@@ -1,0 +1,19 @@
+# TR-05 - Transit facilities improvement  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: transit_facilities_improvement
+uid: TR-05
+name: Transit facilities improvement
+category: transit
+status: planned
+tags: []
+short_description: Enhancements to transportation-related infrastructure such as sidewalks, bike parking,
+  or transit amenities to support alternative modes.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: 'Tier 2. Sheet note: effect size estimation; consider merging with transit shelters.'

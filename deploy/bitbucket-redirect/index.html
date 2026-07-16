@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>This page has moved — CDOT TDM Calculator</title>
+  <meta name="robots" content="noindex" />
+  <link rel="canonical" href="https://tdm.highstreet.work/" />
+  <!-- Bitbucket Pages is a static host and can't issue a real HTTP 302, so this
+       stub redirects client-side after a short delay (so visitors see the
+       notice). The JS path preserves the hash route (e.g. #/strategies); the
+       <meta refresh> is the no-JS fallback. -->
+  <meta http-equiv="refresh" content="4; url=https://tdm.highstreet.work/" />
+  <script>
+    var TARGET = "https://tdm.highstreet.work/" + (location.hash || "");
+    document.addEventListener("DOMContentLoaded", function () {
+      var a = document.getElementById("go");
+      if (a) a.href = TARGET;
+    });
+    setTimeout(function () { location.replace(TARGET); }, 3000);
+  </script>
+  <style>
+    :root { --blue: #002d6a; }
+    body { font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+           max-width: 34rem; margin: 15vh auto 0; padding: 0 1.25rem; color: #141414; }
+    h1 { font-size: 1.6rem; color: var(--blue); margin: 0 0 .5rem; }
+    p { margin: .5rem 0; }
+    .muted { color: #6b6b6b; font-size: .95rem; }
+    a { color: var(--blue); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>This page has moved</h1>
+  <p>The CDOT TDM Calculator now lives at
+    <a id="go" href="https://tdm.highstreet.work/">tdm.highstreet.work</a>.</p>
+  <p class="muted">Redirecting you there in a few seconds… If nothing happens, use the link above.</p>
+</body>
+</html>

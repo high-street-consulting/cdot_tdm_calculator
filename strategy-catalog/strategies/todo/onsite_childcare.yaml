@@ -1,0 +1,19 @@
+# SP-10 - On-site child care  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: onsite_childcare
+uid: SP-10
+name: On-site child care
+category: support
+status: planned
+tags: []
+short_description: Providing childcare facilities at or near workplaces to reduce commute complexity and
+  trip chaining.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: Tier 2.

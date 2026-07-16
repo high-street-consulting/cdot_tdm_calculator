@@ -1,0 +1,19 @@
+# SP-08 - Trip reduction program (voluntary)  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: trip_reduction_voluntary
+uid: SP-08
+name: Trip reduction program (voluntary)
+category: support
+status: planned
+tags: []
+short_description: Voluntary programs that encourage reduced single-occupancy vehicle trips through incentives
+  and support services.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: Tier 2.

@@ -1,0 +1,97 @@
+# PK-03 - Dynamic Parking Pricing
+# Promoted from strategies/todo and split from the parking-pricing engine: a
+# demand-responsive variant scored on the average resulting price (trip_purpose=all).
+# Engine: strategy_parking_pricing.
+
+id: dynamic_parking_pricing
+uid: PK-03
+name: Dynamic Parking Pricing
+category: parking
+status: implemented
+tags:
+- pricing
+- auto
+- local-government
+- technology
+short_description: Adjust parking prices by demand, time, or location; estimated from the resulting
+  average price drivers pay.
+extended_description: |
+  Dynamic parking pricing adjusts rates by time of day, location, observed occupancy, or
+  other factors. The purpose is to keep some spaces available in high-demand areas, reduce
+  time spent searching for parking, and encourage commuters to consider other travel
+  options when appropriate.
+
+  The additional effect of dynamic pricing can be difficult to separate from parking
+  pricing generally, so results should be interpreted as approximate.
+guidance: |
+  Handy et al. (2025) advise against treating dynamic pricing as a distinct
+  measure because its added effect beyond parking pricing is difficult to isolate. When in
+  doubt, model the average price under [Parking Fees and Curb
+  Management](#/strategies/parking_fees_curb_management)
+  instead.
+images: []
+method: Lehner & Peer (2019) parking elasticity (ε=−0.40) on average price (effect-size estimate)
+formula: ΔVMT% = %Δprice × ε × share_affected
+methodology_detail: |
+  What reduces driving is the average price drivers pay, not the fact that the price
+  varies. This strategy is therefore estimated the same way as fixed parking fees, using
+  the average resulting price. Raising that average price raises the cost of driving
+  to those destinations and reduces vehicle miles traveled (VMT), following CAPCOA
+  [T-24 (Implement Market Price Public Parking, On-Street)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-24.pdf)
+  and the parking-response relationship in Lehner & Peer (2019).
+
+  `ΔVMT% = %Δprice × ε × share_affected`
+
+  Because Handy et al. (2025) do not recommend estimating dynamic pricing on its
+  own, treat the result as a rough estimate only.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  warn_message: Demand-responsive pricing applies where parking demand is high (urban downtowns and districts) and is rarely relevant at lower densities.
+inputs:
+- key: new_price
+  label: Average resulting price
+  control: number
+  min: 0
+  max: 50
+  step: 0.5
+  default: 8.0
+  unit: $ per day
+  prerequisite: true
+  summary: The average full-day price drivers will pay under the demand-responsive scheme (across times and locations), not the peak rate.
+  source_note: your proposed pricing schedule / parking rate policy
+  tooltip: Average price drivers pay under the dynamic scheme. The starting price defaults to the typical price for this type of area.
+  instructions: |
+    Enter the average price drivers will pay under the dynamic scheme (a full-day
+    equivalent across times and locations), not the peak rate. If parking is free
+    today, any new average price is treated as a meaningful increase.
+- key: share_affected
+  label: Share of area VMT priced
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.3
+  prerequisite: true
+  summary: The share of the area's driving whose destinations fall within the demand-responsive pricing zone.
+  source_note: your pricing-zone boundary vs. area travel patterns
+  tooltip: Share of the area's driving whose destinations fall under the dynamic pricing.
+  instructions: |
+    Estimate the share of the area's driving whose destinations fall within the
+    dynamic pricing zone. This input is required.
+notes: 'Promoted from todo; split from the pricing engine. Engine: strategy_parking_pricing (trip_purpose=all). Handy 2025: standalone quantification not recommended.'
+# Closed-form (parking pricing, all trips). Reads imputed parking_price.
+compute:
+  pool: all
+  const:
+    elasticity: -0.40    # parking demand elasticity
+    vmt_to_trips: 1.0    # neutral vmt<->trips factor
+  row_defaults:
+    parking_price: 0     # imputed by area_type (host dslRow); 0 -> model as new-pricing
+  let:
+    - effective_old: "if(parking_price > 0, parking_price, new_price / 2)"
+    - pct_price: "(new_price - effective_old) / effective_old"
+  formula: "pct_price * elasticity * share_affected * vmt_to_trips"

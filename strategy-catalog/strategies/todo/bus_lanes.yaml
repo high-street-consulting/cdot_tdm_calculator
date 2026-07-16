@@ -1,0 +1,19 @@
+# TR-08 - Bus lanes  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: bus_lanes
+uid: TR-08
+name: Bus lanes
+category: transit
+status: not_recommended
+tags: []
+short_description: Dedicated roadway lanes reserved for buses to improve transit speed and reliability.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: 'Tier 2. Sheet: quantification not recommended (Handy et al. 2025), but methods exist in CAPCOA
+  or TDM.'

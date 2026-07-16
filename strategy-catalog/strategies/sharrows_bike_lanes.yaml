@@ -1,0 +1,99 @@
+# BP-02 - Striped Bike Lanes, Neighborhood Bikeways and Sharrows
+# Split from the former "Bike mode-share booster" tile: this is the area-wide,
+# on-street-infrastructure half (scope=area_vmt). End-of-trip facilities are now a
+# separate tile. Engine: strategy_bike_mode_share_booster (scope=area_vmt).
+
+id: sharrows_bike_lanes
+uid: BP-02
+name: Striped Bike Lanes, Neighborhood Bikeways and Sharrows
+category: bikeped
+status: implemented
+tags:
+- infrastructure
+- bike
+- corridor
+- local-government
+short_description: Lower-grade on-street bike infrastructure (sharrows, painted lanes) applied across an
+  area, raising bike mode share by a documented effect size.
+extended_description: |
+  Bike lanes are facilities that do not have separation between the roadway and the
+  bikeway. They are typically defined by pavement markings, such as a painted line, rather
+  than by curbs, posts or other physical separation.
+
+  Sharrows, or shared lane markings, are pavement markings that indicate where bicyclists
+  may ride within a shared travel lane. They can help alert drivers to expect bicyclists
+  along a corridor, but they do not provide any significant comfort and safety
+  improvements for those riding bikes.
+
+  Neighborhood bikeways are travel lanes shared by vehicles and bicyclists, but they are
+  an improvement over sharrows because they include additional intersection and mid-block
+  safety measures to reduce vehicle speeds and volumes.
+
+  The relative comfortability and safety of each facility type depends on vehicle speed,
+  vehicle volume, connectivity to the larger bike network, and other corridor factors.
+guidance: |
+  Use this strategy for bike lanes, sharrows or neighborhood bikeways. For
+  physically separated bikeways, use [Protected or Buffered Bike
+  Lanes](#/strategies/separated_bike_lanes).
+  For workplace amenities such as bicycle parking, showers, and lockers, use [Workplace
+  Bicycle
+  Amenities](#/strategies/end_of_trip_facilities).
+images: []
+method: CAPCOA T-19-A / T-20 (bike facility / network expansion), area_vmt scope
+formula: ΔVMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)
+methodology_detail: |
+  Making streets more bike-friendly encourages more people to bike for trips they
+  would otherwise drive, lowering vehicle miles traveled (VMT). Sharrows and painted
+  lanes raise the share of trips made by bike by about 15% within the area they
+  cover, following CAPCOA
+  [T-19-A (Construct or Improve Bike Facility)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-19-a.pdf)
+  and [T-20 (Expand Bikeway Network)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-20.pdf).
+  Because bike trips are typically shorter than car trips, the calculator accounts
+  for that when converting the added bike trips into driving avoided.
+
+  `ΔVMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)`
+
+  This uses the same bike effect as [Workplace Bicycle
+  Amenities](https://high-street.bitbucket.io/cdot_tdm_calculator/#/strategies/end_of_trip_facilities),
+  applied across an area rather than to commuters at a worksite.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: On-street bike treatments shift the most trips in denser, walkable areas; the effect is limited in rural areas.
+inputs:
+- key: scope_share
+  label: Share of area VMT treated
+  control: slider
+  min: 0
+  max: 100
+  step: 1
+  scale: 100
+  suffix: '%'
+  default: 0.1
+  prerequisite: true
+  summary: The share of your area's driving carried on the streets that will receive the new
+    sharrows or painted bike lanes.
+  resources:
+  - label: CDOT Traffic Data Explorer
+    url: https://dtdapps.codot.gov/otis/trafficdata
+  tooltip: Share of area driving on the streets receiving sharrows / painted lanes.
+  instructions: |
+    Estimate the share of your area's driving carried on the streets that get the
+    new markings or painted lanes. Identify the treated streets, then judge what
+    fraction of local driving they carry. A network of sharrows across many streets
+    covers more than a single painted lane.
+
+    To check traffic on a specific street, CDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)
+    maps annual average daily traffic (AADT) counts for state highways statewide.
+notes: 'Split from bike_mode_share_booster. Engine: strategy_bike_mode_share_booster (scope=area_vmt).'
+# Closed-form (bike mode-share booster, area_vmt scope fixed). Reads imputed bike/auto mode share.
+compute:
+  pool: all
+  const:
+    adj: 0.15       # sharrows bike-share boost
+    bike_len: 1.5   # NACTO avg bike trip length (mi)
+  row_defaults:
+    avg_trip_length: 9.0   # statewide default vehicle trip length when TAZ value absent
+  formula: "-scope_share * bike_len * (bike_mode_share * adj) / (max(avg_trip_length, 0.5) * max(auto_mode_share, 0.000000001))"

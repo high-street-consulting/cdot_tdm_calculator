@@ -1,0 +1,82 @@
+/* ============================================================================
+   CDOT brand layer, layered on top of Calcite's colors_and_type.css.
+   Overrides the six --brand-* tokens with Colorado DOT colors from the
+   CDOT Brand Quick Guide.
+
+   CDOT palette:
+     Dark Blue   #001970  : CDOT emblem primary (chrome, headlines)
+     Orange     #E57200  : CDOT emblem accent (highlights, not body text)
+     Red        #C3002F  : Colorado "C" emblem (only in logo / accents)
+     Yellow     #FFD100  : Colorado "C"
+     Green      #245D39  : Colorado "C"
+     Light Blue #35647E  : Colorado "C"
+
+   Orange is lower-contrast; per the guide it's for headings ≥18pt, borders,
+   decorative elements, icons, NOT body text. So we use Dark Blue for chrome
+   and CTAs, Orange as a spark accent.
+   ============================================================================ */
+
+:root {
+  /* CDOT core */
+  --cdot-dark-blue:      #001970;
+  --cdot-dark-blue-hover:#00124F;
+  --cdot-dark-blue-press:#000B33;
+  --cdot-orange:         #E57200;
+  --cdot-orange-hover:   #C66300;
+  --cdot-orange-press:   #A55200;
+  /* Accessible orange for CTAs (white-on-orange contrast).
+     E57200 only hits 3.07:1 against white, fails AA for body text.
+     A55200 = 5.6:1 (AA pass), 7E3F00 = ~9:1 for hover state. */
+  --cdot-orange-cta:       #A55200;
+  --cdot-orange-cta-hover: #7E3F00;
+  --cdot-red:            #C3002F;
+  --cdot-yellow:         #FFD100;
+  --cdot-green:          #245D39;
+  --cdot-light-blue:     #35647E;
+
+  /* Tints for surfaces */
+  --cdot-dark-blue-80:   #334784;
+  --cdot-dark-blue-10:   #E6E8F1;
+  --cdot-dark-blue-05:   #F2F4F9;
+  --cdot-orange-20:      #FBE0C4;
+  --cdot-orange-10:      #FDEFE0;
+
+  /* Re-point the brand aliases that Calcite components inherit */
+  --brand-primary:         var(--cdot-dark-blue);
+  --brand-primary-hover:   var(--cdot-dark-blue-hover);
+  --brand-on-primary:      #ffffff;
+  --brand-secondary:       var(--cdot-dark-blue);        /* interactive = dark blue */
+  --brand-secondary-hover: var(--cdot-dark-blue-hover);
+  --brand-on-secondary:    #ffffff;
+  --brand-accent:          var(--cdot-orange);           /* spark accent */
+  --brand-on-accent:       #ffffff;
+  --brand-surface-soft:    var(--cdot-dark-blue-05);
+  --brand-on-surface-soft: var(--cdot-dark-blue);
+
+  /* Re-point Calcite's own brand tokens */
+  --calcite-color-brand:        var(--cdot-dark-blue);
+  --calcite-color-brand-hover:  var(--cdot-dark-blue-hover);
+  --calcite-color-brand-press:  var(--cdot-dark-blue-press);
+  --calcite-color-brand-underline: rgba(0, 25, 112, 0.4);
+  --calcite-color-text-link:    var(--cdot-dark-blue);
+  --calcite-color-text-highlight: var(--cdot-dark-blue-hover);
+  --calcite-color-focus:        var(--cdot-dark-blue);
+}
+
+/* High-Street brand toggle: class on <html> */
+html[data-brand="highstreet"] {
+  --brand-primary:         #002A42;
+  --brand-primary-hover:   #0A3A54;
+  --brand-secondary:       #50779B;
+  --brand-secondary-hover: #415F7E;
+  --brand-accent:          #FAAA42;
+  --brand-on-accent:       #002A42;
+  --brand-surface-soft:    #DCE4EB;
+  --brand-on-surface-soft: #002A42;
+
+  --calcite-color-brand:        #50779B;
+  --calcite-color-brand-hover:  #415F7E;
+  --calcite-color-brand-press:  #34506B;
+  --calcite-color-text-link:    #00619B;
+  --calcite-color-focus:        #50779B;
+}

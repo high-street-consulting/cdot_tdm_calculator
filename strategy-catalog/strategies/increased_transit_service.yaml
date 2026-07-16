@@ -1,0 +1,124 @@
+# TR-06 Increased Transit Service
+# Split from the former merged "Transit service expansion" tile: this file is the
+# service-miles-elasticity (new route / added revenue miles) half. The frequency
+# half lives in transit_service_expansion.yaml. Both call
+# strategy_transit_service_expansion (this one fixes basis=service_miles).
+
+id: new_transit_service
+uid: TR-06
+name: Increased Transit Service
+category: transit
+status: implemented
+tags:
+- service
+- transit
+- transit-agency
+- mpo
+short_description: New routes, route extensions, or expanded operating hours for an existing transit
+  network, giving more people a transit option.
+extended_description: |
+  Increased transit service introduces transit access where it was not previously available
+  or extends service to new markets. This may include a new local route, an extension of an
+  existing route, or a new regional connection. This may also include expanding operating
+  hours. The service is most useful when it links people to jobs, schools, services, or
+  activity centers at times that match actual travel needs.
+
+  The effect of increased transit service depends on how many riders the service attracts
+  and how many of those trips would otherwise have been made by driving alone. Increased
+  service is most likely to reduce VMT where it connects places people already need to
+  travel, offers reliable travel times, and offers connectivity between transit stops and
+  final destinations.
+
+  This strategy models **fixed-route** transit service (scheduled routes along a fixed
+  alignment). Demand-responsive services such as microtransit and on-demand circulators
+  are modeled separately and are not included here.
+guidance: |
+  Use this when a project expands fixed-route service, such as new routes, route
+  extensions, regional connections, or expanded operating hours. To increase how often existing
+  routes run, use [Transit Service Frequency Increase](#/strategies/transit_service_expansion)
+  instead.
+images: []
+method: TCRP 95 service-miles elasticity (ε=0.75)
+formula: ΔVMT% = −L × Δservice × transit_MS × ε × (1/AVO) × trip_reduction_ratio
+methodology_detail: |
+  Extending transit into new areas gives more people a usable alternative to
+  driving, so some car trips shift to transit and vehicle miles traveled (VMT) fall.
+  The more service is added relative to what exists today, the larger the ridership
+  gain. This follows CAPCOA
+  [T-25 (Extend Transit Network Coverage or Hours)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-25.pdf)
+  and the service-miles relationship in Transit Cooperative Research Program (TCRP)
+  Report 95.
+
+  `ΔVMT% = −L × Δservice × transit_MS × ε × (1/AVO) × trip_reduction_ratio`
+
+  The calculator uses local commute mode share from the American Community Survey
+  (ACS) and a statewide average for vehicle occupancy (the average number of people
+  per car), and it discounts for new transit trips that don't fully replace a car
+  trip. Use the implementation level to phase in service that isn't fully running
+  yet.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: New transit coverage reduces the most driving where density supports ridership; expect a limited effect in rural areas.
+inputs:
+- key: pct_change
+  label: Service-mile change
+  control: slider
+  min: -50
+  max: 200
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.2
+  prerequisite: true
+  summary: The percent change in revenue miles the new or extended service adds, compared with
+    the existing network serving your area.
+  resources:
+  - label: CDOT Statewide Transit Routes map
+    url: https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824
+  tooltip: 'Signed: positive = added revenue miles / new routes, negative = a service cut.'
+  instructions: |
+    Enter the percentage change in transit revenue miles for the affected area.
+    Compare the daily (or annual) revenue miles of the new/extended service
+    against the existing network serving the area. For a brand-new route in an
+    area with little prior service, this can be large; for a modest extension it
+    may be a few percent.
+
+    To check the existing routes, operators, and service in your area, CDOT's
+    [Statewide Transit Routes map](https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824)
+    maps fixed-route transit statewide.
+- key: level_of_implementation
+  label: Implementation level
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 1.0
+  prerequisite: true
+  summary: What share of the planned service will actually be operating. Use 100% for a full
+    build-out, less for a pilot or phased roll-out.
+  source_note: your project scope / agency service plan
+  tooltip: Phase-in factor. 100% = the new/expanded service is fully operating.
+  instructions: |
+    Use this to phase in the effect. 100% means the new or expanded service is
+    fully operating across the impacted area; a pilot or partial roll-out lowers it.
+
+    To check the existing routes, operators, and service in your area, CDOT's
+    [Statewide Transit Routes map](https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824)
+    maps fixed-route transit statewide.
+auto_filled_summary:
+- mode share
+- vehicle occupancy
+- baseline VMT
+notes: 'Split from the merged transit service tile. Engine: strategy_transit_service_expansion (basis=service_miles).'
+# Closed-form (transit service expansion, service_miles basis fixed). Reads imputed mode share + avo.
+compute:
+  pool: all
+  const:
+    elasticity: 0.75    # TCRP 95 service-miles midpoint
+    trip_red_ratio: 0.7
+  formula: "-level_of_implementation * pct_change * transit_mode_share * elasticity * (1 / avo) * trip_red_ratio"

@@ -1,0 +1,100 @@
+# PK-02 - Parking Fees and Curb Management
+# Promoted from strategies/todo and split from the parking-pricing engine: this is
+# the area-wide half (trip_purpose=all). Engine: strategy_parking_pricing.
+
+id: parking_fees_curb_management
+uid: PK-02
+name: Parking Fees and Curb Management
+category: parking
+status: implemented
+tags:
+- pricing
+- auto
+- local-government
+- all-trips
+short_description: Price and manage on- and off-street public parking across an area to reduce auto trips
+  and improve turnover.
+extended_description: |
+  Parking fees and curb management price public parking in areas such as metered on-street
+  spaces, municipal lots, or managed curb zones. Pricing helps manage limited parking so
+  spaces are more likely to be available for people who need them, while also encouraging
+  some commuters to consider lower-cost options such as transit, carpooling, biking,
+  walking, or other travel options.
+
+  The effect depends on the price, whether free parking is still available nearby, and the
+  quality of other possible travel options that avoid the need for parking.
+guidance: |
+  This strategy applies the price change to a share of area driving
+  specified by the user. For parking charged by employers, use [Workplace Parking
+  Pricing](#/strategies/workplace_parking_pricing).
+  For rates that change with demand, use [Dynamic Parking
+  Pricing](#/strategies/dynamic_parking_pricing).
+images: []
+method: Lehner & Peer (2019) parking demand elasticity (ε=−0.40), all trips
+formula: ΔVMT% = %Δprice × ε × share_affected
+methodology_detail: |
+  Charging for public parking that used to be free or cheap raises the cost of
+  driving to those destinations, so some trips are made another way or not at all,
+  reducing vehicle miles traveled (VMT). The larger the price increase and the more
+  of the area's driving it covers, the bigger the reduction, following CAPCOA
+  [T-24 (Implement Market Price Public Parking, On-Street)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-24.pdf)
+  and the parking-response relationship in Lehner & Peer (2019).
+
+  `ΔVMT% = %Δprice × ε × share_affected`
+
+  Where parking is free today, introducing a charge is treated as a meaningful price
+  increase. The estimate is most reliable for moderate price changes and overstates
+  the response to very large ones (above about a 50% increase).
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  warn_message: Priced public and curb parking is an urban tool with little application in lower-density areas where parking is free and plentiful.
+inputs:
+- key: new_price
+  label: New parking price
+  control: number
+  min: 0
+  max: 50
+  step: 0.5
+  default: 8.0
+  unit: $ per day
+  prerequisite: true
+  summary: The new average full-day price for the priced or managed public parking; if parking is free today, any new price counts as an increase.
+  source_note: your proposed parking rate schedule / curb management plan
+  tooltip: New average price for the managed parking. The starting price defaults to the typical price for this type of area.
+  instructions: |
+    Enter the new average price for the priced/managed parking (a representative
+    full-day equivalent for the affected spaces). If parking is free today, any new
+    price is treated as a meaningful increase.
+- key: share_affected
+  label: Share of area VMT priced
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.3
+  prerequisite: true
+  summary: The share of the area's driving whose destinations fall under the new parking pricing (for example, trips ending in a priced district).
+  source_note: your pricing-program boundary vs. area travel patterns
+  tooltip: Share of the area's driving whose destinations fall under the new parking pricing.
+  instructions: |
+    Estimate the share of the area's driving whose destinations are covered by the
+    new pricing, for example trips ending in a priced downtown or district. A
+    district-wide program covers far more than a few metered blocks. This input is
+    required.
+notes: 'Promoted from todo; split from the pricing engine. Engine: strategy_parking_pricing (trip_purpose=all).'
+# Closed-form (parking pricing, all trips). Reads imputed parking_price.
+compute:
+  pool: all
+  const:
+    elasticity: -0.40    # parking demand elasticity
+    vmt_to_trips: 1.0    # neutral vmt<->trips factor
+  row_defaults:
+    parking_price: 0     # imputed by area_type (host dslRow); 0 -> model as new-pricing
+  let:
+    - effective_old: "if(parking_price > 0, parking_price, new_price / 2)"
+    - pct_price: "(new_price - effective_old) / effective_old"
+  formula: "pct_price * elasticity * share_affected * vmt_to_trips"

@@ -1,0 +1,7 @@
+# No Git LFS in this repo. The large travel-model inputs that used LFS live in
+# the private data repo; nothing tracked here needs it.
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.docx binary

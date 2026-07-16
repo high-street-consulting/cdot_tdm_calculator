@@ -1,0 +1,19 @@
+# TC-01 - HOV lanes  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: hov_lanes
+uid: TC-01
+name: HOV lanes
+category: technology
+status: planned
+tags: []
+short_description: High-occupancy vehicle lanes reserved for carpools, vanpools, and sometimes transit
+  to encourage shared rides.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: Tier 2.

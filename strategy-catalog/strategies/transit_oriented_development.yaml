@@ -1,0 +1,104 @@
+# LU-03 - Transit Oriented Development
+# Seeded from app/src/strategies/registry.ts. This file is now the source of truth.
+
+id: transit_oriented_development
+uid: LU-03
+name: Transit Oriented Development
+category: landuse
+status: implemented
+tags:
+- land-use
+- transit
+- commute
+- developer
+- transit-agency
+- urban
+short_description: Higher-density mixed-use development around high-quality transit. Residents shift commute
+  trips to transit at a rate documented by CAPCOA T-3.
+extended_description: |
+  Transit-oriented development places compact, mixed-use development within walking
+  distance of high-quality transit, typically around a rail station or major bus hub. The
+  transportation benefit comes from locating more homes, jobs, shops, and services near
+  frequent transit so some trips can be made without driving or with fewer household
+  vehicles.
+
+  The effect depends on the quality of both the transit service and the walking
+  environment around the station area. Compact development near reliable service, safe
+  crossings, limited parking, and active street-level uses will generally shift more
+  travel than similar density near infrequent service or a station that is hard to reach.
+guidance: |
+  Use this strategy for development around an existing or planned
+  high-quality transit station. For density that is not tied to a transit station, use
+  [Increased Residential
+  Density](#/strategies/residential_density)
+  or [Increased Employment
+  Density](#/strategies/employment_density)
+  instead.
+images: []
+method: CAPCOA T-3 (Transit-Oriented Development); Lund 2004 / Cervero 2007 / Chatman 2013
+formula: ΔVMT% = −%TAZ_in_TOD × (min(TOD_ratio × transit_MS, cap) − transit_MS) / auto_MS
+methodology_detail: |
+  Living within walking distance of high-quality transit leads residents to ride
+  transit far more and drive far less, lowering vehicle miles traveled (VMT). The
+  calculator gives residents inside the walkshed a transit share equal to the
+  area's transit share times a multiplier (4.9× by default, the typical rail-station
+  value), capped at 50% as a realistic ceiling. This follows CAPCOA
+  [T-3 (Provide Transit-Oriented Development)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-3.pdf),
+  drawing on Lund (2004), Cervero (2007), and Chatman (2013).
+
+  `ΔVMT% = −%TAZ_in_TOD × (min(TOD_ratio × transit_MS, cap) − transit_MS) / auto_MS`
+
+  The effect grows with the share of the area's population that lives inside the
+  walkshed. Commute mode share comes from American Community Survey (ACS) data.
+  Lower the multiplier for development served by bus only, which shifts fewer trips
+  than rail.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Transit-oriented development depends on high-quality transit, which is generally limited to urban and suburban areas.
+inputs:
+- key: pct_taz_in_tod
+  label: Share of TAZ within TOD walkshed
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.1
+  prerequisite: true
+  summary: The share of the area's population that will live inside the ½-mile walkshed around the station, based on planned TOD housing.
+  source_note: your development program / site plan vs. the TAZ population
+  tooltip: Share of the area's population estimated to live within the ½-mi transit-oriented development walkshed.
+  instructions: |
+    Estimate the share of the TAZ's population that will live inside the TOD
+    walkshed, roughly the ½-mile area around the station that is comfortable to
+    walk. Compare the planned TOD housing (or population) against the TAZ total.
+    If the TOD covers only part of a large TAZ, this share is small.
+- key: tod_mode_share_ratio
+  label: TOD transit-MS multiplier
+  control: number
+  step: 0.1
+  default: 4.9
+  prerequisite: true
+  summary: The transit mode-share multiplier for the TOD; keep 4.9x for a rail station, or lower it (2-3x) for a bus-served TOD.
+  source_note: the transit service serving your TOD (rail vs. bus)
+  tooltip: CAPCOA T-3 default = 4.9× (rail-station TODs). Lower for bus-served TODs.
+  instructions: |
+    Leave at the 4.9× default for development around a rail station (the CAPCOA
+    T-3 value). Lower it for TODs served by bus only, which shift fewer trips; a
+    2–3× multiplier is more realistic for frequent bus service.
+  min: 1.0
+  max: 10.0
+notes: ''
+# Closed-form (CAPCOA LUT-4). tod_mode_share_ratio is a user input. Reads imputed mode share.
+compute:
+  pool: all
+  const:
+    max_tod_transit_share: 0.50   # realistic ceiling
+  let:
+    - tod_transit: "min(transit_mode_share * tod_mode_share_ratio, max_tod_transit_share)"
+    - delta: "tod_transit - transit_mode_share"
+  formula: "-pct_taz_in_tod * delta / max(auto_mode_share, 0.000000001)"

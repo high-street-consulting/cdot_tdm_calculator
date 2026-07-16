@@ -1,0 +1,87 @@
+# SP-04 Commuter Incentives
+# Split from the former merged "Commute program (marketing / incentives)" tile:
+# this is the incentive-campaign half (~3%). Engine: strategy_commute_program
+# (defaults to the incentive effect size).
+
+id: commute_incentives
+uid: SP-04
+name: Commuter Incentives
+category: support
+status: implemented
+tags:
+- program
+- commute
+- employer
+- local-government
+short_description: Financial or non-financial rewards (transit benefits, rideshare subsidies, prizes) that
+  pay employees to shift out of driving alone.
+extended_description: |
+  Commuter incentives provide a financial or other tangible benefit for changing travel
+  behavior. The incentive may support transit use, carpooling, vanpooling, bicycling,
+  telework, remote parking, or another specific action, but it should be tied to a
+  measurable change rather than general awareness.
+
+  The effect is strongest when incentives support repeated behavior or change the relative
+  cost of driving alone. Short-term incentives can encourage commuters to try a new mode,
+  while recurring benefits, like free transit passes provided by employers for example,
+  are more likely to influence ongoing commute choices.
+guidance: |
+  Use this strategy for incentive-driven programs. For awareness and
+  promotion without payments, use [Commute Trip Reduction
+  Marketing](#/strategies/commute_marketing).
+  Avoid double-counting if an overlapping fare subsidy or parking cash-out is also modeled
+  for the same commuters.
+images: []
+method: CAPCOA T-5 / T-6 (Commute Trip Reduction), incentive-heavy ≈3%
+formula: Δcommute_VMT% = −%eligible × reduction_per_eligible
+methodology_detail: |
+  Incentive-heavy commute programs reduce commute VMT by roughly 3% per eligible
+  commuter, drawn from the commute-trip-reduction evidence in CAPCOA
+  [T-5 (voluntary)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-5.pdf)
+  and [T-6 (mandatory)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-6.pdf).
+  Programs that pair financial incentives with outreach land toward the upper end
+  of that range:
+
+  `Δcommute_VMT% = −%eligible × reduction_per_eligible`
+
+  Adjust the per-commuter rate to match the level of incentives antcipated in the program.
+applicability: {}
+inputs:
+- key: pct_eligible
+  label: Share of workforce eligible
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.5
+  prerequisite: true
+  summary: The share of area employees eligible for the incentive program. For a single employer this is its share of area commuters; for a regional program, use the eligible workforce share.
+  source_note: your project scope / employer or program participation estimate
+  tooltip: Share of area employees eligible for the incentives.
+  instructions: |
+    Estimate the share of area employees eligible for the incentive program. For a
+    single employer, this is its share of area commuters; for a regional program,
+    estimate the eligible workforce share.
+- key: reduction_per_eligible
+  label: Reduction per eligible commuter
+  control: slider
+  min: 1
+  max: 3
+  step: 0.1
+  scale: 100
+  suffix: '%'
+  default: 0.03
+  prerequisite: true
+  summary: The commute-VMT reduction per eligible commuter. Keep 3% for incentive-heavy programs, or lower toward 1-2% for token incentives.
+  source_note: CAPCOA T-5/T-6 default (3%); adjust from your program's incentive level
+  tooltip: 3% = incentive-heavy default. Lower to 1-2% for light incentives.
+  instructions: |
+    The default 3% reflects programs with meaningful financial incentives. Lower it
+    toward 1-2% for token incentives.
+notes: 'Split from commute_program. Engine: strategy_commute_program (incentive default ~3%).'
+# Closed-form (commute program). reduction_per_eligible is a user input (default 0.03).
+compute:
+  pool: commute
+  formula: "-pct_eligible * reduction_per_eligible"

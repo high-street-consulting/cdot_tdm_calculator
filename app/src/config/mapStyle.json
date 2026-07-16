@@ -1,0 +1,34 @@
+{
+  "_comment": "Standalone styling + symbology for the calculator's maps — the interactive TAZ map (MapView) and the printable report's project-area map (reportMap). Edit values here; no code changes needed. Colors are either CSS strings (e.g. 'rgb(107,57,0)') or [r, g, b, a] arrays where a is 0..1.",
+
+  "basemap": "streets-navigation-vector",
+
+  "initialView": {
+    "_comment": "Starting camera for the interactive map: [longitude, latitude] center and zoom level (Denver metro, statewide-ish overview).",
+    "center": [-104.9903, 39.7392],
+    "zoom": 10
+  },
+
+  "tazBoundary": {
+    "_comment": "Visible TAZ boundaries are painted by the published vector tile layer, restyled to a dotted brown line. lineWidthZoomStops is a list of [zoom, widthPx] pairs interpolated linearly (≈0px zoomed out → 3.2px zoomed in, fading out at low zoom).",
+    "lineColor": "rgb(107,57,0)",
+    "lineOpacity": 0.85,
+    "lineDasharray": [0, 2],
+    "lineWidthZoomStops": [[9.5, 0], [10.5, 0.8], [12.5, 1.6], [14, 3.2]]
+  },
+
+  "selection": {
+    "_comment": "Highlight overlay for selected TAZs — used by both the interactive map overlay and the report map. CDOT blue, semi-transparent fill with a dark-blue outline.",
+    "fillColor": [0, 122, 194, 0.32],
+    "outlineColor": [0, 25, 112, 1],
+    "outlineWidth": 1.5
+  },
+
+  "sketch": {
+    "_comment": "Polygon-draw preview shown while the user is drawing a selection area on the interactive map.",
+    "fillColor": [0, 25, 112, 0.18],
+    "outlineColor": [0, 25, 112, 0.9],
+    "outlineWidth": 1.5,
+    "outlineStyle": "dash"
+  }
+}

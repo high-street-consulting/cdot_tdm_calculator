@@ -1,0 +1,165 @@
+# TR-04 - Park-and-ride
+# Promoted from strategies/todo. Engine: strategy_park_and_ride (derived; Duncan & Cao 2020).
+
+id: park_and_ride
+uid: TR-04
+name: Park-and-Ride
+category: transit
+status: implemented
+tags:
+- infrastructure
+- transit
+- commute
+- corridor
+- local-government
+short_description: Designated parking facilities where travelers can leave personal vehicles and transfer
+  to transit or carpools.
+extended_description: |
+  Park-and-rides are designated facilities where users can leave personal vehicles and
+  transfer to transit, carpools, vanpools, or shuttle services. Park-and-rides can support
+  longer commute trips, regional travel, first/last-mile access to transit, and connections
+  for users who do not live within walking or biking distance of frequent transit service.
+
+  The effect of a park-and-ride will vary based on its location, utilization, and connection
+  to useful transportation services. Park-and-rides are most effective when they are paired
+  with reliable transit, organized carpools or vanpools, frequent shuttle service, or managed
+  parking strategies, especially in suburban, rural, and regional corridor contexts where
+  they can shorten drive-alone trips rather than simply adding new vehicle trips to reach
+  transit.
+guidance: |
+  Use this strategy for new or improved park-and-ride facilities that connect
+  drivers to various types of transit services. Park-and-rides are most appropriate when
+  users can replace a longer drive-alone trip with a shorter drive to a park-and-ride paired
+  with a transit trip.
+images: []
+method: Derived (Duncan & Cao 2020) with local TAZ catchment
+formula: ΔCommuteVMT% = −(min(supply, demand) × V_net) / commute_VMT_catchment
+methodology_detail: |
+  A park-and-ride converts a would-be drive-all-the-way commute into a shorter drive to the
+  lot plus a transit trip. The credit is the avoided line-haul mileage, net of the access
+  drive, for the riders who would otherwise have driven the whole way. No CAPCOA measure or
+  CARB brief quantifies park-and-ride, so this method is built on the only US study that
+  isolates the *marginal* VMT effect (Duncan & Cao 2020), with the avoided mileage
+  reconstructed from local Colorado trip lengths.
+
+  **Spatial catchment.** Savings accrue along the corridor riders come from, not at the lot.
+  The calculator identifies the catchment (the Traffic Analysis Zones, or TAZs, within the
+  average access drive of the facility) and measures the reduction against the commute
+  vehicle miles traveled (VMT) *produced by those TAZs*.
+
+  **Binding constraint.** Diverted round trips are computed two ways and the lower (binding)
+  value is used:
+
+  - *Supply side* (parking capacity): `spaces × utilization × diversion_fraction`
+  - *Demand side* (who actually drives to transit): `transit_commute_trips × drive-to-transit share × diversion_fraction`
+
+  The drive-to-transit access share comes from the area's observed transit-access split (the
+  share of transit riders who reach transit by car versus on foot) rather than a national
+  default. The avoided VMT per diverted round trip is `V_net = 2 × (commute trip length −
+  access drive length)`, using the area's observed commute trip length. The diversion
+  fraction is 0.80 for an isolated facility and 0.32 where a comparable alternative exists
+  (Duncan & Cao 2020). Where local trip lengths are unavailable, the method falls back to
+  Duncan & Cao's empirical 19 mi (isolated) / 10 mi (alternative) per round trip, which
+  already embed the diversion behavior.
+
+  **Context limitation:** This method is defensible for the US auto-oriented commuter
+  context that matches Colorado. International studies (Mingardo 2013; Parkhurst 2000) find
+  park-and-ride can *increase* vehicle travel in some European settings; those are out of
+  scope here. Commute-VMT reductions above ~5% of the catchment are flagged for review.
+
+  **Sources**
+
+  - Duncan, M., & Cao, J. (2020). *Marginal Impacts of Park-and-Ride Facilities in the Twin
+    Cities*. Transportation Research Record 2674. https://doi.org/10.1177/0361198120945696
+  - Duncan, M. (2019). *Would the replacement of park-and-ride facilities with
+    transit-oriented development reduce vehicle kilometers traveled...* Transport Policy 81.
+    https://doi.org/10.1016/j.tranpol.2017.12.005
+applicability:
+  area_types:
+  - urban
+  - suburban
+  - rural
+  warn_message: Park-and-ride is most defensible in suburban, rural, and regional commute corridors where it shortens drive-alone trips.
+inputs:
+- key: n_spaces
+  label: Number of parking spaces
+  control: number
+  min: 0
+  step: 10
+  default: 200
+  unit: spaces
+  prerequisite: true
+  summary: The total number of parking spaces planned at the park-and-ride facility, which bounds how many daily round trips it can divert.
+  source_note: your facility design / site plan
+  tooltip: Total parking spaces at the park-and-ride facility.
+  instructions: |
+    Enter the total number of parking spaces at the facility. This bounds the supply side:
+    the facility cannot divert more daily round trips than it has occupied spaces.
+- key: l_access_mi
+  label: Average access drive (one-way)
+  control: number
+  min: 0
+  max: 30
+  step: 0.5
+  default: 4
+  unit: miles
+  prerequisite: true
+  summary: The average one-way distance riders drive from home to reach the facility, which also defines the catchment area used in the estimate.
+  source_note: your expected rider catchment / corridor travel patterns
+  tooltip: Average one-way distance riders drive from home to the facility. Also defines the catchment.
+  instructions: |
+    Enter the average one-way distance riders drive from home to reach the facility. This
+    both nets out of the avoided mileage and defines the catchment (the area riders come
+    from) used for the VMT denominator.
+- key: utilization
+  label: Utilization rate
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.7
+  prerequisite: true
+  summary: The share of parking spaces you expect to be occupied on a typical day (occupied spaces divided by total spaces).
+  source_note: observed occupancy counts, or the 70% planning default
+  tooltip: Occupied spaces ÷ total spaces (planning default 70%).
+  instructions: |
+    Estimate the share of spaces typically occupied. Use observed counts if available;
+    otherwise the 70% planning default is reasonable.
+- key: isolated_facility
+  label: Comparable facilities nearby?
+  control: select
+  default: isolated
+  options:
+  - value: isolated
+    label: Isolated (no comparable park-and-ride nearby)
+  - value: alternative
+    label: A comparable park-and-ride exists nearby
+  prerequisite: true
+  summary: Whether a comparable park-and-ride facility already exists nearby, which sets how many riders depend on this specific lot to use transit.
+  source_note: your knowledge of nearby park-and-ride facilities
+  tooltip: Whether comparable alternative park-and-ride facilities exist nearby. Drives the diversion fraction (0.80 isolated vs 0.32 with an alternative).
+  instructions: |
+    Choose "Isolated" if there is no comparable park-and-ride nearby, so riders depend on this
+    facility to use transit (diversion fraction 0.80). Choose the alternative option where a
+    comparable facility exists (0.32), since fewer riders would abandon transit without this
+    specific lot.
+- key: total_transit_commute_trips_catchment
+  label: Daily transit commute trips in catchment
+  control: number
+  min: 0
+  step: 50
+  default: 0
+  unit: trips/day
+  prerequisite: true
+  summary: Optional but recommended - the total daily commute transit trips originating in the catchment, which caps the credit to commuters actually driving to transit.
+  source_note: your regional travel model or transit ridership data
+  tooltip: Optional. Total daily commute transit trips originating in the catchment, used as the demand-side ceiling.
+  instructions: |
+    Optional but recommended. Enter the total daily commute transit trips originating in the
+    catchment. Combined with the observed drive-to-transit access share, this caps the credit
+    at the number of commuters actually driving to transit. Leave at 0 to use the
+    parking-capacity (supply-side) estimate only; the calculator will flag the missing
+    demand ceiling.
+notes: 'Promoted from todo; replaces the legacy CAPCOA 2010 T-22 credit with a derived Duncan & Cao (2020) method that uses the observed drive/walk transit-access split and a spatial catchment. COMPLEX (cross-TAZ / spatial): stays a Python calc fn (strategy_park_and_ride) and is hand-ported to app/src/strategies/parkAndRide.ts (AGGREGATE_REGISTRY), pinned to Python by parkAndRide.test.ts via scripts/generate_pnr_golden.py. App approximation: the user''s selected TAZs are the catchment (no runtime geometry), the commute split is the statewide default (no observed vmt_share_commute on the app TAZ layer), and with no drive-access/transit-trip data the credit is supply-side only (observed trip length is used where avg_trip_length is present). For a geographic sub-catchment or demand ceiling, those fields must be added to the app TAZ layer.'

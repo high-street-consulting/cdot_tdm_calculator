@@ -1,0 +1,392 @@
+// Results / cart view: combined VMT reduction, per-strategy contribution
+// breakdown, subsector-cap note, co-benefits, export buttons.
+
+import { CATEGORIES, getStrategy } from "../strategies/registry";
+import type { AggregatedResults, BasketEntry } from "../strategies/compute";
+import { isDefaultValue } from "../strategies/defaults";
+import type { StrategyKey } from "../strategies/strategies";
+import type { TazInputs } from "../strategies/types";
+import { downloadResultsCsv } from "../data/exportCsv";
+import { annualVmtToGhgTonnes, ANNUAL_VMT_PER_CAR } from "../strategies/ghg";
+import { getStrategyContext, OVERRIDE_FORMATTERS } from "../strategies/context";
+import { CategoryIcon } from "./CategoryIcon";
+
+interface CartViewProps {
+  basket: BasketEntry[];
+  results: AggregatedResults;
+  tazCount: number;
+  /** Per-TAZ baseline attributes for the selection, included in the CSV. */
+  tazInputs: TazInputs[];
+  /** PROJECT-LEVEL baseline VMT override (native mi/day), or null when the
+      modeled/derived baseline is in use. When set, surfaced as a note near the
+      summary and passed into the CSV export. */
+  baselineVmtOverride: number | null;
+  /** Free-text "why" narrative documenting the baseline override. */
+  baselineVmtNote: string;
+  onEdit: (id: StrategyKey) => void;
+  onRemove: (id: StrategyKey) => void;
+  onBrowse: () => void;
+  /** Open the printable PDF report (navigates to #/report). */
+  onExportPdf: () => void;
+}
+
+export function CartView({
+  basket,
+  results,
+  tazCount,
+  tazInputs,
+  baselineVmtOverride,
+  baselineVmtNote,
+  onEdit,
+  onRemove,
+  onBrowse,
+  onExportPdf,
+}: CartViewProps) {
+  if (basket.length === 0) {
+    return (
+      <div className="cart-view">
+        <div className="cart-main">
+          <div className="cart-empty">
+            <h1>No strategies in your package yet</h1>
+            <p>Add TDM strategies to see combined VMT reduction, GHG co-benefits, and per-strategy contributions.</p>
+            <button
+              onClick={onBrowse}
+              className="cart-empty-cta"
+            >
+              Browse strategies
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const totalPct = results.total_pct_vmt_reduction * 100;
+  const dailyReduced = results.total_daily_vmt_reduction;
+  const annualReduced = dailyReduced * 365;
+  const ghgTonnes = annualVmtToGhgTonnes(annualReduced);
+  // Net direction follows the computed sign (positive = a reduction). When the
+  // package nets to an increase, the abs-row labels read "added"/"increase"
+  // rather than "reduced" (CMT-06/08).
+  const netReduces = dailyReduced >= 0;
+
+  return (
+    <div className="cart-view">
+      <div className="cart-main">
+        <div className="cart-hero">
+          <div>
+            <h1 className="ov">Your strategy package</h1>
+            <div className="big" aria-label={`${totalPct >= 0 ? "Reduction" : "Increase"} of ${Math.abs(totalPct).toFixed(2)} percent VMT`}>
+              {totalPct >= 0 ? "−" : "+"}
+              {Math.abs(totalPct).toFixed(2)}
+              <span className="pct">% VMT</span>
+            </div>
+            <div className="sub">
+              vs. baseline · {basket.length} strateg{basket.length === 1 ? "y" : "ies"} · {tazCount} TAZ{tazCount === 1 ? "" : "s"}
+            </div>
+            <div className="abs-row">
+              <div className="c">
+                <div className="lab">Daily VMT {netReduces ? "reduced" : "added"}</div>
+                <div className="v">
+                  {Math.round(Math.abs(dailyReduced)).toLocaleString()}
+                  <span className="u">mi/day</span>
+                </div>
+              </div>
+              <div className="c">
+                <div className="lab">Annual VMT {netReduces ? "reduced" : "added"}</div>
+                <div className="v">
+                  {(Math.abs(annualReduced) / 1e6).toFixed(2)}
+                  <span className="u">M mi/yr</span>
+                </div>
+              </div>
+              <div className="c">
+                <div className="lab">{netReduces ? "GHG avoided" : "GHG increase"}</div>
+                <div className="v">
+                  {Math.round(Math.abs(ghgTonnes)).toLocaleString()}
+                  <span className="u">t CO₂e/yr</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="right">
+            <div className="badge-count">{basket.length} strategies selected</div>
+          </div>
+        </div>
+
+        {baselineVmtOverride != null && (
+          <div className="baseline-override-note">
+            <span className="ic">✎</span>
+            <div>
+              <b>
+                Baseline VMT overridden to{" "}
+                {Math.round(baselineVmtOverride).toLocaleString("en-US")} mi/day
+              </b>
+              {baselineVmtNote.trim() && ` — ${baselineVmtNote.trim()}`}
+            </div>
+          </div>
+        )}
+
+        {results.capped_categories.length > 0 && (
+          <div className="cap-note">
+            <span className="ic">!</span>
+            <div>
+              <b>Subsector cap applied</b> to{" "}
+              {results.capped_categories
+                .map((id) => CATEGORIES.find((c) => c.id === id)?.name ?? id)
+                .join(", ")}
+              . Per CAPCOA methodology, combined reductions within a category are capped
+              to prevent double-counting.
+            </div>
+          </div>
+        )}
+
+        <div className="cart-section-head">
+          <h2>Selected strategies</h2>
+          <span className="meta">Click edit to revise inputs for any strategy.</span>
+        </div>
+        {CATEGORIES.map((cat) => {
+          const list = results.per_strategy.filter((p) => p.meta.category === cat.id);
+          if (list.length === 0) return null;
+          return (
+            <div key={cat.id} style={{ marginBottom: 16 }}>
+              <div className="cat-section-head">
+                <span
+                  className="cat-section-ic"
+                  style={{
+                    background: `color-mix(in srgb, ${cat.cssColorVar} 14%, #fff)`,
+                    color: cat.cssColorVar,
+                  }}
+                  aria-hidden="true"
+                >
+                  <CategoryIcon cat={cat.id} size={14} />
+                </span>
+                {cat.name} ({list.length})
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {list.map((p) => (
+                  <div key={p.id} className="cart-line">
+                    <div className="stripe" style={{ background: cat.cssColorVar }} />
+                    <div className="content">
+                      <div className="ln-head">
+                        <span className="nm">{p.meta.displayName}</span>
+                        {p.capped && (
+                          <span style={{
+                            fontSize: 10, color: "var(--cdot-orange-press)",
+                            background: "#FFF1E8", padding: "2px 6px",
+                            borderRadius: 2, fontWeight: 600,
+                          }}>
+                            CAPPED
+                          </span>
+                        )}
+                      </div>
+                      <BasketInputs basket={basket} id={p.id} tazInputs={tazInputs} />
+                    </div>
+                    <div className="right">
+                      {/* Sign follows the computed contribution (positive =
+                          reduction, "−"); keep isInduced only for the warn tint
+                          so capacity strategies stay visually flagged (CMT-06/08). */}
+                      <div className={`contrib ${p.meta.isInduced ? "warn" : ""}`}>
+                        {p.pct_vmt_reduction >= 0 ? "−" : "+"}
+                        {(Math.abs(p.pct_vmt_reduction) * 100).toFixed(2)}
+                        <span className="u">% VMT</span>
+                      </div>
+                      <div className="ln-actions">
+                        <button onClick={() => onEdit(p.id)}>Edit</button>
+                        <button className="rm" onClick={() => onRemove(p.id)}>Remove</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <aside className="cart-side">
+        <div className="card cart-breakdown">
+          <h4>Reduction by category</h4>
+          <div className="cat-row cat-row-head" aria-hidden="true">
+            <span />
+            <span />
+            <span className="col-h">VMT</span>
+          </div>
+          {CATEGORIES.map((cat) => {
+            const list = results.per_strategy.filter((p) => p.meta.category === cat.id);
+            if (list.length === 0) return null;
+            const sumDelta = list.reduce((a, p) => a + p.daily_vmt_reduction, 0);
+            const sumPct = results.baseline_vmt > 0 ? sumDelta / results.baseline_vmt : 0;
+            const capped = list.some((p) => p.capped);
+            return (
+              <div key={cat.id} className={`cat-row ${capped ? "capped" : ""}`}>
+                <span
+                  className="cat-row-ic"
+                  style={{
+                    background: `color-mix(in srgb, ${cat.cssColorVar} 14%, #fff)`,
+                    color: cat.cssColorVar,
+                  }}
+                  aria-hidden="true"
+                >
+                  <CategoryIcon cat={cat.id} size={12} />
+                </span>
+                <span className="nm">
+                  {cat.name} <span className="count">({list.length})</span>
+                </span>
+                <span className="v">
+                  {sumPct >= 0 ? "−" : "+"}{(Math.abs(sumPct) * 100).toFixed(2)}%
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="card cart-cobenefits">
+          <h4>Co-benefits</h4>
+          <div className="co-row">
+            <span className="nm">GHG avoided</span>
+            <span className="v">{Math.round(ghgTonnes).toLocaleString()} t/yr</span>
+          </div>
+          <div className="co-row">
+            <span className="nm">Cars off-road equivalent</span>
+            <span className="v">{Math.round(annualReduced / ANNUAL_VMT_PER_CAR).toLocaleString()}</span>
+          </div>
+        </div>
+
+        <div className="card cart-actions">
+          <h4>Export</h4>
+          <button
+            className="btn-primary"
+            onClick={onExportPdf}
+            disabled={basket.length === 0}
+          >
+            Export PDF report
+          </button>
+          <button
+            className="btn-outline-ca"
+            onClick={() =>
+              downloadResultsCsv(basket, results, tazCount, tazInputs, {
+                baselineVmtOverride,
+                baselineVmtNote,
+              })
+            }
+            disabled={basket.length === 0}
+          >
+            Download CSV
+          </button>
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+function BasketInputs({
+  basket,
+  id,
+  tazInputs,
+}: {
+  basket: BasketEntry[];
+  id: StrategyKey;
+  tazInputs: TazInputs[];
+}) {
+  const entry = basket.find((b) => b.id === id);
+  if (!entry) return null;
+  const meta = getStrategy(id);
+  // Source/justification notes the user entered for modified inputs (CMT-01).
+  // inputNotes is only populated for still-modified, non-empty inputs.
+  const notes = meta.inputs
+    .map((inp) => {
+      const text = entry.inputNotes?.[inp.key]?.trim();
+      return text ? { label: inp.label, text } : null;
+    })
+    .filter((n): n is { label: string; text: string } => n !== null);
+  // Project-context baseline overrides (transit share, AVO, density, parking
+  // price, …) the user pinned for this strategy, plus their "why" narrative
+  // (mirrors inputNotes but for data-derived baselines rather than inputs).
+  // Map each overrideKey → its human label via the strategy's context rows.
+  const overrideRows = deriveContextOverrides(entry, tazInputs);
+  return (
+    <>
+      <div className="ln-params">
+        {meta.inputs.map((inp) => {
+          const v = entry.values[inp.key];
+          const scale = inp.type === "slider" ? inp.scale ?? 1 : 1;
+          const display = typeof v === "number" ? v * scale : v;
+          const suffix =
+            inp.type === "slider" ? inp.suffix ?? "" : inp.type === "number" ? ` ${inp.unit ?? ""}` : "";
+          // Mark params the user changed from the seeded default for this area
+          // (UI-06); derived from the basket entry's seed snapshot.
+          const seeded = entry.seededDefaults?.[inp.key] ?? meta.defaults[inp.key];
+          const modified = !isDefaultValue(v, seeded);
+          return (
+            <span key={inp.key} className={`param${modified ? " modified" : ""}`}>
+              <span className="k">{inp.label}:</span>{" "}
+              <span className="v">
+                {typeof display === "number"
+                  ? display.toLocaleString(undefined, { maximumFractionDigits: 2 })
+                  : display}
+                {suffix}
+              </span>
+              {modified && (
+                <span className="param-mod" title="Changed from default"> ·&nbsp;modified</span>
+              )}
+            </span>
+          );
+        })}
+      </div>
+      {notes.length > 0 && (
+        <div className="ln-justify">
+          <div className="ln-justify-h">Justification for changed inputs</div>
+          {notes.map((n) => (
+            <div className="ln-justify-row" key={n.label}>
+              <span className="k">{n.label}:</span> <span className="t">{n.text}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {overrideRows.length > 0 && (
+        <div className="ln-justify ln-overrides">
+          <div className="ln-justify-h">Project context overrides</div>
+          {overrideRows.map((o) => (
+            <div className="ln-justify-row" key={o.key}>
+              <span className="k">{o.label}:</span>{" "}
+              <span className="v">{o.value}</span>
+              {o.note && <span className="t"> — {o.note}</span>}
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+/**
+ * Build the list of project-context baseline overrides the user pinned on a
+ * basket entry, each resolved to its human label + display-unit value via the
+ * strategy's context rows (so an overrideKey like "transit_mode_share" becomes
+ * "Current transit commute share" and a fraction becomes "12.3%"). Returns []
+ * when the entry carries no overrides. `note` is the optional "why" narrative.
+ */
+function deriveContextOverrides(
+  entry: BasketEntry,
+  tazInputs: TazInputs[],
+): { key: string; label: string; value: string; note?: string }[] {
+  const overrides = entry.contextOverrides;
+  if (!overrides || Object.keys(overrides).length === 0) return [];
+  // Label lookup: the context rows tag each override with the row's label.
+  const rows = getStrategyContext(entry.id, tazInputs, entry.values);
+  const labelByKey = new Map<string, string>();
+  for (const r of rows) {
+    if (r.overrideKey) labelByKey.set(r.overrideKey, r.label);
+  }
+  return Object.entries(overrides)
+    .filter(([, v]) => typeof v === "number" && Number.isFinite(v))
+    .map(([key, v]) => {
+      const format = OVERRIDE_FORMATTERS[key];
+      return {
+        key,
+        label: labelByKey.get(key) ?? key,
+        value: format ? format(v) : String(v),
+        note: entry.contextNotes?.[key]?.trim() || undefined,
+      };
+    });
+}

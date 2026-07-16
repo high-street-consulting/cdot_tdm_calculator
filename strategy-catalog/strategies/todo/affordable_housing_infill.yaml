@@ -1,0 +1,20 @@
+# LU-04 - Infill development / affordable housing  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: affordable_housing_infill
+uid: LU-04
+name: Infill development / affordable housing
+category: landuse
+status: planned
+tags: []
+short_description: Development within existing urban areas, including affordable housing, to reduce travel
+  distances and support transit use.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: 'Tier 2. Sheet: effect size estimation, combined with increased residential density. Python reference
+  exists (strategy_affordable_housing).'

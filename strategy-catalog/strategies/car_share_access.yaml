@@ -1,0 +1,93 @@
+# PK-06 - Access to car share
+# Promoted from strategies/todo. Engine: strategy_carshare (CAPCOA T-21).
+
+id: car_share_access
+uid: PK-06
+name: Carshare
+category: parking
+status: implemented
+tags:
+- program
+- auto
+- urban
+- local-government
+short_description: Availability of shared vehicles for short-term use as an alternative to personal car
+  ownership.
+extended_description: |
+  Carshare programs provide members access to shared vehicles for short-term use, billed by
+  the hour or trip, as an alternative to owning a personal vehicle. By making it practical to
+  live with fewer (or no) household vehicles, carshare nudges members toward transit, walking,
+  biking, and as-needed driving, reducing overall vehicle miles traveled.
+
+  The effect of carshare depends on how many residents join and how readily transit and
+  active modes can serve their everyday trips. Carshare is most effective in compact,
+  mixed-use areas with good transit and parking pressure, where the cost and hassle of car
+  ownership are highest and members can comfortably go car-light or car-free.
+guidance: |
+  Use this strategy where a project supports access to shared vehicles, such as
+  round-trip or one-way carshare pods, dedicated parking, or partnerships with a carshare
+  operator. Carshare works best alongside density, transit, and parking-management
+  strategies.
+images: []
+method: CAPCOA T-21 (structural; constants pending fact-sheet confirmation)
+formula: ΔVMT% = −min(participation_rate × service_area_share × member_vmt_reduction, 10%)
+methodology_detail: |
+  Carshare reduces vehicle miles traveled (VMT) primarily by lowering private vehicle
+  ownership and shifting members toward as-needed vehicle access, transit, and active modes,
+  following CAPCOA
+  [T-21 (Implement Carshare Program)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-21.pdf).
+  The credit is the share of the service-area population who become members times the
+  per-member VMT reduction, capped at the Neighborhood Design subsector maximum (10%):
+
+  `ΔVMT% = −min(participation_rate × service_area_share × member_vmt_reduction, 10%)`
+
+  > **Constants pending confirmation.** The verbatim T-21 equation and its default constants
+  > (member participation rate, per-member VMT reduction, measure maximum) were not captured
+  > during research, and the T-21 fact sheet was unreachable at implementation time. The
+  > participation rate and per-member reduction are **placeholders** exposed in the code
+  > (`CARSHARE_T21`) for recalibration and should be confirmed against the T-21 fact sheet
+  > before the numeric results are relied upon. The structural form is unit-consistent and
+  > the result is bounded by the subsector cap. Outputs flag this assumption.
+
+  **Sources**
+
+  - CAPCOA *Handbook* (2021), Measure
+    [T-21 (Implement Carshare Program)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-21.pdf)
+    (also published as T-21-A Conventional and T-21-B Electric).
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Carshare has a measurable effect mainly in compact, transit-served areas; results use placeholder constants pending CAPCOA T-21 confirmation.
+inputs:
+- key: service_area_share
+  label: Share of area within carshare service area
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 1.0
+  prerequisite: true
+  summary: The share of the area's residents who live within walking distance of a shared vehicle or carshare pod.
+  source_note: your carshare program plan / operator service-area map
+  tooltip: Share of the area's population living within the carshare service area (walking distance of a shared vehicle).
+  instructions: |
+    Estimate the share of the area's residents who live within the carshare service area,
+    roughly walking distance of a shared vehicle or pod. Use 100% if the whole area is
+    served; lower it for a pilot covering only part of the area.
+notes: 'Promoted from todo. CAPCOA T-21; participation_rate and member_vmt_reduction are PLACEHOLDER constants pending fact-sheet confirmation. Closed-form: math lives in the compute block below (no code calc fn). strategy_carshare in scripts/strategy_calculations.py is retained as the cross-check oracle.'
+# Closed-form math (single source of truth). Evaluated identically in Python and the app.
+# Mirrors strategy_carshare. PLACEHOLDER constants; confirm against the T-21 fact sheet.
+compute:
+  pool: all
+  const:
+    participation_rate: 0.02     # PLACEHOLDER: share of service-area residents who join
+    member_vmt_reduction: 0.30   # PLACEHOLDER: per-member VMT reduction fraction
+    measure_max: 0.10            # Neighborhood Design subsector cap (stand-in for measure max)
+  let:
+    - member_pop_share: "participation_rate * service_area_share"
+    - A: "min(member_pop_share * member_vmt_reduction, measure_max)"
+  formula: "-A"

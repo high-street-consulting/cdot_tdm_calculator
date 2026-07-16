@@ -1,0 +1,462 @@
+/* Report view: the printable VMT-reduction report (#/report).
+   On screen it renders as an A4/letter-width "document" preview inside the
+   normal app chrome. In print it takes over the page: all app chrome is
+   hidden and only .report-doc flows, paginated by the browser's print engine
+   (crisp vector text, selectable, multi-page). */
+
+/* ── Screen presentation ─────────────────────────────────────────────── */
+.report-view {
+  background: var(--calcite-color-surface-1, #f7f7f7);
+  padding: 24px 16px 48px;
+  overflow: auto;
+}
+
+.report-toolbar {
+  max-width: 8.5in;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.report-back {
+  background: none;
+  border: none;
+  color: var(--cdot-dark-blue);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 2px;
+}
+.report-back:hover { text-decoration: underline; }
+.report-toolbar .btn-primary {
+  background: var(--cdot-dark-blue);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 2px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.report-toolbar .btn-primary:hover { background: var(--cdot-dark-blue-hover); }
+
+/* The printed "page": letter width on screen for a true preview. */
+.report-doc {
+  max-width: 8.5in;
+  margin: 0 auto;
+  background: #fff;
+  color: #141414;
+  padding: 0.6in 0.55in;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08);
+  font-size: 10.5pt;
+  line-height: 1.45;
+}
+
+/* ── Header / cover band ─────────────────────────────────────────────── */
+.report-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 2px solid var(--cdot-dark-blue);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+.report-logo { height: 44px; width: auto; flex-shrink: 0; }
+.report-overline {
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cdot-dark-blue);
+  font-weight: 700;
+}
+.report-head-text h1 {
+  font-size: 19pt;
+  line-height: 1.2;
+  margin: 2px 0 4px;
+  color: #141414;
+  font-weight: 600;
+}
+.report-meta { font-size: 9.5pt; color: #4a4a4a; }
+
+/* ── Sections ────────────────────────────────────────────────────────── */
+.report-section { margin-bottom: 22px; }
+.report-section-title {
+  font-size: 13pt;
+  font-weight: 600;
+  color: var(--cdot-dark-blue);
+  border-bottom: 1px solid #dedede;
+  padding-bottom: 4px;
+  margin: 0 0 12px;
+}
+.report-sub {
+  font-size: 11pt;
+  font-weight: 600;
+  color: #141414;
+  margin: 14px 0 8px;
+}
+.report-lede {
+  font-size: 10pt;
+  color: #4a4a4a;
+  margin: 0 0 12px;
+}
+.report-empty {
+  font-size: 10pt;
+  color: #6b6b6b;
+  font-style: italic;
+}
+.report-map-wrap {
+  margin: 0 0 14px;
+  /* Keep the project-area map a tidy figure, not a full-page block. */
+  max-width: 560px;
+}
+.report-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+/* ── Results hero ────────────────────────────────────────────────────── */
+.report-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) 2fr;
+  gap: 16px;
+  align-items: center;
+}
+.report-results-hero .report-hero-big {
+  background: var(--cdot-dark-blue);
+  color: #fff;
+  border-radius: 4px;
+  padding: 16px;
+  text-align: center;
+}
+.report-hero-num {
+  font-size: 30pt;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.report-hero-num .u {
+  display: block;
+  font-size: 11pt;
+  font-weight: 600;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+.report-hero-sub {
+  font-size: 9.5pt;
+  opacity: 0.85;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.report-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 0;
+}
+.report-stat-grid > div {
+  border: 1px solid #ebebeb;
+  border-radius: 2px;
+  padding: 8px 10px;
+}
+.report-stat-grid dt {
+  font-size: 8.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b6b6b;
+}
+.report-stat-grid dd {
+  margin: 2px 0 0;
+  font-size: 15pt;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.report-stat-grid dd .u {
+  font-size: 8.5pt;
+  font-weight: 500;
+  color: #6b6b6b;
+  margin-left: 4px;
+}
+.report-cap-note {
+  margin-top: 12px;
+  background: #fdefe0;
+  border-left: 3px solid var(--cdot-orange-press);
+  padding: 8px 12px;
+  font-size: 9.5pt;
+  color: #141414;
+}
+
+/* Project baseline VMT override callout: mirrors .report-cap-note but with the
+   brand-blue accent used for the "overridden" language elsewhere. */
+.report-baseline-override {
+  margin-top: 12px;
+  background: var(--cdot-dark-blue-05, #f2f4f9);
+  border-left: 3px solid var(--cdot-dark-blue, #001970);
+  padding: 8px 12px;
+  font-size: 9.5pt;
+  color: #141414;
+}
+.report-baseline-override b { color: var(--cdot-dark-blue, #001970); }
+.report-baseline-override-note { color: #4A4A4A; font-style: italic; }
+
+/* ── Tables ──────────────────────────────────────────────────────────── */
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9.5pt;
+  margin-bottom: 8px;
+}
+.report-table th,
+.report-table td {
+  text-align: left;
+  padding: 5px 8px;
+  border-bottom: 1px solid #ebebeb;
+  vertical-align: top;
+}
+.report-table thead th {
+  font-size: 8.5pt;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #4a4a4a;
+  border-bottom: 1.5px solid #bfbfbf;
+}
+.report-table tfoot th {
+  font-weight: 700;
+  border-top: 1.5px solid #bfbfbf;
+  border-bottom: none;
+}
+.report-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.report-uid {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--cdot-dark-blue);
+  margin-right: 6px;
+}
+.report-tag {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: var(--cdot-orange-press);
+  background: #fff1e8;
+  padding: 1px 5px;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+/* ── Configured inputs ───────────────────────────────────────────────── */
+.report-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.report-input-block {
+  border: 1px solid #ebebeb;
+  border-radius: 2px;
+  padding: 8px 10px;
+  break-inside: avoid;
+}
+.report-input-name {
+  font-size: 10pt;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.report-input-list { margin: 0; }
+.report-input-list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 9pt;
+  padding: 2px 0;
+  border-bottom: 1px dotted #ebebeb;
+}
+.report-input-list > div:last-child { border-bottom: none; }
+.report-input-list dt { color: #4a4a4a; }
+.report-input-list dd {
+  margin: 0;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.report-input-default {
+  font-size: 9pt;
+  color: #6b6b6b;
+  font-style: italic;
+}
+/* Provenance annotation per configured input (OR-04). Kept print-friendly:
+   plain inline text with weight/colour rather than fills, so it renders
+   cleanly in black-and-white printouts. */
+.report-input-mod,
+.report-input-def {
+  font-weight: 400;
+  font-size: 8pt;
+  margin-left: 4px;
+}
+.report-input-mod { color: var(--cdot-dark-blue, #001970); }
+.report-input-def { color: #9e9e9e; }
+/* Optional source/justification captured for a modified input (CMT-01). Shown
+   as a small left-aligned line under the value for PD 1601 defensibility. */
+.report-input-note {
+  display: block;
+  font-size: 8pt;
+  font-weight: 400;
+  color: #4a4a4a;
+  font-style: italic;
+  text-align: right;
+  margin-top: 2px;
+}
+/* Project-context baseline overrides (transit share, AVO, density, parking
+   price, …) the user pinned for this strategy, documenting WHICH baseline was
+   overridden, to WHAT, and WHY (mirrors the per-input source/justification
+   notes). Print-friendly: a thin top rule rather than a fill. */
+.report-overrides {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dotted #ebebeb;
+}
+.report-overrides-head {
+  font-size: 8pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--cdot-dark-blue, #001970);
+  margin-bottom: 3px;
+}
+
+/* ── Methodology blocks ──────────────────────────────────────────────── */
+.report-method-cat { margin-bottom: 14px; }
+.report-method-cat-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 6px;
+}
+.report-cat-ic {
+  width: 22px;
+  height: 22px;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.report-method-cat-head h3 {
+  font-size: 11pt;
+  font-weight: 600;
+  margin: 0;
+}
+.report-cat-cap {
+  margin-left: auto;
+  font-size: 8pt;
+  color: #6b6b6b;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.report-method-strat {
+  border-left: 2px solid #ebebeb;
+  padding: 4px 0 8px 12px;
+  margin-bottom: 8px;
+  break-inside: avoid;
+}
+.report-method-strat-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.report-method-strat-head h4 {
+  font-size: 10pt;
+  font-weight: 600;
+  margin: 0;
+}
+.report-method-tag {
+  font-size: 8pt;
+  color: #4a4a4a;
+  text-align: right;
+  flex-shrink: 0;
+}
+.report-formula {
+  font-family: var(--calcite-font-family-code);
+  font-size: 8.5pt;
+  background: #f7f7f7;
+  border: 1px solid #ebebeb;
+  border-radius: 2px;
+  padding: 4px 8px;
+  margin: 4px 0;
+  color: #141414;
+  overflow-wrap: anywhere;
+}
+.report-method-detail {
+  font-size: 9pt;
+  color: #4a4a4a;
+  margin: 4px 0 0;
+}
+.report-method-detail p { margin: 4px 0; }
+.report-method-detail a { color: var(--cdot-dark-blue); }
+
+/* ── Footer ──────────────────────────────────────────────────────────── */
+.report-foot {
+  margin-top: 24px;
+  padding-top: 10px;
+  border-top: 1px solid #dedede;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 8pt;
+  color: #6b6b6b;
+}
+
+/* ── Print: report takes over the page ───────────────────────────────── */
+@media print {
+  /* When the report route is active, hide every other app surface. The
+     report route sets data-view="report" on .shop-main-region (App.tsx). */
+  .shop-main-region[data-view="report"] ~ *,
+  .shop-main-region[data-view="report"] .map-host { display: none !important; }
+
+  .report-view {
+    background: #fff !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  .report-toolbar { display: none !important; }
+  .report-doc {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    font-size: 10pt !important;
+  }
+  /* Keep brand ink in print (browsers strip backgrounds by default). */
+  .report-results-hero .report-hero-big,
+  .report-cap-note,
+  .report-baseline-override,
+  .report-formula,
+  .report-cat-ic {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .report-section { break-inside: auto; }
+  .report-section-title { break-after: avoid; }
+  .report-head { break-after: avoid; }
+  .report-input-block,
+  .report-method-strat,
+  .report-map-wrap,
+  .report-table tr { break-inside: avoid; }
+  /* Spell out citation URLs on paper. */
+  .report-method-detail a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #6b6b6b;
+    word-break: break-all;
+  }
+}

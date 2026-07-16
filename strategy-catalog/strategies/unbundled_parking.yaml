@@ -1,0 +1,115 @@
+# PK-04 - Unbundled parking for multifamily housing
+# Promoted from strategies/todo. Engine: strategy_unbundled_parking (CAPCOA T-16).
+
+id: unbundled_parking
+uid: PK-04
+name: Unbundled Parking for Multifamily Housing
+category: parking
+status: planned  # HELD back: not app-wired (YAML method/inputs differ from the Python engine; see reconciliation note)
+tags:
+- pricing
+- developer
+- urban
+- local-government
+short_description: Renting or selling parking spaces separately from housing units.
+extended_description: |
+  Unbundled parking for multifamily housing separates the cost of parking from the cost of
+  renting or purchasing a housing unit. Instead of including parking as part of the housing
+  cost, residents rent or buy parking spaces separately. This saves money for residents who
+  do not have a car, and it reduces the incentive for households to own or store multiple
+  vehicles on site.
+
+  The effect of unbundled parking will vary based on neighborhood context, parking supply,
+  parking pricing, and access to transportation options. It is most effective in areas with
+  strong transit, walking, biking, carshare, or micromobility options, where residents can
+  realistically choose to live car-free or car-light. In areas with limited transportation
+  alternatives or abundant free off-site parking, the VMT reduction potential may be lower
+  unless unbundled parking is paired with other TDM measures.
+guidance: |
+  Use this strategy for multifamily residential projects or policies that price
+  parking separately from housing costs. It is most appropriate where residents have
+  realistic alternatives to owning or using a vehicle, such as transit, walking, biking,
+  carshare, or micromobility. For employee parking pricing or cash-out programs, use
+  [Workplace Parking
+  Pricing](#/strategies/workplace_parking_pricing)
+  or [Parking
+  Cash-Out](#/strategies/parking_cashout)
+  instead.
+images: []
+method: CAPCOA T-16 (parking price-elasticity; 15.7% cap)
+formula: ΔHouseholdVMT% = −clamp(|(charge / reference_cost) × −0.4 × adj|, 0, 15.7%)
+methodology_detail: |
+  Unbundling separates the price of a parking space from the dwelling price, so residents pay
+  for parking only if they keep a vehicle. Revealing the cost lowers car ownership and shifts
+  trips to other modes, reducing household vehicle miles traveled (VMT). Following CAPCOA
+  [T-16 (Unbundle Residential Parking Costs from Property Cost)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-16.pdf),
+  the unbundled charge is a price signal relative to the residents' cost of vehicle
+  ownership, scaled by the parking-demand price elasticity of **−0.4** (Lehner & Peirson
+  2019):
+
+  `ΔVMT% = −(unbundled_parking_charge / reference_cost) × −0.4 × adjustment_factors`
+
+  capped at the **15.7% measure maximum** (confirmed: Caltrans SB 743 Playbook; USDOT 2025).
+
+  **Mandatory condition:** the measure "will not work if free parking is readily available on
+  the street or elsewhere near the housing project." When that is the case, the strategy
+  returns **zero**, because unbundling only changes behavior if residents can't simply park free
+  nearby.
+
+  > **Constants pending confirmation.** The CAPCOA T-16 fact sheet could not be read at
+  > implementation time. The reference-cost denominator (defaulted to the annual vehicle
+  > ownership cost basis) and the adjustment factor are **placeholders** exposed in the code
+  > (`UNBUNDLE_RESIDENTIAL_T16`); confirm against the fact sheet, including whether CAPCOA
+  > uses a fee→reduction lookup table or the closed-form elasticity used here. The 15.7% cap
+  > is confirmed. Outputs flag this.
+
+  **Sources**
+
+  - CAPCOA *Handbook*, Measure
+    [T-16 (Unbundle Residential Parking Costs)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-16.pdf),
+    pp. 126–129.
+  - Caltrans *SB 743 Program Mitigation Playbook* (15.7% cap; free-parking caveat).
+  - Lehner & Peirson (2019), parking price elasticity (−0.4).
+  - USDOT (2025), *Parking Reforms* (~15% figure).
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Effective only where free parking is not readily available nearby and residents have viable non-car options; results use placeholder constants pending CAPCOA T-16 confirmation.
+inputs:
+- key: unbundled_parking_charge
+  label: Annual charge per parking space
+  control: number
+  min: 0
+  step: 100
+  default: 1200
+  unit: $/year
+  prerequisite: true
+  summary: The annual charge a resident will pay for one parking space now priced separately from rent (for example, $100/month = $1,200/year).
+  source_note: your project pro forma / parking pricing policy
+  tooltip: Annual price charged to residents per unbundled parking space (e.g. $100/mo = $1,200/yr).
+  instructions: |
+    Enter the annual charge a resident pays for one parking space, now priced separately from
+    rent (e.g. $100/month = $1,200/year). For reference, bundled garage parking adds roughly
+    $1,700/year to renter housing costs (Gabbe & Pierce 2017). Larger charges produce larger
+    reductions, up to the 15.7% cap.
+- key: free_parking_nearby
+  label: Free parking readily available nearby?
+  control: select
+  default: 'no'
+  options:
+  - value: 'no'
+    label: No, free on-street/off-site parking is not readily available
+  - value: 'yes'
+    label: Yes, free parking is readily available nearby
+  prerequisite: true
+  summary: Whether residents can readily park free on-street or nearby; if so, unbundling has no effect and the estimate returns zero.
+  source_note: your knowledge of on-street and off-site parking near the site
+  tooltip: Required precondition. If free parking is readily available on-street or nearby, the measure does not work and returns zero.
+  instructions: |
+    Choose "Yes" only if residents can readily park free on the street or elsewhere near the
+    project. If so, unbundling has no effect (residents avoid the charge by parking free
+    nearby) and the calculator returns a zero reduction. Choose "No" where parking is
+    genuinely constrained.
+notes: 'Promoted from todo. CAPCOA T-16; reference_cost and adjustment_factors are PLACEHOLDER constants (UNBUNDLE_RESIDENTIAL_T16), cap = 15.7% (confirmed). HOUSEHOLD pool (approximated as all-trip VMT). Mandatory free_parking_nearby precondition zeroes the measure. Engine: strategy_unbundled_parking.'

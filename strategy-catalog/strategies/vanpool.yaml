@@ -1,0 +1,89 @@
+# VP-01 Vanpool
+# Seeded from app/src/strategies/registry.ts. This file is now the source of truth.
+
+id: vanpool
+uid: VP-01
+name: Vanpool
+category: vanpool
+status: implemented
+tags:
+- program
+- vanpool
+- commute
+- employer
+- mpo
+short_description: Employer-supported or regional vanpools that consolidate commute trips into a single
+  high-occupancy vehicle.
+extended_description: |
+  Vanpools organize commuters with similar origins, destinations, and schedules into a
+  shared vehicle, replacing several drive-alone commute trips with one vehicle trip. They
+  are most effective for longer commutes, shift-based worksites, and locations that are
+  not well served by fixed-route transit.
+
+  The effect depends on whether enough commuters have compatible schedules and travel
+  patterns. A vanpool serving a long commute to a major employment site can reduce more
+  vehicle miles than one serving short trips or dispersed schedules, and successful
+  programs require rider matching and reliable vehicle management.
+guidance: |
+  Use this strategy for employer-supported or regional vanpool programs.
+  Enter the share of area commute trips the program can realistically reach and how fully
+  the program is implemented.
+images: []
+method: Effect-size adaptation of TCRP 95 service-miles elasticity, commute scope (cf. CAPCOA T-11)
+formula: Δcommute_VMT% = −%trips_impacted × Δservice × transit_MS × ε × 1/AVO
+methodology_detail: |
+  Each vanpool takes several commuters out of their own cars and into one shared
+  vehicle, reducing commute vehicle miles traveled (VMT). The reduction grows with
+  the share of the area's commute trips the program carries and how fully it is
+  running. The approach mirrors CAPCOA
+  [T-11 (Provide Employer-Sponsored Vanpool)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-11.pdf).
+
+  `Δcommute_VMT% = −%trips_impacted × Δservice × transit_MS × ε × 1/AVO`
+
+  The calculator uses a statewide average of 1.20 people per vehicle (2017 National
+  Household Travel Survey, NHTS). Regional vanpool participation is usually small, so
+  base the share reached on observed local numbers rather than a target.
+applicability: {}
+inputs:
+- key: pct_trips_impacted
+  label: Share of commute trips impacted
+  control: slider
+  min: 0
+  max: 30
+  step: 0.5
+  scale: 100
+  suffix: '%'
+  default: 0.05
+  prerequisite: true
+  summary: The share of the area's commute trips the vanpool program will carry, typically a percent or two; use observed local rates rather than an aspirational target.
+  source_note: observed local vanpool participation (e.g. DRCOG Way to Go rates by region)
+  tooltip: DRCOG Way-to-Go statistics on vanpool participation rates by region.
+  instructions: |
+    Estimate the share of the area's commute trips the vanpool program will carry.
+    Regional participation is typically small (a percent or two), so use observed
+    vanpool rates where you have them (DRCOG's Way to Go program publishes
+    participation by region) rather than an aspirational target.
+- key: pct_service_change
+  label: Service intensity
+  control: slider
+  min: 0
+  max: 200
+  step: 10
+  scale: 100
+  suffix: '%'
+  default: 1.0
+  prerequisite: true
+  summary: How fully the vanpool program will operate, from 10% for a small pilot to 100% for a fully deployed program; this scales the effect without changing commuters reached.
+  source_note: your project scope / program deployment plan
+  tooltip: Fraction of full deployment (10% = pilot, 100% = full program).
+  instructions: |
+    Use this to scale the program from pilot to full deployment: 10% for a small
+    pilot, 100% for a fully operating program. It phases in the effect without
+    changing the share of commuters reached.
+notes: ''
+# Closed-form. Reads imputed transit_mode_share + avo. strategy_vanpool retained as oracle.
+compute:
+  pool: commute
+  const:
+    elasticity: 0.75   # TCRP 95 service-miles midpoint
+  formula: "-pct_trips_impacted * pct_service_change * transit_mode_share * elasticity * (1 / avo)"

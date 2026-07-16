@@ -1,0 +1,120 @@
+# TR-09 Transit shelters
+# New strategy (CAPCOA T-46). No master-sheet stub existed; the related
+# transit_facilities_improvement (TR-05) stub remains in todo. Engine: strategy_transit_shelters.
+
+id: transit_shelters
+uid: TR-09
+name: Transit Shelters
+category: transit
+status: implemented
+tags:
+- infrastructure
+- transit
+- transit-agency
+- local-government
+short_description: Shelters and station amenities that make waiting for transit more comfortable, raising
+  ridership.
+extended_description: |
+  Transit shelters and station improvements (covered seating, lighting, real-time arrival
+  information, and other amenities) make waiting for transit more comfortable and
+  predictable. More attractive stops produce a modest ridership gain, and some of those
+  riders would otherwise have driven, lowering vehicle miles traveled.
+
+  The effect depends on how many stops are improved and on the area's existing transit mode
+  share, and shelters add the most where transit is already a viable option. Shelters are a
+  station-improvement amenity within the broader transit toolkit and are best paired with
+  service-frequency and fare strategies.
+guidance: |
+  Use this strategy for projects that add or upgrade transit shelters and stop
+  amenities. Do not combine it with Bus Rapid Transit where BRT already covers all community
+  routes, since BRT investments already account for station improvements.
+images: []
+method: CAPCOA T-46 (structural; constants pending fact-sheet confirmation)
+formula: ΔVMT% = −clamp(LOI × ridership_uplift × transit_MS × (1/AVO) / vehicle_MS, 0, 15%)
+methodology_detail: |
+  Transit shelters and station improvements raise transit's attractiveness, producing a
+  small ridership gain that converts to a vehicle miles traveled (VMT) reduction through the
+  same ridership-to-VMT machinery as CAPCOA
+  [T-26 (Increase Transit Service Frequency)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf),
+  following Measure
+  [T-46 (Provide Transit Shelters)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-46.pdf):
+
+  `ΔVMT% = −(LOI × ridership_uplift × transit_MS × (1/AVO) / vehicle_MS)`, capped at the 15%
+  Transit subsector maximum.
+
+  The mode-shift factor uses the area's **observed** average vehicle occupancy (1/AVO) rather
+  than the national default, and local transit and vehicle mode shares come from the area
+  data. T-46 is **mutually exclusive with Bus Rapid Transit** where BRT covers all community
+  routes, and turning on that flag zeroes the credit.
+
+  > **Constants pending confirmation.** The verbatim T-46 equation and constants (the
+  > shelter ridership uplift and the measure maximum) were not captured during research and
+  > the fact sheet was unreadable at implementation time. The ridership uplift and measure
+  > maximum are **placeholders** exposed in the code (`TRANSIT_SHELTERS_T46`) for
+  > recalibration and should be confirmed against the T-46 fact sheet before the numeric
+  > results are relied upon. Outputs flag this assumption.
+
+  **Sources**
+
+  - CAPCOA *Handbook* (2021), Measure
+    [T-46 (Provide Transit Shelters)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-46.pdf);
+    conversion machinery from Measure
+    [T-26](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf).
+  - Handy, S., et al. (2013). *Impacts of Transit Service Strategies on Passenger Vehicle Use
+    and GHG Emissions*. CARB.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Shelters add ridership mainly where transit is already viable; results use placeholder constants pending CAPCOA T-46 confirmation.
+inputs:
+- key: level_of_implementation
+  label: Share of stops with shelters/improvements
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 1.0
+  prerequisite: true
+  summary: The share of the area's transit stops or stations that will receive new shelters or amenity improvements. Use 100% for a system-wide program, less for a targeted set.
+  source_note: your project scope / stop-improvement plan
+  tooltip: Share of area transit stops receiving shelters or station improvements.
+  instructions: |
+    Estimate the share of the area's transit stops or stations that will receive new shelters
+    or amenity improvements. Use 100% for a system-wide program; lower it for a targeted set
+    of stops.
+- key: brt_covers_all_routes
+  label: Bus Rapid Transit coverage
+  control: select
+  default: 'no'
+  options:
+  - value: 'no'
+    label: Not BRT, or BRT does not cover all routes
+  - value: 'yes'
+    label: BRT already covers all community routes
+  prerequisite: true
+  summary: Whether Bus Rapid Transit already covers all community routes. If yes, shelters are mutually exclusive with BRT and the credit is zeroed to avoid double-counting.
+  source_note: your area's existing/planned BRT coverage
+  tooltip: If Bus Rapid Transit already covers all community routes, shelters are mutually exclusive with BRT and the credit is zeroed.
+  instructions: |
+    Choose the BRT option only if Bus Rapid Transit already covers all community routes. BRT
+    investments account for station improvements, so crediting shelters too would
+    double-count, and the calculator zeroes the shelter credit in that case.
+notes: 'New strategy (CAPCOA T-46). shelter_ridership_uplift and measure_max are PLACEHOLDER constants pending fact-sheet confirmation. Mutually exclusive with BRT where it covers all routes. Closed-form: math lives in the compute block below (no code calc fn). strategy_transit_shelters in scripts/strategy_calculations.py is retained as the cross-check oracle. brt_covers_all_routes (select yes/no) is coerced to 1/0 by the host.'
+# Closed-form math (single source of truth). Evaluated identically in Python and the app.
+# Mirrors strategy_transit_shelters. Reads imputed transit_mode_share/auto_mode_share/avo.
+# brt_covers_all_routes: select 'yes'/'no' -> coerced to 1/0 by the host (zeroes the credit
+# where BRT already covers all routes, mutually exclusive with T-28).
+compute:
+  pool: all
+  const:
+    shelter_ridership_uplift: 0.0050   # PLACEHOLDER: ridership uplift at improved stops
+    measure_max: 0.15                  # Transit subsector cap (stand-in for measure max)
+  let:
+    - a_raw: "level_of_implementation * shelter_ridership_uplift * transit_mode_share * (1 / avo) / max(auto_mode_share, 0.000000001)"
+    - a: "clamp(a_raw, 0, measure_max)"
+    - credit: "a * (1 - brt_covers_all_routes)"
+  formula: "-credit"

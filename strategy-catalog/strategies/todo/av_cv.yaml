@@ -1,0 +1,19 @@
+# TC-02 - AV & CV readiness  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: av_cv
+uid: TC-02
+name: AV & CV readiness
+category: technology
+status: planned
+tags: []
+short_description: Integration of autonomous and connected vehicle technologies to improve transportation
+  system efficiency and safety.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: Tier 2.

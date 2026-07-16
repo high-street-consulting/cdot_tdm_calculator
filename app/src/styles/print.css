@@ -1,0 +1,150 @@
+/* Print stylesheet: a printer-friendly cart / results one-pager.
+   Hides interactive chrome and decorative effects; flattens the cart
+   layout into a single column with page-break-aware sections. */
+
+@media print {
+  @page { size: letter; margin: 0.6in 0.5in; }
+
+  html, body, .shop-app {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt !important;
+  }
+  .shop-app { display: block !important; }
+
+  /* Hide global chrome: header, basket bar, footer, map */
+  .hdr,
+  .basket-bar,
+  .app-footer,
+  .map-host,
+  .skip-link,
+  .added-banner,
+  .map-tools-overlay,
+  .esri-search,
+  .map-search-host,
+  .map-overlay-top,
+  .map-legend,
+  .map-scale,
+  .map-attr,
+  .detail-back,
+  .commit-bar .commit-actions,
+  .added-banner-progress,
+  .shop-aside { display: none !important; }
+
+  /* Strip the main landmark of its grid pretense */
+  .shop-main-region { display: block !important; }
+
+  /* Cart view: single column, no sticky aside */
+  .cart-view {
+    display: block !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  .cart-main, .cart-side {
+    display: block !important;
+    max-width: none !important;
+    width: 100% !important;
+    position: static !important;
+  }
+
+  /* Print title above hero so the page has an identifying heading */
+  .cart-hero::before {
+    content: "CDOT TDM Calculator: Strategy package";
+    display: block;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #4A4A4A;
+    margin-bottom: 8pt;
+  }
+
+  /* Hero: flatten gradient + decorative bubble for ink economy */
+  .cart-hero, .results-hero {
+    background: #fff !important;
+    color: #000 !important;
+    border: 1pt solid #000 !important;
+    padding: 14pt 16pt !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+  .cart-hero::after, .results-hero::after { display: none !important; }
+  .cart-hero .badge-count { display: none !important; }
+  .cart-hero .big, .results-hero .big {
+    font-size: 36pt !important;
+    color: #000 !important;
+    opacity: 1 !important;
+  }
+  .cart-hero .big .pct, .results-hero .big .pct {
+    font-size: 18pt !important;
+    color: #4A4A4A !important;
+    opacity: 1 !important;
+  }
+  .cart-hero .sub, .results-hero .sub,
+  .cart-hero .ov, h1.ov,
+  .cart-hero .abs-row .c .lab,
+  .cart-hero .abs-row .c .v,
+  .cart-hero .abs-row .c .u {
+    color: #000 !important;
+    opacity: 1 !important;
+  }
+  .cart-hero .abs-row { border-top-color: #BFBFBF !important; }
+
+  /* Cap-note alert: keep visible but ink-light */
+  .cap-note {
+    background: #fff !important;
+    border-left-color: #4A4A4A !important;
+    color: #000 !important;
+    page-break-inside: avoid;
+  }
+
+  /* Cart lines: avoid splitting a strategy across page boundaries */
+  .cart-line {
+    page-break-inside: avoid;
+    background: #fff !important;
+    border-color: #BFBFBF !important;
+    box-shadow: none !important;
+  }
+  .cart-line .stripe { background: #BFBFBF !important; }
+  .cart-line .contrib, .cart-line .contrib.warn {
+    color: #000 !important;
+  }
+
+  /* Section heads */
+  .cart-section-head h2 { color: #000 !important; }
+
+  /* Sidebar cards: show after main column on a printed page */
+  .cart-side .card {
+    page-break-inside: avoid;
+    background: #fff !important;
+    border-color: #BFBFBF !important;
+    box-shadow: none !important;
+    margin-top: 12pt;
+  }
+  .cart-side .card h4 { color: #4A4A4A !important; }
+  .cart-actions { display: none !important; }
+
+  /* Documentation views (methodology, data sources) */
+  .doc-view { padding: 0 !important; background: #fff !important; }
+  .doc-hero, .doc-section {
+    padding: 12pt 0 !important;
+    border-color: #BFBFBF !important;
+  }
+  .doc-hero h1, .doc-section h2, .doc-section h3 { color: #000 !important; }
+  .doc-code, .doc-strat-formula, .doc-table {
+    background: #fff !important;
+    border-color: #BFBFBF !important;
+    color: #000 !important;
+  }
+
+  /* All link URLs spelled out (useful on paper) */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #6B6B6B;
+  }
+
+  /* Avoid splitting headings from their content */
+  h1, h2, h3, h4 { page-break-after: avoid; }
+}

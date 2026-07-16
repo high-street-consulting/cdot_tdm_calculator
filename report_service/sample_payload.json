@@ -1,0 +1,54 @@
+{
+  "title": "TDM Strategy Package — VMT Reduction Report",
+  "generated": "June 4, 2026, 4:30 PM",
+  "taz_count": 2,
+  "strategy_count": 4,
+  "map_alt": "Map of the 2 selected traffic analysis zones in downtown Denver, highlighted over the street network.",
+  "results": {
+    "total_pct": 4.21,
+    "baseline_vmt": 19435,
+    "daily_reduced": 818,
+    "annual_reduced_m": 0.30,
+    "ghg_tonnes": 1172,
+    "cars_equiv": 87,
+    "capped_categories": ["Public Transit"]
+  },
+  "per_strategy": [
+    {
+      "uid": "T-1", "name": "Transit service expansion", "category": "Public Transit",
+      "pct": 2.10, "daily": 408, "annual": 148920, "capped": true,
+      "method": "Elasticity of VMT to transit service",
+      "formula": "ΔVMT% = e_svc × (Δservice_hours / base_service_hours)",
+      "citation_html": "Effect size adapted from the <a href=\"https://www.caleemod.com/\">CAPCOA Handbook</a> (2021), Measure T-1, localized with Colorado transit ridership elasticities.",
+      "inputs": [{"label": "Added annual service hours", "value": "1,200 hr/yr"}, {"label": "Mode", "value": "Local bus"}]
+    },
+    {
+      "uid": "T-19", "name": "Separated bike lanes", "category": "Active Transportation",
+      "pct": 1.05, "daily": 204, "annual": 74460, "capped": false,
+      "method": "Facility-length × bikeable-days demand model",
+      "formula": "ΔVMT = lane_mi × annual_use_days × avg_trip_shift",
+      "citation_html": "Method follows the <a href=\"https://www.caleemod.com/\">CAPCOA Handbook</a> Measure T-19, with NOAA-derived annual bikeable days per TAZ.",
+      "inputs": [{"label": "New separated lane miles", "value": "2.5 mi"}, {"label": "Annual use days", "value": "210 days"}]
+    },
+    {
+      "uid": "T-7", "name": "Parking pricing", "category": "Pricing",
+      "pct": 0.78, "daily": 152, "annual": 55480, "capped": false,
+      "method": "Parking-cost elasticity of vehicle trips",
+      "formula": "ΔVMT% = e_park × (Δdaily_parking_cost / total_trip_cost)",
+      "citation_html": "Elasticity from the <a href=\"https://www.caleemod.com/\">CAPCOA Handbook</a> Measure T-7.",
+      "inputs": [{"label": "Daily parking charge", "value": "$6.00/day"}]
+    },
+    {
+      "uid": "T-5", "name": "Employer commute program", "category": "Commute Programs",
+      "pct": 0.28, "daily": 54, "annual": 19710, "capped": false,
+      "method": "Participation-weighted commute VMT reduction",
+      "formula": "ΔVMT = participants × commute_vmt × shift_factor",
+      "citation_html": "Per the <a href=\"https://www.caleemod.com/\">CAPCOA Handbook</a> Measure T-5.",
+      "inputs": []
+    }
+  ],
+  "tazs": [
+    {"id": "1234", "area_type": "urban_core", "daily_vmt": 15235, "population": 1200, "employment": 3400},
+    {"id": "5678", "area_type": "urban", "daily_vmt": 4200, "population": 880, "employment": 410}
+  ]
+}

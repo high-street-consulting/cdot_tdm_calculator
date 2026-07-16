@@ -1,0 +1,36 @@
+# TR-03 - Mobility hub  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: mobility_hub
+uid: TR-03
+name: Mobility hub
+category: transit
+status: planned
+tags: []
+short_description: A central location where multiple travel modes (transit, bikeshare, micromobility,
+  ride-hailing, etc.) connect seamlessly.
+extended_description: |
+  Mobility hubs connect multiple travel options in a convenient location, such as transit,
+  bikeshare, micromobility, rideshare, carshare, or shuttle services. Mobility hubs can help
+  users transfer between modes, complete first/last-mile connections, and reach destinations
+  that may be difficult to access by one mode alone.
+
+  The effect of a mobility hub will vary based on the number, quality, and usefulness of the
+  services connected through the hub. Mobility hubs are most effective when they link
+  reliable transportation options, serve key origins and destinations, and make transfers
+  between modes simple, visible, and convenient.
+guidance: |
+  Use this strategy for projects that create or improve a location where
+  multiple travel options are intentionally connected, such as transit, bikeshare,
+  scooter-share, carshare, rideshare, shuttles, or secure bike parking. Mobility hubs should
+  be modeled where the hub improves access to useful services or destinations. Avoid
+  double-counting individual mobility components that are also modeled separately unless the
+  inputs are clearly separated.
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: 'Tier 1. Sheet: quantification not recommended (Handy et al. 2025), but a composite-stack Python
+  reference exists (strategy_mobility_hub).'

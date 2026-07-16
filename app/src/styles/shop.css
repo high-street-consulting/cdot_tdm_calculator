@@ -1,0 +1,1454 @@
+/* CDOT TDM Calculator: e-commerce flow styles.
+   Layers over app.css and colors_and_type.css. */
+
+/* Page-level layout. Header (56) + basket bar (64) sit at top. The 3rd row
+   (1fr) holds the active scrolling view (or the persistent map). The 4th
+   row (auto) holds the full-bleed footer when it's visible; the Area
+   view hides the footer so the map fills the rest of the viewport. */
+.shop-app {
+  display: grid;
+  grid-template-rows: 56px 64px 1fr auto;
+  height: 100vh;
+  background: #F7F7F7;
+  min-height: 0;
+  overflow: hidden;
+}
+.shop-app > * { min-height: 0; min-width: 0; }
+.shop-app > .app-footer { grid-row: 4; }
+
+/* <main id="main-content"> sits in row 3 of .shop-app. On the Area
+   route it's a 360 px panel + 1 fr map; on other routes the route's
+   content takes the full width and the map-host is hidden. The
+   data-view attribute is set from the active route in App.tsx. */
+.shop-main-region {
+  display: flex;
+  min-height: 0; min-width: 0;
+  overflow: hidden;
+}
+.shop-main-region > * { min-height: 0; min-width: 0; }
+.shop-main-region > .map-host { flex: 1; overflow: hidden; order: 2; }
+.shop-main-region > .map-host > .map { width: 100%; height: 100%; }
+.shop-main-region > .route-outlet {
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+}
+.shop-main-region > .route-outlet > * { flex: 1; min-height: 0; }
+
+.shop-main-region[data-view="area"] > .route-outlet {
+  flex: 0 0 360px;
+  width: 360px;
+}
+.shop-main-region:not([data-view="area"]) > .map-host { display: none; }
+
+/* ── Top header (minimal, reuses .hdr styling) ───────────────────────── */
+
+/* ── Sticky basket/progress bar ──────────────────────────────────────── */
+.basket-bar {
+  display: grid;
+  /* crumb (its content width) | flexible metrics strip | Start-over.
+     The metrics strip is the shrink track: minmax(0, 1fr) lets it compress
+     below its content's min-content size (a plain 1fr won't) so the stepper
+     and Start-over always fit before the metrics start to squeeze. */
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 20px;
+  padding: 0 24px;
+  box-sizing: border-box;
+  max-width: 100vw;
+  background: #fff;
+  border-bottom: 1px solid #EBEBEB;
+  box-shadow: 0 1px 0 rgba(0,0,0,.02);
+  overflow: hidden;
+}
+/* Grid children that hold text must be allowed to shrink (min-width:auto on a
+   grid item defaults to its content min-size, which, with the nowrap metrics
+   and the widened cart-badge Results tab, forced the row past the viewport and
+   clipped Start-over). Let the metrics strip absorb the squeeze. */
+.basket-bar > * { min-width: 0; }
+.basket-bar .crumb {
+  position: relative;
+  display: flex; align-items: center; gap: 4px;
+  font-size: 14px; color: #6B6B6B;
+  white-space: nowrap;
+  /* A little vertical room so the active-tab underline bar (.tab-indicator,
+     absolutely positioned along the .crumb bottom) has space to sit beneath the
+     pills without being clipped by the bar's overflow:hidden. */
+  padding: 8px 16px 8px 0;
+}
+/* Workflow steps styled as distinct, button-like pills so the (1)→(2)→(3)
+   navigation reads as clickable controls (CMT-16). */
+.basket-bar .crumb .step {
+  position: relative;
+  display: inline-flex; align-items: center; gap: 8px;
+  cursor: pointer; padding: 6px 12px; white-space: nowrap;
+  font: inherit; font-size: 14px; font-weight: 500; color: #4A4A4A;
+  background: #F2F2F2; border: 1px solid #DEDEDE; border-radius: 999px;
+  line-height: 1.2; transition: background .12s, border-color .12s, color .12s, box-shadow .12s;
+}
+.basket-bar .crumb .step:hover:not(:disabled) {
+  background: var(--cdot-dark-blue-05); border-color: var(--cdot-dark-blue-10); color: var(--cdot-dark-blue);
+}
+.basket-bar .crumb .step:focus-visible {
+  outline: 2px solid var(--cdot-dark-blue); outline-offset: 2px;
+}
+.basket-bar .crumb .step:disabled { cursor: not-allowed; opacity: .5; }
+.basket-bar .crumb .step.active {
+  background: var(--cdot-dark-blue); border-color: var(--cdot-dark-blue);
+  color: #fff; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.12);
+}
+.basket-bar .crumb .step.done {
+  background: var(--cdot-green-05, #EAF5EE); border-color: var(--cdot-green-10, #CFE9D9); color: var(--cdot-green);
+}
+/* "Ready to view" call-to-action fill on the (3) Results tab: the CDOT orange
+   accent (same token as the "Add to package" button) so it stands out from the
+   inactive steps and reads as "ready, click me". Only shown when not the
+   active step (the active step keeps its dark-blue fill). */
+.basket-bar .crumb .step.ready {
+  background: var(--cdot-orange-cta); border-color: var(--cdot-orange-cta);
+  color: #fff; font-weight: 600; box-shadow: 0 1px 2px rgba(0,0,0,.12);
+}
+.basket-bar .crumb .step.ready:hover:not(:disabled) {
+  background: var(--cdot-orange-cta-hover); border-color: var(--cdot-orange-cta-hover); color: #fff;
+}
+.basket-bar .crumb .step.ready .n { background: #fff; color: var(--cdot-orange-cta); }
+.basket-bar .crumb .step .n { width: 18px; height: 18px; border-radius: 50%; background: #E0E0E0; color: #6B6B6B; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.basket-bar .crumb .step.active .n { background: #fff; color: var(--cdot-dark-blue); }
+.basket-bar .crumb .step.done .n { background: var(--cdot-green); color: #fff; }
+/* Shopping-cart count on the (3) Results tab: a small cart glyph immediately
+   followed by the basket count, so it reads as "N items in your cart", distinct
+   from the step ordinal ("3"). Pushed to the right end of the tab and fenced off
+   by a subtle vertical divider so the step number and the cart count never sit
+   adjacent as bare digits. Mental model: [ (3) Results | 🛒 1 ]. Inherits the
+   tab's text color (currentColor), so it stays readable on both the orange
+   ready-fill and the normal step background. */
+.basket-bar .crumb .step .cart-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  margin-left: auto; padding-left: 10px;
+  border-left: 1px solid currentColor;
+  /* The divider is a hair too loud at full text color; soften it without
+     affecting the glyph/count (which use full currentColor). */
+  border-left-color: color-mix(in srgb, currentColor 35%, transparent);
+  font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.basket-bar .crumb .step .cart-badge .cart-icon { flex: 0 0 auto; }
+.basket-bar .crumb .step .cart-badge .cart-count { line-height: 1; }
+/* Sliding active-indicator bar: a single accent bar that rests beneath the
+   active step and slides to follow the cursor to whichever step is hovered,
+   reverting to the active step on mouse-out. Its left/width are set inline from
+   JS (measured against the .crumb container); the transition gives the slide.
+   Resting position/appearance matches the old per-step underline (3px orange,
+   inset 12px, 7px below the pill). */
+.basket-bar .crumb .tab-indicator {
+  position: absolute; bottom: 1px; height: 3px;
+  background: var(--cdot-orange); border-radius: 2px 2px 0 0;
+  transition: left .2s ease, width .2s ease;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .basket-bar .crumb .tab-indicator { transition: none; }
+}
+.basket-bar .crumb .sep { color: #C4C4C4; font-size: 14px; margin: 0 2px; }
+
+.basket-bar .area-chip {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 6px 12px; background: var(--cdot-dark-blue-05); border: 1px solid var(--cdot-dark-blue-10); border-radius: 999px;
+  font-size: 14px; color: #141414; cursor: pointer;
+  min-width: 0; max-width: 100%; overflow: hidden;
+  justify-self: start;
+}
+.basket-bar .area-chip:hover { border-color: var(--cdot-dark-blue); }
+.basket-bar .area-chip .pin { width: 22px; height: 22px; border-radius: 50%; background: var(--cdot-dark-blue); color: #fff; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.basket-bar .area-chip .txt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.basket-bar .area-chip .mini { color: #6B6B6B; font-size: 13px; margin-left: 4px; }
+
+.basket-bar .totals {
+  display: flex; align-items: center; gap: 20px;
+  border-left: 1px solid #EBEBEB; padding-left: 20px;
+  white-space: nowrap;
+  /* Shrink track (see .basket-bar grid): when space gets tight the strip
+     compresses: the inter-metric gap tightens and, if still cramped, the
+     leftmost metrics clip here rather than pushing Start-over off-screen. */
+  min-width: 0; overflow: hidden;
+}
+.basket-bar .totals > div { display: flex; flex-direction: column; justify-content: center; flex-shrink: 0; }
+.basket-bar .totals .lab { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: #6B6B6B; font-weight: 700; line-height: 1.2; }
+/* Subtle "(edited)" marker on the BASELINE VMT metric when the project baseline
+   VMT has been overridden. Muted brand blue, non-uppercase, so it reads as a
+   quiet annotation without disrupting the metrics strip. */
+.basket-bar .totals .lab .baseline-edited-tag {
+  margin-left: 4px; text-transform: none; letter-spacing: 0; font-weight: 600;
+  color: var(--cdot-dark-blue); cursor: help;
+}
+.basket-bar .totals .val { font-size: 16px; font-weight: 600; color: #141414; font-variant-numeric: tabular-nums; line-height: 1.1; margin-top: 3px; }
+.basket-bar .totals .val.green { color: var(--cdot-green); }
+.basket-bar .totals .val.warn { color: var(--cdot-orange-press); }
+.basket-bar .totals .val .u { font-size: 12px; color: #6B6B6B; font-weight: 400; margin-left: 3px; }
+/* Narrower desktops: condense the header before it gets tight; tighten the
+   metrics-strip spacing and the bar's outer gap/padding so the stepper, all
+   four metrics, and Start-over keep fitting without clipping. */
+@media (max-width: 1180px) {
+  .basket-bar { gap: 12px; padding: 0 16px; }
+  .basket-bar .totals { gap: 12px; padding-left: 12px; }
+}
+/* One-time highlight when a selection first fills the totals (see BasketBar). */
+@keyframes totals-flash {
+  0%, 25% { background-color: rgba(229, 114, 0, 0.20); }
+  100%    { background-color: transparent; }
+}
+.basket-bar .totals.flash-once { animation: totals-flash 1.5s ease-out 1; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) {
+  .basket-bar .totals.flash-once { animation: none; }
+}
+
+/* "Start over" lives in the top-right slot the "View results" button used to
+   occupy. Neutral/secondary styling (not a call-to-action); the CTA emphasis
+   now lives on the (3) Results tab. Routes through the confirm-reset modal.
+   Only rendered when there's something to reset (see BasketBar). */
+.basket-bar .start-over {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px;
+  background: #fff; color: var(--cdot-dark-blue); border: 1px solid #D4D4D4; border-radius: 2px;
+  font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+  white-space: nowrap;
+  transition: background .12s, border-color .12s, color .12s;
+}
+.basket-bar .start-over:hover { background: var(--cdot-dark-blue-05); border-color: var(--cdot-dark-blue); }
+.basket-bar .start-over:focus-visible { outline: 2px solid var(--cdot-dark-blue); outline-offset: 2px; }
+/* Placeholder occupies the 4th grid column when there's nothing to reset, so
+   the metrics strip doesn't shift when "Start over" appears/disappears. */
+.basket-bar .start-over-placeholder { display: inline-block; }
+
+/* ── Shop layout ─────────────────────────────────────────────────────── */
+.shop-body { display: grid; grid-template-columns: 280px 1fr; overflow: hidden; }
+.shop-aside {
+  background: #fff; border-right: 1px solid #EBEBEB;
+  padding: 20px 18px; overflow-y: auto;
+}
+.shop-aside h4 { margin: 0 0 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: #6B6B6B; font-weight: 700; }
+.shop-aside .cat-nav { display: flex; flex-direction: column; gap: 2px; margin-bottom: 24px; }
+.shop-aside .cat-nav button {
+  display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: center;
+  padding: 8px 10px; background: transparent; border: 0; border-radius: 2px;
+  font-family: inherit; font-size: 15px; color: #141414; text-align: left; cursor: pointer;
+}
+.shop-aside .cat-nav button:hover { background: #F7F7F7; }
+.shop-aside .cat-nav button.on { background: var(--cdot-dark-blue-05); color: var(--cdot-dark-blue); font-weight: 600; }
+.shop-aside .cat-nav button .ic { width: 28px; height: 28px; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.shop-aside .cat-nav button .n { font-size: 13px; color: #6B6B6B; font-variant-numeric: tabular-nums; }
+.shop-aside .cat-nav button.on .n { color: var(--cdot-dark-blue); opacity: .8; }
+
+.shop-aside .filter-box { display: flex; flex-direction: column; gap: 6px; }
+.shop-aside .filter-box label { display: flex; gap: 8px; align-items: center; font-size: 14px; color: #4A4A4A; cursor: pointer; padding: 4px 2px; }
+.shop-aside .filter-box input[type="checkbox"] { accent-color: var(--cdot-dark-blue); }
+.shop-aside-status { margin-top: 14px; font-size: 12px; color: #6B6B6B; line-height: 1.5; }
+.link-btn {
+  background: none; border: 0; padding: 0;
+  color: var(--cdot-dark-blue); font: inherit; font-weight: 600;
+  text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+}
+.link-btn:hover { color: var(--cdot-dark-blue-hover); }
+
+/* ── Shop main (product grid) ────────────────────────────────────────── */
+.shop-main { overflow-y: auto; padding: 24px 32px; }
+/* In detail view, pull padding-top to 0 so the sticky bar's clip boundary and
+   top:0 anchor are the same pixel; prevents content from showing above the bar */
+.shop-main:has(.shop-detail) { padding-top: 0; }
+.shop-head { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 20px; }
+.shop-head h1 { margin: 0; font-size: 28px; font-weight: 600; color: #141414; letter-spacing: -0.02em; line-height: 1.2; }
+/* Full-width subhead (no narrow column constraint), CMT-18. */
+.shop-head .sub { font-size: 14px; color: #6B6B6B; margin-top: 4px; width: 100%; max-width: none; line-height: 1.5; }
+.shop-head .sort { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #4A4A4A; }
+.shop-head select { padding: 6px 10px; border: 1px solid #D4D4D4; border-radius: 2px; font-family: inherit; font-size: 14px; background: #fff; }
+
+.shop-search {
+  display: flex; align-items: center; gap: 8px;
+  background: #fff; border: 1px solid #D4D4D4; border-radius: 2px;
+  padding: 8px 12px; margin-bottom: 18px; max-width: 520px;
+}
+.shop-search input { flex: 1; border: 0; outline: 0; font-family: inherit; font-size: 15px; color: #141414; background: transparent; }
+.shop-search .ic { color: #6B6B6B; display: inline-flex; }
+.shop-search-clr {
+  width: 24px; height: 24px;
+  border: 0; background: transparent; color: #6B6B6B;
+  cursor: pointer; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px; line-height: 1;
+}
+.shop-search-clr:hover { background: #F2F2F2; color: #141414; }
+
+/* Empty state when search / filter yields no strategy cards */
+.shop-empty {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: 56px 24px;
+  background: #fff; border: 1px dashed #D4D4D4; border-radius: 2px;
+  color: #4A4A4A;
+}
+.shop-empty-icon { color: #9E9E9E; margin-bottom: 12px; }
+.shop-empty h2 { margin: 0 0 6px; font-size: 18px; font-weight: 600; color: #141414; line-height: 1.3; }
+.shop-empty p { margin: 0 0 16px; font-size: 14px; max-width: 420px; line-height: 1.5; color: #6B6B6B; }
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  padding-bottom: 40px;
+}
+
+.product-card {
+  background: #fff; border: 1px solid #EBEBEB; border-radius: 2px;
+  display: flex; flex-direction: column;
+  cursor: pointer; transition: border-color .12s, box-shadow .12s, transform .12s;
+  position: relative; overflow: hidden;
+}
+.product-card:hover { border-color: var(--cdot-dark-blue); box-shadow: 0 4px 12px rgba(0,25,112,.08); transform: translateY(-1px); }
+.product-card:focus-visible { outline: 2px solid var(--cdot-dark-blue); outline-offset: 2px; border-color: var(--cdot-dark-blue); }
+.product-card.in-basket { border-color: var(--cdot-green); background: #F6FBF5; }
+/* Induced strategies: keep card neutral (orange text only via .metric.warn) */
+
+.product-card .band { height: 6px; flex-shrink: 0; }
+
+.product-card .body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.product-card .name-row { display: flex; align-items: flex-start; gap: 8px; }
+.product-card .name { font-size: 16px; font-weight: 600; color: #141414; line-height: 1.3; flex: 1; min-width: 0; }
+.product-card .tier-pill {
+  flex-shrink: 0;
+  font-size: 10px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700;
+  padding: 3px 6px;
+  background: var(--cdot-dark-blue-05);
+  color: var(--cdot-dark-blue);
+  border-radius: 2px;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+.product-card .in-basket-dot {
+  flex-shrink: 0;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: var(--cdot-green); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+.product-card .desc { font-size: 13px; color: #595959; line-height: 1.5; flex: 1; }
+.product-card .desc-row { display: flex; align-items: flex-start; gap: 12px; flex: 1; }
+.product-card .desc-row .desc { flex: 1; min-width: 0; }
+.product-card .desc-row .metric {
+  flex-shrink: 0;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-left: 8px;
+  border-left: 1px solid #EBEBEB;
+}
+.product-card .desc-row .metric .metric-val {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--cdot-green);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.product-card .desc-row .metric .metric-val .u { font-size: 14px; font-weight: 500; margin-left: 1px; }
+.product-card .desc-row .metric.warn .metric-val { color: var(--cdot-orange-press); }
+.product-card .desc-row .metric .metric-lab {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #6B6B6B;
+  font-weight: 700;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+
+.impact-bar-wrap { padding-top: 6px; border-top: 1px dashed #EBEBEB; }
+.impact-bar-wrap .lbl { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: #6B6B6B; margin-bottom: 4px; }
+.impact-bar-wrap .lbl b { color: #141414; font-weight: 600; }
+.impact-bar {
+  position: relative; height: 20px; background: #F2F2F2; border-radius: 2px; overflow: hidden;
+}
+.impact-bar .range {
+  position: absolute; top: 0; bottom: 0;
+  background: linear-gradient(90deg, var(--cdot-green-10), var(--cdot-green));
+  border-radius: 2px;
+}
+.impact-bar.warn .range { background: linear-gradient(90deg, var(--cdot-orange-10), var(--cdot-orange)); }
+.impact-bar .mid {
+  position: absolute; top: 1px; bottom: 1px; width: 2px; background: #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.2);
+}
+.impact-bar .tick { position: absolute; top: 100%; transform: translateX(-50%); font-size: 11px; color: #6B6B6B; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+.product-card .card-meta { display: flex; gap: 12px; font-size: 12px; color: #6B6B6B; margin-top: 6px; }
+.product-card .card-meta .pill { display: inline-flex; align-items: center; gap: 4px; }
+.product-card .card-meta .pill .ic { color: var(--cdot-dark-blue); }
+
+/* ── Detail view (replaces product grid; takes over shop-main) ──────────
+   Redesign: a two-column workspace. The "← Back" link and the .detail-grid are
+   the direct children of .shop-detail, both capped to the page max-width and
+   centered. The grid holds the workflow (left) and a sticky right rail. */
+.shop-detail { overflow-y: auto; padding: 8px 32px 32px; }
+.shop-detail > .detail-back,
+.shop-detail > .detail-grid { max-width: 1180px; margin-left: auto; margin-right: auto; }
+.shop-detail .detail-back { display: inline-flex; align-items: center; gap: 6px; background: transparent; border: 0; font-family: inherit; font-size: 14px; color: var(--cdot-dark-blue); cursor: pointer; padding: 6px 0; margin-bottom: 8px; }
+.shop-detail .detail-back:hover { text-decoration: underline; }
+
+/* Two-column grid: workflow (1fr) + sticky rail (344px). */
+.shop-detail .detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 344px;
+  gap: 24px;
+  align-items: start;
+}
+.shop-detail .detail-main {
+  display: flex; flex-direction: column; gap: 16px;
+  min-width: 0;
+}
+.shop-detail .detail-rail {
+  position: sticky; top: 16px;
+  display: flex; flex-direction: column; gap: 14px;
+  min-width: 0;
+  /* When the rail's content is taller than the viewport it scrolls internally
+     (instead of clipping the bottom rows) while staying sticky. Height budget =
+     viewport minus the sticky top (16px) plus a little breathing room. */
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+}
+
+/* Shared section subhead + overline helpers used across the new sections. */
+.shop-detail .section-sub { font-size: 13px; color: #6B6B6B; line-height: 1.5; margin-bottom: 16px; }
+.shop-detail .overline {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #6B6B6B;
+}
+
+/* Bordered "↗ label" resource link button (opens in a new tab). */
+.shop-detail .resource-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; background: #fff; border: 1px solid var(--cdot-dark-blue);
+  color: var(--cdot-dark-blue); border-radius: 2px;
+  font-size: 13px; font-weight: 600; text-decoration: none;
+  max-width: 100%;
+}
+.shop-detail .resource-link.sm { padding: 5px 11px; font-size: 12px; }
+.shop-detail .resource-link:hover { background: var(--cdot-dark-blue-05); }
+
+/* ── Hero ──────────────────────────────────────────────────────────── */
+.shop-detail .dhero {
+  background: #fff; border: 1px solid #EBEBEB; border-radius: 2px; padding: 26px 30px;
+  /* Contain the floated .band-panel so the card wraps its full height. */
+  display: flow-root;
+}
+/* The band panel FLOATS left; the title + short description + extended
+   description are normal-flow siblings after it. Text sits beside the panel and
+   wraps full-width beneath it once it outruns the panel's height, so there is
+   never a dead gap next to the panel when the title + short description are
+   short. `.dhero` is a flow-root so the card contains the float. */
+.shop-detail .dhero .band-panel {
+  float: left; width: 210px;
+  margin: 0 18px 12px 0;
+  background: var(--cdot-dark-blue); color: #fff; border-radius: 2px; padding: 22px 20px;
+  min-height: 150px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  /* overflow: visible so the cap-pill's `.info-i` tooltip can escape the panel.
+     The bleeding imagery (photo cover + glyph watermark) is clipped by the
+     inner `.band-clip` wrapper instead — see below. */
+  position: relative; overflow: visible;
+}
+/* Inner clip layer: absolutely fills the panel and rounds to match it, then
+   clips the photo cover and the bled-off glyph watermark. Sits behind the text
+   (z-index 0); the `.band-panel > *` rule below would otherwise bump it to 1. */
+.shop-detail .dhero .band-panel .band-clip {
+  position: absolute; inset: 0; z-index: 0;
+  border-radius: inherit; overflow: hidden;
+}
+/* Normal flow (NOT a new BFC) so its text wraps beside the floated panel and
+   continues under it. min-width:0 guards long unbreakable tokens from forcing
+   overflow. */
+.shop-detail .dhero .dhero-body { min-width: 0; }
+/* Figures sit full-width below the whole hero (clear the floated panel). */
+.shop-detail .dhero .strategy-figs { clear: both; }
+.shop-detail .dhero .band-panel::before {
+  content: ""; position: absolute; inset: 0;
+  /* Round to match the panel: the panel is now overflow: visible, so the scrim
+     no longer inherits the panel's corner clip. */
+  border-radius: inherit;
+  background: radial-gradient(ellipse at 100% 0%, rgba(255,255,255,.14), transparent 55%);
+}
+.shop-detail .dhero .band-panel > * { position: relative; z-index: 1; }
+.shop-detail .dhero .band-panel .sku { font-family: var(--calcite-font-family-code); font-size: 12px; opacity: .82; letter-spacing: .04em; }
+.shop-detail .dhero .band-panel .cat-name { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-top: 8px; opacity: .92; }
+.shop-detail .dhero .band-panel .cap-pill {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 6px 4px 10px; border-radius: 999px;
+  background: rgba(255,255,255,.2); font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .05em; margin-top: 12px;
+}
+/* Info cue on the dark-blue band: reuse the .info-i tooltip idiom but recolor
+   the badge so it stays legible on the panel (the default gray→dark-blue hover
+   would vanish here). Slightly smaller to sit neatly inside the pill; the
+   tooltip surface keeps its own dark-blue background so its white text reads
+   regardless of the panel behind it. */
+.shop-detail .dhero .band-panel .cap-pill .cap-info {
+  width: 20px; height: 20px; padding: 0; flex-shrink: 0;
+  background: rgba(255,255,255,.28); color: #fff;
+  text-transform: none; letter-spacing: 0; cursor: help;
+}
+.shop-detail .dhero .band-panel .cap-pill .cap-info:hover,
+.shop-detail .dhero .band-panel .cap-pill .cap-info:focus-visible {
+  background: #fff; color: var(--cdot-dark-blue);
+}
+
+/* ── Hero imagery ──────────────────────────────────────────────────────
+   When a strategy/category image exists it fills the band as a cover layer
+   (z-index 0, behind the text at z-index 1). A #001970 scrim keeps the white
+   SKU/category/cap-pill text legible (AA). No image → the category glyph sits
+   on the solid blue band. Both degrade gracefully (neither → plain blue). */
+.shop-detail .dhero .band-panel .band-img {
+  position: absolute; inset: 0; z-index: 0;
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+}
+/* Dark-blue scrim over the photo so the overlaid text stays high-contrast:
+   heavier at the top (SKU/category) and bottom (cap pill), lighter mid-image.
+   Layering: .band-img (z 0) → scrim ::before (z 1) → text content (z 2). */
+.shop-detail .dhero .band-panel.has-img::before {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(0,25,112,.86) 0%, rgba(0,25,112,.42) 45%, rgba(0,25,112,.82) 100%),
+    radial-gradient(ellipse at 100% 0%, rgba(255,255,255,.12), transparent 55%);
+}
+/* Raise the SKU/category/cap-pill text above the scrim (the image sits below). */
+.shop-detail .dhero .band-panel.has-img > .band-top,
+.shop-detail .dhero .band-panel.has-img > .cap-pill { z-index: 2; }
+/* Category glyph as a subtle branded watermark: out of flow, tucked into the
+   panel's bottom-right corner and partly bled off the edge (the inner
+   `.band-clip` wrapper clips it via overflow: hidden), at a low opacity. This
+   keeps the imagery the user wants without a big washed-out icon floating in
+   the panel's empty middle — the SKU/category and cap pill keep the panel's
+   normal space-between rhythm. */
+.shop-detail .dhero .band-panel .band-glyph {
+  position: absolute; z-index: 0; right: -20px; bottom: -20px;
+  color: #fff; opacity: .12; pointer-events: none;
+  display: flex; align-items: center; justify-content: center; margin: 0;
+}
+.shop-detail .dhero .dhero-body h1 { margin: 0 0 8px; font-size: 27px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+.shop-detail .dhero .dhero-body .desc { font-size: 15px; color: #4A4A4A; line-height: 1.5; }
+
+/* ── Sections ──────────────────────────────────────────────────────── */
+.shop-detail .dsection {
+  background: #fff; border: 1px solid #EBEBEB; border-radius: 2px; padding: 24px 30px;
+}
+.shop-detail .dsection h3 { margin: 0 0 4px; font-size: 18px; font-weight: 600; color: #141414; letter-spacing: -0.01em; }
+.shop-detail .dsection.configure-section > h3 { margin-bottom: 16px; }
+
+/* Input configuration */
+.shop-detail .inputs-grid { display: flex; flex-direction: column; gap: 16px; }
+.shop-detail .input-item {
+  background: #F7F7F7;
+  border: 1px solid #E8E8E8;
+  border-radius: 6px;
+  padding: 16px 18px;
+}
+.shop-detail .input-item .row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.shop-detail .input-item label { font-size: 15px; font-weight: 600; color: #141414; display: flex; align-items: center; gap: 6px; }
+.shop-detail .input-item .val-display { font-family: var(--calcite-font-family-code); font-size: 16px; font-weight: 600; color: var(--cdot-dark-blue); font-variant-numeric: tabular-nums; }
+.shop-detail .input-item input[type="range"] { width: 100%; accent-color: var(--cdot-dark-blue); margin: 10px 0 2px; }
+.shop-detail .input-item input[type="number"] { width: 100%; padding: 8px 10px; border: 1px solid #BEBEBE; border-radius: 2px; font-family: var(--calcite-font-family-code); font-size: 15px; background: #fff; }
+.shop-detail .input-item input[type="number"]:focus { outline: 2px solid var(--cdot-dark-blue); outline-offset: -1px; border-color: var(--cdot-dark-blue); }
+.shop-detail .input-item .range-lbls { display: flex; justify-content: space-between; font-size: 12px; color: #9E9E9E; font-variant-numeric: tabular-nums; margin-top: 2px; }
+.shop-detail .input-item .src { font-size: 12px; color: #6B6B6B; margin-top: 6px; font-style: italic; }
+
+/* Provenance: flag inputs the user has changed from the system default (UI-06). */
+.shop-detail .input-item.is-modified { border-color: var(--cdot-dark-blue); }
+.shop-detail .input-item .label-wrap {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+.shop-detail .input-item .prov {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+}
+.shop-detail .input-item .prov-chip {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--cdot-dark-blue);
+  background: color-mix(in srgb, var(--cdot-dark-blue) 12%, #fff);
+  border: 1px solid color-mix(in srgb, var(--cdot-dark-blue) 30%, #fff);
+  border-radius: 999px;
+  padding: 1px 8px;
+  line-height: 1.6;
+}
+.shop-detail .input-item .prov-reset {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--cdot-dark-blue);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.shop-detail .input-item .prov-reset:hover { color: var(--cdot-orange-press, #b34a00); }
+.shop-detail .input-item .prov-reset:focus-visible {
+  outline: 2px solid var(--cdot-dark-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Optional source/justification note, shown only for a modified input (CMT-01). */
+.shop-detail .input-item .prov-note { margin-top: 8px; }
+.shop-detail .input-item .prov-note label {
+  display: block; font-size: 12px; font-weight: 600; color: #4A4A4A; margin-bottom: 4px;
+}
+.shop-detail .input-item .prov-note-input {
+  width: 100%; padding: 6px 8px; border: 1px solid #BEBEBE; border-radius: 2px;
+  font-family: inherit; font-size: 13px; color: #141414; background: #fff;
+  resize: vertical; line-height: 1.4;
+}
+.shop-detail .input-item .prov-note-input:focus {
+  outline: 2px solid var(--cdot-dark-blue); outline-offset: -1px; border-color: var(--cdot-dark-blue);
+}
+.shop-detail .input-item .prov-note-input::placeholder { color: #9E9E9E; }
+.shop-detail .input-item .prov-note label .info-i { vertical-align: middle; }
+.shop-detail .input-item .prov-note-hint {
+  margin-top: 4px; font-size: 11px; color: #6B6B6B; line-height: 1.4;
+}
+
+/* No project area selected: the Configure controls are disabled (adjusting them
+   does nothing with a 0-VMT baseline). A friendly hint explains why, and the
+   input blocks read as intentionally muted rather than broken. */
+.shop-detail .configure-section .configure-hint {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  background: color-mix(in srgb, var(--cdot-dark-blue) 6%, #fff);
+  border: 1px solid color-mix(in srgb, var(--cdot-dark-blue) 22%, #fff);
+  border-radius: 6px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #2A2A2A;
+}
+.shop-detail .configure-section .configure-hint .ic {
+  flex: none;
+  width: 18px; height: 18px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px;
+  background: var(--cdot-dark-blue);
+  color: #fff;
+  font-size: 11px; font-weight: 700; font-style: normal;
+  font-family: var(--calcite-font-family-code, inherit);
+  line-height: 1;
+}
+.shop-detail .configure-section .configure-hint b { color: #141414; }
+.shop-detail .configure-hint-link {
+  display: inline-block;
+  margin-top: 4px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--cdot-dark-blue);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.shop-detail .configure-hint-link:hover { color: var(--cdot-orange-press, #b34a00); }
+.shop-detail .configure-hint-link:focus-visible {
+  outline: 2px solid var(--cdot-dark-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Disabled input block: muted, non-interactive, but still readable so the help
+   text and value stay legible. Labels/help keep near-full opacity; only the
+   interactive chrome dims + shows the not-allowed cursor. */
+.shop-detail .input-item.is-disabled { opacity: 0.72; }
+.shop-detail .input-item.is-disabled label { color: #4A4A4A; }
+.shop-detail .input-item.is-disabled .val-display { color: #6B6B6B; }
+.shop-detail .input-item.is-disabled input[type="range"],
+.shop-detail .input-item.is-disabled input[type="number"],
+.shop-detail .input-item.is-disabled select {
+  cursor: not-allowed;
+  color: #6B6B6B;
+}
+.shop-detail .input-item.is-disabled input[type="range"] { accent-color: #9E9E9E; }
+.shop-detail .input-item.is-disabled input[type="number"],
+.shop-detail .input-item.is-disabled select {
+  background: #F0F0F0;
+  border-color: #D6D6D6;
+}
+.shop-detail .input-item.is-disabled .prov-reset,
+.shop-detail .input-item.is-disabled .prov-note-input {
+  cursor: not-allowed;
+}
+.shop-detail .input-item.is-disabled .prov-reset:disabled {
+  color: #9E9E9E;
+  text-decoration: none;
+}
+.shop-detail .input-item.is-disabled .prov-note-input:disabled {
+  background: #F0F0F0;
+  border-color: #D6D6D6;
+  color: #6B6B6B;
+}
+
+/* Methodology section */
+.shop-detail .method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.shop-detail .method-grid .block .k { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: #6B6B6B; font-weight: 700; margin-bottom: 4px; }
+.shop-detail .method-grid .block .v { font-size: 14px; color: #141414; line-height: 1.5; }
+.shop-detail .formula-box { background: #F7F7F7; border-left: 3px solid var(--cdot-dark-blue); padding: 14px 18px; margin-top: 12px; font-family: var(--calcite-font-family-code); font-size: 14px; color: #141414; line-height: 1.6; border-radius: 0 2px 2px 0; overflow-x: auto; }
+
+/* ── Applicability section (absorbs Guidance) ──────────────────────── */
+.shop-detail .applicability-section .applic-context {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;
+}
+.shop-detail .context-chip {
+  display: inline-flex; padding: 4px 11px; border-radius: 999px;
+  background: #E8F0EA; color: var(--cdot-green); font-size: 13px; font-weight: 600;
+}
+.shop-detail .applic-warn {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 12px 14px; background: var(--cdot-orange-10);
+  border-left: 3px solid var(--cdot-orange); border-radius: 0 2px 2px 0;
+  margin-bottom: 18px;
+}
+.shop-detail .applic-warn .ic {
+  flex-shrink: 0; width: 18px; height: 18px; margin-top: 1px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--cdot-orange); color: #fff; border-radius: 50%;
+  font-weight: 700; font-size: 12px;
+}
+.shop-detail .applic-warn > div { font-size: 13px; color: #141414; line-height: 1.5; }
+.shop-detail .applic-warn b { color: var(--cdot-dark-blue); }
+.shop-detail .applic-guidance { border-top: 1px solid #EBEBEB; padding-top: 16px; }
+.shop-detail .applic-guidance .overline { display: block; margin-bottom: 6px; }
+.shop-detail .applic-guidance-body { font-size: 14px; color: #4A4A4A; }
+.shop-detail .applic-guidance-body p { margin: 0; }
+
+/* ── What you'll need (prerequisite checklist) ─────────────────────── */
+.shop-detail .whatyouneed-section {
+  border: 1px solid var(--cdot-dark-blue);
+  border-top-width: 3px;
+}
+.shop-detail .whatyouneed-section > h3 { color: var(--cdot-dark-blue); }
+.shop-detail .wyn-list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.shop-detail .wyn-item { display: grid; grid-template-columns: 28px 1fr; gap: 14px; align-items: start; }
+.shop-detail .wyn-badge {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--cdot-dark-blue); color: #fff; font-size: 14px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+.shop-detail .wyn-body { min-width: 0; }
+.shop-detail .wyn-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.shop-detail .wyn-label { font-size: 15px; font-weight: 600; color: #141414; }
+.shop-detail .wyn-chip {
+  font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--cdot-orange-cta); background: var(--cdot-orange-10);
+  border-radius: 999px; padding: 2px 8px;
+}
+.shop-detail .wyn-summary { font-size: 13px; color: #4A4A4A; line-height: 1.55; margin-top: 4px; }
+.shop-detail .wyn-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.shop-detail .wyn-source { font-size: 12px; color: #6B6B6B; margin-top: 6px; }
+.shop-detail .wyn-reassure {
+  margin-top: 18px; display: flex; gap: 9px; align-items: flex-start;
+  padding: 11px 14px; background: var(--cdot-dark-blue-05); border-radius: 2px;
+}
+.shop-detail .wyn-reassure .ic { flex-shrink: 0; color: var(--cdot-green); font-weight: 700; margin-top: -1px; }
+.shop-detail .wyn-reassure > div { font-size: 13px; color: #4A4A4A; line-height: 1.5; }
+.shop-detail .wyn-reassure b { color: #141414; }
+
+/* ── Always-open per-input help ("How to find this value") ─────────── */
+.shop-detail .input-item .howto-open {
+  margin-top: 10px;
+  background: var(--cdot-dark-blue-05); border-left: 3px solid var(--cdot-dark-blue);
+  border-radius: 0 2px 2px 0; padding: 11px 14px;
+}
+.shop-detail .input-item .howto-open-head {
+  font-size: 12px; font-weight: 700; color: var(--cdot-dark-blue); margin-bottom: 4px;
+}
+.shop-detail .input-item .howto-open .md-help { font-size: 13px; color: #4A4A4A; }
+.shop-detail .input-item .howto-open .md-help p { margin: 0 0 6px; }
+.shop-detail .input-item .howto-open .md-help > :last-child { margin-bottom: 0; }
+.shop-detail .input-item .howto-open-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.shop-detail .input-item .prov-note { margin-top: 10px; }
+
+/* ── Commit bar (live impact echo + add/update action) ─────────────── */
+.commit-bar {
+  background: #fff; border: 1px solid var(--cdot-dark-blue); border-radius: 2px;
+  padding: 18px 22px;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 12px rgba(0,25,112,.09);
+}
+.commit-bar .commit-impact { min-width: 0; }
+.commit-bar .commit-figure { display: flex; align-items: baseline; gap: 10px; margin-top: 3px; flex-wrap: wrap; }
+.commit-bar .commit-pct {
+  font-size: 26px; font-weight: 600; letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums; line-height: 1;
+}
+.commit-bar .commit-caption { font-size: 14px; color: #4A4A4A; }
+.commit-bar .commit-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+.commit-bar .commit-buttons { display: flex; gap: 10px; align-items: center; }
+.commit-bar .commit-help { font-size: 12px; color: #9E9E9E; text-align: right; }
+.commit-bar .btn-add {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 28px; background: var(--cdot-orange-cta); color: #fff;
+  border: 0; border-radius: 2px; font-family: inherit; font-size: 16px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+}
+.commit-bar .btn-add:hover { background: var(--cdot-orange-cta-hover); }
+.commit-bar .btn-add.added { background: var(--cdot-orange-cta); }
+.commit-bar .btn-rm {
+  padding: 12px 16px; background: transparent; color: #A12B24;
+  border: 1px solid #EBEBEB; border-radius: 2px; font-family: inherit; font-size: 15px; cursor: pointer;
+  white-space: nowrap;
+}
+.commit-bar .btn-rm:hover { background: #FCF2F2; border-color: #A12B24; }
+
+/* ── Sticky right rail cards ───────────────────────────────────────── */
+.shop-detail .rail-card {
+  background: #fff; border: 1px solid #EBEBEB; border-radius: 2px; padding: 20px;
+}
+.shop-detail .impact-card { box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+.shop-detail .impact-big {
+  font-size: 42px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.05;
+  margin-top: 4px; font-variant-numeric: tabular-nums;
+}
+.shop-detail .impact-sub { font-size: 13px; color: #6B6B6B; margin-top: 2px; }
+.shop-detail .impact-divider { border-top: 1px solid #EBEBEB; margin-top: 16px; padding-top: 14px; }
+.shop-detail .impact-annual {
+  font-size: 22px; font-weight: 600; color: #141414; margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.shop-detail .impact-annual .u { font-size: 13px; color: #6B6B6B; font-weight: 400; margin-left: 4px; }
+.shop-detail .impact-baseline { font-size: 11px; color: #9E9E9E; margin-top: 2px; }
+
+.shop-detail .ctx-card .ctx-title { display: block; }
+.shop-detail .ctx-card .ctx-sub { font-size: 12px; color: #9E9E9E; line-height: 1.45; margin: 4px 0 14px; }
+.shop-detail .ctx-card .ctx-list { display: flex; flex-direction: column; gap: 12px; }
+.shop-detail .ctx-card .ctx-item {
+  border-bottom: 1px solid #F2F2F2; padding-bottom: 12px;
+}
+.shop-detail .ctx-card .ctx-item:last-child { border-bottom: 0; padding-bottom: 0; }
+.shop-detail .ctx-card .ctx-item.unavailable { opacity: .7; }
+.shop-detail .ctx-card .ctx-label {
+  font-size: 13px; color: #6B6B6B; text-transform: none; letter-spacing: normal; font-weight: 400;
+}
+.shop-detail .ctx-card .ctx-value {
+  font-size: 18px; font-weight: 600; color: #141414;
+  font-variant-numeric: tabular-nums; display: inline-flex; align-items: baseline; gap: 4px;
+}
+.shop-detail .ctx-card .ctx-item.unavailable .ctx-value { color: #9E9E9E; font-weight: 500; font-size: 14px; }
+.shop-detail .ctx-card .ctx-unit { font-size: 13px; font-weight: 400; color: #6B6B6B; }
+.shop-detail .ctx-card .ctx-projected {
+  font-size: 13px; color: var(--cdot-green); font-weight: 600;
+  font-variant-numeric: tabular-nums; margin-top: 2px;
+}
+.shop-detail .ctx-card .ctx-source { font-size: 11px; color: #9E9E9E; line-height: 1.4; margin-top: 2px; }
+
+/* ── Per-strategy project-context overrides ────────────────────────────
+   An overridable context row (a row mapped to a per-TAZ variable) gets a subtle
+   pencil-icon affordance that reveals a value box (in display units) + a
+   strongly-encouraged "why" narrative. Mirrors the input provenance idiom
+   (.prov-chip / is-modified) so the two read as one language. */
+.shop-detail .ctx-card .ctx-item.is-overridden { border-left: 3px solid var(--cdot-dark-blue); padding-left: 10px; margin-left: -10px; }
+/* Label keeps its own line (block-level flex, not inline-flex) so the value
+   renders BELOW it, restoring the original stacked rail layout; the flex box
+   only lets the optional "Modified" chip sit inline with the label text. */
+.shop-detail .ctx-card .ctx-item .ctx-label { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.shop-detail .ctx-card .ctx-ov-chip {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+  color: var(--cdot-dark-blue);
+  background: color-mix(in srgb, var(--cdot-dark-blue) 12%, #fff);
+  border: 1px solid color-mix(in srgb, var(--cdot-dark-blue) 30%, #fff);
+  border-radius: 999px; padding: 1px 8px; line-height: 1.6;
+}
+/* Subtle, unobtrusive edit affordance: a small muted pencil icon tucked into
+   the row's top-right. Quiet by default (low-contrast grey), it brightens to
+   the brand blue on row hover / focus so it's discoverable without shouting. */
+.shop-detail .ctx-card .ctx-item-ov { position: relative; }
+/* Reserve room at the label line so text/chip never runs under the icon. */
+.shop-detail .ctx-card .ctx-item-ov > .ctx-label { padding-right: 28px; }
+.shop-detail .ctx-card .ctx-ov-trigger {
+  position: absolute; top: 0; right: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; padding: 0;
+  background: none; border: none; border-radius: 4px;
+  color: #B4B7BC; cursor: pointer;
+  transition: color .12s ease, background-color .12s ease, opacity .12s ease;
+}
+.shop-detail .ctx-card .ctx-ov-trigger svg { display: block; }
+.shop-detail .ctx-card .ctx-item-ov:hover .ctx-ov-trigger,
+.shop-detail .ctx-card .ctx-ov-trigger:hover,
+.shop-detail .ctx-card .ctx-ov-trigger:focus-visible {
+  color: var(--cdot-dark-blue);
+}
+.shop-detail .ctx-card .ctx-ov-trigger:hover { background: color-mix(in srgb, var(--cdot-dark-blue) 8%, transparent); }
+.shop-detail .ctx-card .ctx-ov-trigger:focus-visible {
+  outline: 2px solid var(--cdot-dark-blue); outline-offset: 1px;
+}
+.shop-detail .ctx-card .ctx-ov-trigger:disabled { color: #D6D6D6; cursor: not-allowed; background: none; }
+
+.shop-detail .ctx-card .ctx-ov-edit {
+  margin-top: 10px; padding: 12px; border: 1px solid #E3E7EC; border-radius: 6px;
+  background: color-mix(in srgb, var(--cdot-dark-blue) 4%, #fff);
+}
+.shop-detail .ctx-card .ctx-ov-edit-label,
+.shop-detail .ctx-card .ctx-ov-note-label {
+  display: block; font-size: 12px; font-weight: 600; color: #4A4A4A; margin-bottom: 4px;
+}
+.shop-detail .ctx-card .ctx-ov-note-label { margin-top: 12px; }
+.shop-detail .ctx-card .ctx-ov-field { display: flex; align-items: center; gap: 8px; }
+.shop-detail .ctx-card .ctx-ov-input {
+  width: 110px; max-width: 100%; padding: 6px 8px; border: 1px solid #BEBEBE; border-radius: 2px;
+  font-family: inherit; font-size: 14px; color: #141414; background: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.shop-detail .ctx-card .ctx-ov-input:focus {
+  outline: 2px solid var(--cdot-dark-blue); outline-offset: -1px; border-color: var(--cdot-dark-blue);
+}
+.shop-detail .ctx-card .ctx-ov-input:disabled { background: #F0F0F0; border-color: #D6D6D6; color: #6B6B6B; cursor: not-allowed; }
+.shop-detail .ctx-card .ctx-ov-unit { font-size: 12px; color: #6B6B6B; }
+.shop-detail .ctx-card .ctx-ov-baseline { margin-top: 6px; font-size: 11px; color: #9E9E9E; font-variant-numeric: tabular-nums; }
+
+.shop-detail .ctx-card .ctx-ov-note {
+  width: 100%; padding: 6px 8px; border: 1px solid #BEBEBE; border-radius: 2px;
+  font-family: inherit; font-size: 13px; color: #141414; background: #fff;
+  resize: vertical; line-height: 1.4;
+}
+.shop-detail .ctx-card .ctx-ov-note:focus {
+  outline: 2px solid var(--cdot-dark-blue); outline-offset: -1px; border-color: var(--cdot-dark-blue);
+}
+.shop-detail .ctx-card .ctx-ov-note::placeholder { color: #9E9E9E; }
+.shop-detail .ctx-card .ctx-ov-note:disabled { background: #F0F0F0; border-color: #D6D6D6; color: #6B6B6B; cursor: not-allowed; }
+.shop-detail .ctx-card .ctx-ov-warn {
+  margin-top: 6px; font-size: 11px; line-height: 1.4; color: var(--cdot-orange-press, #b34a00);
+}
+.shop-detail .ctx-card .ctx-ov-actions { margin-top: 10px; display: flex; gap: 14px; }
+.shop-detail .ctx-card .ctx-ov-reset,
+.shop-detail .ctx-card .ctx-ov-cancel {
+  font: inherit; font-size: 12px; font-weight: 500;
+  color: var(--cdot-dark-blue); background: none; border: none; padding: 0;
+  cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
+}
+.shop-detail .ctx-card .ctx-ov-reset:hover,
+.shop-detail .ctx-card .ctx-ov-cancel:hover { color: var(--cdot-orange-press, #b34a00); }
+.shop-detail .ctx-card .ctx-ov-reset:focus-visible,
+.shop-detail .ctx-card .ctx-ov-cancel:focus-visible {
+  outline: 2px solid var(--cdot-dark-blue); outline-offset: 2px; border-radius: 2px;
+}
+.shop-detail .ctx-card .ctx-ov-reset:disabled { color: #9E9E9E; cursor: not-allowed; text-decoration: none; }
+
+/* ── Responsive: single column below ~980px, rail last ─────────────── */
+@media (max-width: 980px) {
+  .shop-detail { padding: 8px 16px 32px; }
+  .shop-detail .detail-grid { grid-template-columns: 1fr; }
+  /* Stacked (rail last): drop sticky and the internal-scroll budget so the rail
+     flows in the page like the rest of the column. */
+  .shop-detail .detail-rail { position: static; max-height: none; overflow-y: visible; }
+  /* Hero band drops the float and goes full-width on top, with the title +
+     descriptions stacked below it (no wrap, no horizontal overflow). */
+  .shop-detail .dhero .band-panel {
+    float: none; width: 100%; margin: 0 0 18px;
+    min-height: 0; flex-direction: row; align-items: center; justify-content: space-between;
+  }
+  .shop-detail .dhero .band-panel .cap-pill { margin-top: 0; }
+  /* Full-width band with a photo still needs vertical room for the cover layer
+     (the absolute .band-img can't give the band height on its own). */
+  .shop-detail .dhero .band-panel.has-img { min-height: 96px; }
+  /* Full-width band: keep the glyph a corner watermark, nudged a touch smaller
+     and tighter to the corner so it stays subtle at the shorter row height. */
+  .shop-detail .dhero .band-panel .band-glyph {
+    right: -14px; bottom: -14px; transform: scale(.8); transform-origin: bottom right;
+  }
+  /* Commit bar stacks (impact over actions), actions align left. */
+  .commit-bar .commit-actions { align-items: flex-start; }
+  .commit-bar .commit-help { text-align: left; }
+}
+
+/* ── Cart view ─────────────────────────────────────────────────────── */
+.cart-view {
+  overflow-y: auto;
+  padding: 24px 32px;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 20px;
+}
+.cart-view > .cart-main,
+.cart-view > .cart-side {
+  max-width: none;
+  min-width: 0;
+}
+.cart-main { display: flex; flex-direction: column; gap: 16px; }
+
+.cart-hero {
+  background: linear-gradient(135deg, var(--cdot-dark-blue) 0%, #001153 100%);
+  color: #fff; padding: 28px 32px; border-radius: 2px;
+  display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; position: relative; overflow: hidden;
+}
+.cart-hero::after {
+  content: ""; position: absolute; right: -30px; top: -30px; width: 180px; height: 180px; border-radius: 50%;
+  background: radial-gradient(circle, var(--cdot-orange) 0%, transparent 60%); opacity: .5;
+}
+.cart-hero .ov, .cart-hero h1.ov { margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; opacity: .9; position: relative; color: inherit; }
+.cart-hero .big { font-size: 64px; font-weight: 600; line-height: 1; margin: 6px 0 4px; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; position: relative; }
+.cart-hero .big .pct { font-size: 36px; opacity: .8; font-weight: 400; margin-left: 4px; }
+.cart-hero .sub { font-size: 15px; opacity: .92; position: relative; }
+.cart-hero .abs-row { display: flex; gap: 32px; border-top: 1px solid rgba(255,255,255,.18); padding-top: 18px; margin-top: 20px; position: relative; }
+.cart-hero .abs-row .c .lab { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; opacity: .85; font-weight: 700; }
+.cart-hero .abs-row .c .v { font-size: 20px; font-weight: 600; margin-top: 3px; font-variant-numeric: tabular-nums; }
+.cart-hero .abs-row .c .u { font-size: 13px; opacity: .8; font-weight: 400; margin-left: 3px; }
+.cart-hero .right { position: relative; display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.cart-hero .badge-count { background: rgba(255,255,255,.22); backdrop-filter: blur(4px); padding: 8px 16px; border-radius: 999px; font-size: 14px; font-weight: 600; }
+
+.cart-section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.cart-section-head h2 { margin: 0; font-size: 20px; font-weight: 600; color: #141414; line-height: 1.25; }
+.cart-section-head .meta { font-size: 14px; color: #6B6B6B; }
+
+.cart-line {
+  background: #fff; border: 1px solid #EBEBEB; border-radius: 2px;
+  padding: 16px 20px;
+  display: grid; grid-template-columns: 4px 1fr auto; gap: 16px;
+}
+.cart-line .stripe { width: 4px; background: var(--cdot-dark-blue); border-radius: 2px; margin: -16px 0 -16px -20px; }
+.cart-line .content { min-width: 0; }
+.cart-line .ln-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.cart-line .ln-head .sku { font-family: var(--calcite-font-family-code); font-size: 11px; color: #6B6B6B; background: #F2F2F2; padding: 1px 5px; border-radius: 2px; }
+.cart-line .ln-head .nm { font-size: 16px; font-weight: 600; color: #141414; }
+.cart-line .ln-cat { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #6B6B6B; font-weight: 700; }
+.cart-line .ln-params { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 13px; color: #4A4A4A; }
+.cart-line .ln-params .param { display: inline-flex; align-items: center; gap: 5px; background: #F7F7F7; padding: 3px 8px; border-radius: 2px; }
+.cart-line .ln-params .param .k { color: #6B6B6B; }
+.cart-line .ln-params .param .v { font-family: var(--calcite-font-family-code); font-weight: 600; color: #141414; }
+.cart-line .ln-params .param.modified { background: var(--cdot-dark-blue-05, #F2F4F9); box-shadow: inset 0 0 0 1px var(--cdot-dark-blue-10, #E6E8F1); }
+.cart-line .ln-params .param .param-mod { font-size: 11px; font-weight: 600; color: var(--cdot-dark-blue); text-transform: uppercase; letter-spacing: 0.02em; }
+
+/* User-entered source/justification for changed inputs, surfaced on the
+   results page (CMT-01). */
+.cart-line .ln-justify {
+  margin-top: 8px; padding: 8px 10px; border-left: 2px solid var(--cdot-dark-blue-10, #E6E8F1);
+  background: var(--cdot-dark-blue-05, #F2F4F9); border-radius: 2px;
+}
+.cart-line .ln-justify-h {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--cdot-dark-blue); margin-bottom: 4px;
+}
+.cart-line .ln-justify-row { font-size: 12px; color: #4A4A4A; line-height: 1.45; }
+.cart-line .ln-justify-row .k { color: #6B6B6B; font-weight: 600; }
+.cart-line .ln-justify-row .t { color: #141414; }
+.cart-line .ln-justify-row .v { font-family: var(--calcite-font-family-code); font-weight: 600; color: #141414; }
+/* Project-context baseline overrides (transit share, AVO, density, parking
+   price, …) the user pinned for this strategy, plus their "why" narrative.
+   Distinguished from the input-justification block with an accent border. */
+.cart-line .ln-overrides { border-left-color: var(--cdot-green, #4A8B2C); }
+.cart-line .ln-overrides .ln-justify-h { color: var(--cdot-green, #4A8B2C); }
+.cart-line .right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.cart-line .contrib { font-size: 24px; font-weight: 600; color: var(--cdot-green); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.cart-line .contrib.warn { color: var(--cdot-orange-press); }
+.cart-line .contrib .u { font-size: 12px; color: #6B6B6B; font-weight: 400; margin-left: 2px; }
+.cart-line .ln-actions { display: flex; gap: 6px; }
+.cart-line .ln-actions button { background: transparent; border: 1px solid #EBEBEB; color: #4A4A4A; padding: 4px 10px; border-radius: 2px; font-size: 13px; cursor: pointer; font-family: inherit; }
+.cart-line .ln-actions button:hover { border-color: var(--cdot-dark-blue); color: var(--cdot-dark-blue); }
+.cart-line .ln-actions .rm:hover { border-color: #A12B24; color: #A12B24; }
+
+.cart-empty {
+  background: #fff; border: 1px dashed #D4D4D4; border-radius: 2px;
+  padding: 60px 40px; text-align: center;
+}
+.cart-empty h1, .cart-empty h3 { margin: 0 0 8px; font-size: 20px; font-weight: 600; color: #141414; line-height: 1.25; letter-spacing: -0.01em; }
+.cart-empty p { font-size: 15px; color: #6B6B6B; max-width: 360px; margin: 0 auto 18px; line-height: 1.5; }
+.cart-empty-cta {
+  padding: 12px 24px; border: 0; border-radius: 2px;
+  background: var(--cdot-orange-cta); color: #fff;
+  font-family: inherit; font-size: 14px; font-weight: 600;
+  cursor: pointer;
+}
+.cart-empty-cta:hover { background: var(--cdot-orange-cta-hover); }
+
+/* Cart sidebar (totals) */
+.cart-side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 24px; height: fit-content; }
+.cart-side .card { background: #fff; border: 1px solid #EBEBEB; border-radius: 2px; padding: 20px; }
+.cart-side .card h4 { margin: 0 0 14px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: #6B6B6B; font-weight: 700; }
+
+.cart-breakdown .cat-row { display: grid; grid-template-columns: 18px 1fr auto; gap: 10px; align-items: center; padding: 6px 0; font-size: 14px; }
+.cart-breakdown .cat-row.cat-row-head {
+  padding: 0 0 4px;
+  border-bottom: 1px solid #EBEBEB;
+  margin-bottom: 4px;
+}
+.cart-breakdown .cat-row-head .col-h {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+  color: #6B6B6B; font-weight: 700; text-align: right;
+}
+.cart-breakdown .cat-row .sw { width: 10px; height: 10px; border-radius: 2px; }
+.cart-breakdown .cat-row .nm { color: #141414; }
+.cart-breakdown .cat-row .count { color: #6B6B6B; font-size: 12px; }
+.cart-breakdown .cat-row .v { font-family: var(--calcite-font-family-code); font-weight: 600; color: var(--cdot-green); font-variant-numeric: tabular-nums; text-align: right; }
+.cart-breakdown .cat-row.capped .v { color: var(--cdot-orange-press); }
+.cart-breakdown .capnote { font-size: 12px; color: var(--cdot-orange-press); margin-top: 6px; padding-left: 20px; }
+
+/* Co-benefits rows: simple two-column flex (label left, value right).
+   No icon column: the CartView markup doesn't render an icon span. */
+.cart-cobenefits .co-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 8px 0;
+  border-bottom: 1px solid #F7F7F7; font-size: 14px;
+}
+.cart-cobenefits .co-row:last-child { border-bottom: 0; }
+.cart-cobenefits .co-row .nm { color: #141414; flex: 1; min-width: 0; }
+.cart-cobenefits .co-row .v {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums; font-weight: 600; color: #141414;
+  text-align: right;
+}
+
+.cart-actions { display: flex; flex-direction: column; gap: 8px; }
+.cart-actions .btn { width: 100%; justify-content: center; }
+.cart-actions .btn-primary { background: var(--cdot-orange-cta); color: #fff; border: 0; padding: 12px 16px; font-family: inherit; font-size: 15px; font-weight: 600; border-radius: 2px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.cart-actions .btn-primary:hover { background: var(--cdot-orange-cta-hover); }
+.cart-actions .btn-outline-ca { background: #fff; border: 1px solid #D4D4D4; color: #141414; padding: 12px 16px; font-family: inherit; font-size: 15px; font-weight: 500; border-radius: 2px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.cart-actions .btn-outline-ca:hover { border-color: var(--cdot-dark-blue); }
+
+/* ── Area route - left panel ─────────────────────────────────────────
+   The map fills column 2 of .shop-main-region (see top of file). The
+   .area-panel below sits in column 1 and holds the project-area
+   selection summary + the "Select strategies →" CTA. */
+.area-panel {
+  background: #fff;
+  border-right: 1px solid #EBEBEB;
+  overflow-y: auto;
+  padding: 24px 24px;
+  display: flex; flex-direction: column; gap: 20px;
+  height: 100%; min-height: 0;
+}
+.area-panel h1,
+.area-panel h2 { margin: 0 0 4px; font-size: 22px; font-weight: 600; color: #141414; letter-spacing: -0.01em; line-height: 1.25; }
+.area-panel .lede { font-size: 14px; color: #6B6B6B; line-height: 1.5; }
+.area-panel h2.overline {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+  color: #6B6B6B; font-weight: 700; margin: 0;
+}
+.area-panel .area-intro { display: flex; flex-direction: column; gap: 14px; }
+.area-panel .area-intro > * { margin: 0; }
+.area-panel .how-steps {
+  /* Pull the steps up so "How it works" hugs step 1 (tighter than the 14px
+     flex gap used elsewhere in the intro). */
+  margin: -6px 0 0; padding: 0; list-style: none; counter-reset: how-step;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.area-panel .how-steps li {
+  position: relative; padding-left: 30px;
+  font-size: 14px; color: #6B6B6B; line-height: 1.5;
+}
+.area-panel .how-steps li::before {
+  counter-increment: how-step; content: counter(how-step);
+  position: absolute; left: 0; top: 1px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--cdot-dark-blue); color: #fff;
+  font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums;
+  display: flex; align-items: center; justify-content: center;
+}
+.area-panel .how-steps li b { color: #141414; }
+.area-panel .source-note { font-size: 12px; color: #9E9E9E; line-height: 1.45; margin: 12px 0 0; }
+.area-panel .cta { margin-top: 4px; padding-top: 16px; border-top: 1px solid #EBEBEB; }
+.area-panel .cta .btn-next { width: 100%; padding: 12px; background: var(--cdot-orange-cta); color: #fff; border: 0; border-radius: 2px; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.area-panel .cta .btn-next:hover:not(:disabled) { background: var(--cdot-orange-cta-hover); }
+.area-panel .cta .btn-next:disabled { background: #BFBFBF; cursor: not-allowed; }
+
+/* ── Project baseline VMT card (area step) ─────────────────────────────
+   A compact card in the area rail showing the current baseline VMT with a
+   subtle pencil override affordance. Mirrors the per-strategy context-override
+   editor's visual language (pencil trigger, "Modified" chip, value box +
+   narrative, reset link) so the two read as one idiom. */
+.area-panel .baseline-card {
+  position: relative;
+  border: 1px solid #EBEBEB; border-radius: 6px; padding: 12px 14px;
+  background: #fff;
+}
+.area-panel .baseline-card.is-overridden {
+  border-color: color-mix(in srgb, var(--cdot-dark-blue) 30%, #fff);
+  background: color-mix(in srgb, var(--cdot-dark-blue) 4%, #fff);
+}
+.area-panel .baseline-card .baseline-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.area-panel .baseline-card .baseline-label {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+  color: #6B6B6B; font-weight: 700; line-height: 1.2;
+}
+.area-panel .baseline-card .baseline-chip {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
+  color: var(--cdot-dark-blue);
+  background: color-mix(in srgb, var(--cdot-dark-blue) 12%, #fff);
+  border: 1px solid color-mix(in srgb, var(--cdot-dark-blue) 30%, #fff);
+  border-radius: 999px; padding: 1px 8px; line-height: 1.6;
+}
+.area-panel .baseline-card .baseline-value {
+  font-size: 20px; font-weight: 600; color: #141414;
+  font-variant-numeric: tabular-nums; line-height: 1.1; margin-top: 6px;
+}
+.area-panel .baseline-card .baseline-value .baseline-unit {
+  font-size: 12px; color: #6B6B6B; font-weight: 400; margin-left: 4px;
+}
+/* Pencil trigger: quiet grey by default, brightens to brand blue on hover/focus. */
+.area-panel .baseline-card .baseline-ov-trigger {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; padding: 0; flex-shrink: 0;
+  background: none; border: none; border-radius: 4px;
+  color: #B4B7BC; cursor: pointer;
+  transition: color .12s ease, background-color .12s ease;
+}
+.area-panel .baseline-card .baseline-ov-trigger svg { display: block; }
+.area-panel .baseline-card:hover .baseline-ov-trigger,
+.area-panel .baseline-card .baseline-ov-trigger:hover,
+.area-panel .baseline-card .baseline-ov-trigger:focus-visible { color: var(--cdot-dark-blue); }
+.area-panel .baseline-card .baseline-ov-trigger:hover { background: color-mix(in srgb, var(--cdot-dark-blue) 8%, transparent); }
+.area-panel .baseline-card .baseline-ov-trigger:focus-visible { outline: 2px solid var(--cdot-dark-blue); outline-offset: 1px; }
+
+.area-panel .baseline-card .baseline-ov-edit {
+  margin-top: 12px; padding: 12px; border: 1px solid #E3E7EC; border-radius: 6px;
+  background: color-mix(in srgb, var(--cdot-dark-blue) 4%, #fff);
+}
+.area-panel .baseline-card .baseline-ov-edit-label,
+.area-panel .baseline-card .baseline-ov-note-label {
+  display: block; font-size: 12px; font-weight: 600; color: #4A4A4A; margin-bottom: 4px;
+}
+.area-panel .baseline-card .baseline-ov-note-label { margin-top: 12px; }
+.area-panel .baseline-card .baseline-ov-field { display: flex; align-items: center; gap: 8px; }
+.area-panel .baseline-card .baseline-ov-input {
+  width: 140px; max-width: 100%; padding: 6px 8px; border: 1px solid #BEBEBE; border-radius: 2px;
+  font-family: inherit; font-size: 14px; color: #141414; background: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.area-panel .baseline-card .baseline-ov-input:focus {
+  outline: 2px solid var(--cdot-dark-blue); outline-offset: -1px; border-color: var(--cdot-dark-blue);
+}
+.area-panel .baseline-card .baseline-ov-unit { font-size: 12px; color: #6B6B6B; }
+/* Reference line under the headline: shows the modeled baseline the active
+   override replaced (only rendered when overridden). */
+.area-panel .baseline-card .baseline-modeled-ref {
+  margin-top: 4px; font-size: 11px; color: #6B6B6B; font-variant-numeric: tabular-nums;
+}
+/* Inline hint under the editor input, tying it to the modeled baseline it
+   replaces and clarifying that the headline updates live. */
+.area-panel .baseline-card .baseline-ov-hint {
+  margin: 6px 0 0; font-size: 11px; line-height: 1.4; color: #9E9E9E;
+  font-variant-numeric: tabular-nums;
+}
+.area-panel .baseline-card .baseline-ov-note {
+  width: 100%; padding: 6px 8px; border: 1px solid #BEBEBE; border-radius: 2px;
+  font-family: inherit; font-size: 13px; color: #141414; background: #fff;
+  resize: vertical; line-height: 1.4;
+}
+.area-panel .baseline-card .baseline-ov-note:focus {
+  outline: 2px solid var(--cdot-dark-blue); outline-offset: -1px; border-color: var(--cdot-dark-blue);
+}
+.area-panel .baseline-card .baseline-ov-note::placeholder { color: #9E9E9E; }
+.area-panel .baseline-card .baseline-ov-warn {
+  margin-top: 6px; font-size: 11px; line-height: 1.4; color: var(--cdot-orange-press, #b34a00);
+}
+.area-panel .baseline-card .baseline-ov-actions { margin-top: 10px; display: flex; gap: 14px; }
+.area-panel .baseline-card .baseline-ov-reset,
+.area-panel .baseline-card .baseline-ov-cancel {
+  font: inherit; font-size: 12px; font-weight: 500;
+  color: var(--cdot-dark-blue); background: none; border: none; padding: 0;
+  cursor: pointer; text-decoration: underline; text-underline-offset: 2px;
+}
+.area-panel .baseline-card .baseline-ov-reset:hover,
+.area-panel .baseline-card .baseline-ov-cancel:hover { color: var(--cdot-orange-press, #b34a00); }
+.area-panel .baseline-card .baseline-ov-reset:focus-visible,
+.area-panel .baseline-card .baseline-ov-cancel:focus-visible {
+  outline: 2px solid var(--cdot-dark-blue); outline-offset: 2px; border-radius: 2px;
+}
+
+/* Trim the map's overlays so they fit the narrower split-column map */
+.shop-main-region[data-view="area"] .map-footer { display: none; }
+.shop-main-region[data-view="area"] .map-context-badge { top: 60px; right: 52px; }
+.shop-main-region[data-view="area"] .map-overlay-top .map-search { width: 300px; }
+
+/* Scenario picker (top of area step) */
+.scenario-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.scenario-strip button {
+  padding: 10px; background: #fff; border: 1px solid #D4D4D4; border-radius: 2px;
+  font-family: inherit; font-size: 13px; color: #141414; text-align: left; cursor: pointer;
+  opacity: .5; transition: opacity .15s ease, border-color .15s ease, background .15s ease;
+}
+.scenario-strip button:hover { border-color: var(--cdot-dark-blue); opacity: .85; }
+.scenario-strip button.on { border-color: var(--cdot-dark-blue); background: var(--cdot-dark-blue-05); opacity: 1; }
+.scenario-strip button .kd { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #6B6B6B; font-weight: 700; }
+.scenario-strip button .nm { font-size: 13px; font-weight: 600; color: #141414; margin-top: 2px; line-height: 1.3; }
+
+/* Tweaks panel reused as-is */
+
+/* ── Added-to-package confirmation banner ───────────────────────────── */
+@keyframes banner-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes banner-progress {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+.added-banner {
+  display: flex; align-items: center; gap: 12px;
+  background: #fff; border: 1px solid var(--cdot-green, #2E7D32);
+  border-radius: 2px; margin-bottom: 18px;
+  padding: 13px 16px; position: relative; overflow: hidden;
+  animation: banner-in 200ms ease-out both;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.added-banner-swatch {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+}
+
+.added-banner-icon {
+  color: var(--cdot-green, #2E7D32); display: inline-flex; flex-shrink: 0; margin-left: 4px;
+}
+
+.added-banner-body {
+  flex: 1; min-width: 0; font-size: 15px; color: #141414; line-height: 1.4;
+}
+
+.added-banner-name {
+  font-weight: 600;
+}
+
+.added-banner-sub {
+  color: #6B6B6B;
+}
+
+.added-banner-cta {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+  padding: 8px 16px; background: var(--cdot-orange-cta, #A55200); color: #fff;
+  border: 0; border-radius: 2px; font-family: inherit; font-size: 14px;
+  font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.added-banner-cta:hover { background: var(--cdot-orange-cta-hover, #7E3F00); }
+
+.added-banner-dismiss {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; flex-shrink: 0;
+  background: transparent; border: 0; color: #9E9E9E; cursor: pointer; border-radius: 2px;
+}
+.added-banner-dismiss:hover { background: #F2F2F2; color: #141414; }
+
+.added-banner-progress {
+  position: absolute; bottom: 0; left: 0;
+  height: 2px; background: var(--cdot-green, #2E7D32); opacity: 0.4;
+  animation: banner-progress 7000ms linear both;
+}
+
+/* ── Strategy catalog integration ────────────────────────────────────── */
+
+/* Minimal Markdown renderer output */
+.md { line-height: 1.6; }
+.md > :first-child { margin-top: 0; }
+.md > :last-child { margin-bottom: 0; }
+.md p { margin: 0 0 10px; }
+.md ul, .md ol { margin: 0 0 10px; padding-left: 20px; }
+.md li { margin: 2px 0; }
+.md a { color: var(--cdot-dark-blue); text-decoration: underline; text-underline-offset: 2px; }
+.md a:hover { color: var(--cdot-dark-blue-hover, #001a8c); }
+.md code {
+  font-family: var(--calcite-font-family-code); font-size: .92em;
+  background: #F2F4F9; padding: 1px 5px; border-radius: 2px; color: #141414;
+}
+.md h1, .md h2, .md h3, .md h4, .md h5, .md h6 {
+  margin: 14px 0 6px; font-weight: 600; color: #141414; line-height: 1.3;
+}
+.md-prose { font-size: 15px; color: #4A4A4A; }
+.md-help { font-size: 13px; color: #4A4A4A; }
+
+/* "About this strategy" + figures */
+.shop-detail .strategy-figs { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
+.shop-detail .strategy-figs figure { margin: 0; max-width: 360px; }
+.shop-detail .strategy-figs img { width: 100%; height: auto; border-radius: 2px; display: block; }
+.shop-detail .strategy-figs figcaption { font-size: 12px; color: #6B6B6B; margin-top: 4px; line-height: 1.4; }
+.shop-detail .strategy-figs figcaption .credit { color: #9E9E9E; font-style: italic; }
+
+/* Methodology accordion (native <details>; inherits .dsection's 24px 32px padding) */
+.shop-detail .methodology-accordion > summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center;
+  justify-content: space-between;
+}
+.shop-detail .methodology-accordion > summary::-webkit-details-marker { display: none; }
+.shop-detail .methodology-accordion > summary h3 { margin: 0; }
+.shop-detail .methodology-accordion > summary:focus-visible { outline: 2px solid var(--cdot-dark-blue); outline-offset: 2px; }
+/* Chevron points sideways (right) when collapsed, swinging down to point at
+   the revealed content when open, the natural disclosure direction. */
+.shop-detail .methodology-accordion .acc-chevron { color: #6B6B6B; font-size: 18px; transition: transform .15s; transform: rotate(-90deg); }
+.shop-detail .methodology-accordion[open] .acc-chevron { transform: rotate(0deg); }
+.shop-detail .methodology-body { margin-top: 14px; }
+/* Extra breathing room below the methodology section (it's the last block on
+   the detail page), overrides .dsection's default 14px. */
+.shop-detail .methodology-accordion { margin-bottom: 32px; }
+
+/* Per-input benchmark caption (optional contextual line, e.g. peer values). */
+.shop-detail .input-item .benchmark { font-size: 12px; color: #4A4A4A; margin-top: 4px; }
+
+/* Tag filter chips. Used in the left-panel tag facets (alphabetized within
+   each facet group). */
+.tag-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 9px; border: 1px solid #D4D4D4; border-radius: 999px;
+  background: #fff; color: #4A4A4A; font-family: inherit; font-size: 12px; cursor: pointer;
+  text-transform: capitalize; transition: border-color .12s, background .12s, color .12s;
+}
+.tag-chip:hover { border-color: var(--cdot-dark-blue); }
+.tag-chip:focus-visible { outline: 2px solid var(--cdot-dark-blue); outline-offset: 1px; }
+.tag-chip.on {
+  background: var(--cdot-dark-blue); border-color: var(--cdot-dark-blue); color: #fff; font-weight: 600;
+}
+.tag-chip .tc { font-size: 10px; opacity: .7; font-variant-numeric: tabular-nums; }
+.tag-chip.on .tc { opacity: .9; }
+
+/* Left-panel tag facets: each facet is a single wrapping flow; the category
+   label sits inline ahead of its chips (almost like another tag) and the chips
+   wrap across the full rail width, keeping the section compact.
+   .tag-chips uses display:contents so the chips participate directly in the
+   group's wrap flow alongside the label. */
+.shop-aside .tag-facets { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.shop-aside .tag-group { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.shop-aside .tag-group-label {
+  margin-right: 2px;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: #6B6B6B; font-weight: 700; line-height: 1.2;
+}
+.shop-aside .tag-chips { display: contents; }
+.shop-aside .clear-filters { display: inline-block; margin-bottom: 16px; font-size: 13px; }
+
+.shop-result-count { font-size: 12px; color: #6B6B6B; margin-bottom: 12px; font-variant-numeric: tabular-nums; }
+
+/* Extended description prose, below the hero row (guidance already split out). */
+.shop-detail .dhero .dhero-about { margin-top: 9px; font-size: 14px; color: #4A4A4A; line-height: 1.6; }
+.shop-detail .dhero .dhero-about p { margin: 0 0 8px; }
+.shop-detail .dhero .dhero-about > :last-child { margin-bottom: 0; }
+
+/* Method + subsector cap, now inside the methodology accordion */
+.shop-detail .methodology-body .method-meta {
+  display: flex; flex-wrap: wrap; gap: 4px 28px;
+  font-size: 13px; color: #4A4A4A; line-height: 1.5; margin-bottom: 14px;
+}
+.shop-detail .methodology-body .method-meta b { color: #141414; }
+.shop-detail .methodology-body .method-meta .info-i { vertical-align: middle; margin-left: 6px; }
+
+/* Tags on the strategy cards (replaces the old method/uid line) */
+.product-card .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.product-card .card-tag {
+  font-size: 10px; color: #6B6B6B; background: #F2F2F2;
+  padding: 2px 7px; border-radius: 999px; text-transform: capitalize; white-space: nowrap;
+}

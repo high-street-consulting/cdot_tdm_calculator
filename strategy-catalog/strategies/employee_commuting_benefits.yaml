@@ -1,0 +1,103 @@
+# SP-06 Employee Commuting Benefits
+# Promoted from strategies/todo and split from the transit fare-subsidy engine:
+# this is the commute/employer half (scope=commute). The general half is
+# transit_pass_subsidy.yaml. Engine: strategy_transit_fare_subsidy.
+
+id: employee_commuting_benefits
+uid: SP-06
+name: Employee Commuting Benefits
+category: support
+status: implemented
+tags:
+- pricing
+- transit
+- employer
+- developer
+- commute
+short_description: Employer- or development-provided subsidized/free transit passes (ECO passes) and commute
+  benefits, scoped to commute travel.
+extended_description: |
+  Employee commuting benefits reduce the cost or inconvenience of commuting without
+  driving alone. Benefits may include employer-provided transit passes, vanpool support,
+  commuter incentives, workplace bicycle amenities, flexible work options, or other
+  assistance that makes non-drive-alone commuting easier.
+
+  The effectiveness of this strategy depends on how well the benefit matches employee
+  travel needs. Transit passes work best with high quality, frequent, and accessible
+  transit. These benefits can also be paired with clear promotion of benefits and other
+  TDM measures that make non-single-occupancy vehicle modes more appealing.
+guidance: |
+  Use this strategy for employer- or development-provided commute benefits,
+  such as an RTD EcoPass or other pass or subsidy program. For a general transit pass
+  subsidy that is not tied to a worksite or development, use [Transit Pass
+  Subsidies](#/strategies/transit_pass_subsidy).
+  Avoid double-counting if parking cash-out or [Commuter
+  Incentives](#/strategies/commute_incentives)
+  are modeled for the same commuters.
+images: []
+method: Paulley (2006) fare elasticity (ε=−0.30), commute scope
+formula: Δcommute_VMT% = (Δfare × eligible × ε × transit_MS × 1/AVO × p_drive) / auto_MS
+methodology_detail: |
+  Same short-run fare elasticity as the general pass subsidy (ε = −0.30, Paulley
+  et al. 2006), here implementing CAPCOA
+  [T-9 (Implement Subsidized or Discounted Transit Program)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-9.pdf),
+  scoped to commute VMT and discounted by the share of benefiting commuters who
+  would otherwise drive:
+
+  `Δcommute_VMT% = (Δfare × eligible × ε × transit_MS × 1/AVO × p_drive) / auto_MS`
+
+  When the benefit is entered as a dollar subsidy, the effective fare reduction is
+  the subsidy divided by the average fare (statewide default unless provided).
+  Mode share comes from the American Community Survey (ACS); Average vehicle occupancy is from the 2017 National Household Travel Survey (NHTS) statewide default.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Transit commute benefits depend on employees having a usable transit option, which is limited in rural areas.
+inputs:
+- key: subsidy_amount
+  label: Monthly/trip subsidy value
+  control: number
+  min: 0
+  max: 200
+  step: 0.5
+  default: 2.0
+  unit: $ per trip
+  prerequisite: true
+  summary: The per-trip dollar value of the commute benefit; if you have a monthly pass value, divide by the typical monthly commute transit trips to get a per-trip figure.
+  source_note: your employer or development's transit benefit (ECO pass / subsidy) offering
+  tooltip: Dollar value of the commute benefit per transit trip; converted to an effective fare reduction.
+  instructions: |
+    Enter the per-trip dollar value of the commute benefit (the calculator
+    converts it to a fare reduction using the average fare). If your benefit is a
+    monthly pass value, divide by the typical number of commute transit trips per
+    month to get a per-trip figure.
+- key: pct_eligible
+  label: Share of commuters eligible
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.5
+  prerequisite: true
+  summary: The share of area commuters offered the benefit. For a single employer this is its share of area commuters; for a development requirement, use the share at the affected sites.
+  source_note: your project scope / employer or development participation estimate
+  tooltip: Share of area commuters offered the benefit.
+  instructions: |
+    Estimate the share of area commuters offered the benefit. For a single
+    employer, this is its share of area commuters; for a development requirement,
+    estimate the share of commuters at the affected sites.
+notes: 'Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy (scope=commute).'
+# Closed-form (transit fare subsidy, scope=commute, $-subsidy). Reads imputed mode share + avo.
+compute:
+  pool: commute
+  const:
+    avg_fare: 2.5            # statewide default transit fare ($)
+    elasticity: -0.30
+    pct_otherwise_drive: 0.85
+  let:
+    - pct_fare_reduction: "subsidy_amount / avg_fare"
+  formula: "pct_fare_reduction * pct_eligible * elasticity * transit_mode_share * (1 / avo) / max(auto_mode_share, 0.000000001) * pct_otherwise_drive"

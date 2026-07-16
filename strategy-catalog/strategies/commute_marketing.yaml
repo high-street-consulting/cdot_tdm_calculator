@@ -1,0 +1,83 @@
+# SP-03 Commute Trip Reduction Marketing
+# Split from the former merged "Commute program (marketing / incentives)" tile:
+# this is the marketing/outreach half (~1%). Engine: strategy_commute_program
+# (defaults to the marketing effect size).
+
+id: commute_marketing
+uid: SP-03
+name: Commute Trip Reduction Marketing
+category: support
+status: implemented
+tags:
+- program
+- commute
+- employer
+- local-government
+short_description: Outreach, information, and promotion encouraging employees to try alternative-mode commutes.
+extended_description: |
+  Commute trip reduction marketing is a planned outreach effort that connects a defined
+  audience with transportation options they can realistically use. These campaigns can
+  support new or existing services by helping people understand how to take the next step,
+  such as using transit, joining a vanpool, or biking to work.
+
+  Marketing works best when the message is tied to clear travel options. Broad awareness
+  alone is unlikely to change travel behavior if the alternative is inconvenient, unclear,
+  or unsupported by high quality multimodal infrastructure, transit service, incentives,
+  or other tangible TDM measures.
+guidance: |
+  Use this strategy for information- and promotion-driven programs. When the
+  program provides payments, subsidies, rewards, or prizes to encourage mode shift, use
+  [Commuter
+  Incentives](#/strategies/commute_incentives)
+  instead.
+images: []
+method: CAPCOA T-7 (Commute Trip Reduction Marketing), marketing-only ≈1%
+formula: Δcommute_VMT% = −%reached × reduction_per_reached
+methodology_detail: |
+  Marketing-only commute programs reduce commute VMT by roughly 1% per reached
+  commuter ([CAPCOA T-7, Implement Commute Trip Reduction Marketing](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-7.pdf), low end):
+
+  `Δcommute_VMT% = −%reached × reduction_per_reached`
+
+  Adjust the per-commuter rate if local evaluation supports a different value.
+applicability: {}
+inputs:
+- key: pct_eligible
+  label: Share of workforce reached
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.5
+  prerequisite: true
+  summary: The share of area employees reached by the marketing/outreach program. For a single employer this is its share of area commuters; for a regional campaign, use the workforce share.
+  source_note: your project scope / marketing campaign reach estimate
+  tooltip: Share of area employees at workplaces running the marketing program.
+  instructions: |
+    Estimate the share of area employees who work at sites participating in the
+    marketing/outreach program. For a single employer, this is its share of area
+    commuters; for a regional campaign, estimate the share of the workforce impacted by the program.
+- key: reduction_per_eligible
+  label: Reduction per reached commuter
+  control: slider
+  min: 0.5
+  max: 3
+  step: 0.1
+  scale: 100
+  suffix: '%'
+  default: 0.01
+  prerequisite: true
+  summary: The commute-VMT reduction per reached commuter. Keep the 1% marketing-only default unless local program evaluation supports a higher value.
+  source_note: CAPCOA T-7 default (1%); raise only with local program evaluation
+  tooltip: 1% = marketing based program default (CAPCOA T-7 low end). Raise only with local evidence.
+  instructions: |
+    The default 1% reflects marketing/outreach-only programs. Increase it only if
+    local program evaluation documents a stronger response; stronger results
+    usually come from pairing outreach with incentives. For more benefits see the Commute-trip reduction incentives strategy.
+notes: 'Split from commute_program. Engine: strategy_commute_program (marketing default ~1%).'
+# Closed-form (commute program). reduction_per_eligible is a user input (default 0.01).
+compute:
+  pool: commute
+  formula: "-pct_eligible * reduction_per_eligible"

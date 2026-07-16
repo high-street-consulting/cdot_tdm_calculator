@@ -1,0 +1,18 @@
+# BP-06 - E-bike subsidy  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: ebike_subsidy
+uid: BP-06
+name: E-bike subsidy
+category: bikeped
+status: planned
+tags: []
+short_description: Financial incentives to reduce the purchase cost of electric bicycles.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: Tier 2.

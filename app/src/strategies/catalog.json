@@ -1,0 +1,2388 @@
+{
+  "generated_at": "2026-07-14T23:21:13.925718+00:00",
+  "categories": [
+    {
+      "id": "transit",
+      "name": "Transit strategies",
+      "css_color_var": "var(--cdot-dark-blue)",
+      "cap": 15,
+      "image": ""
+    },
+    {
+      "id": "bikeped",
+      "name": "Bike / ped & micromobility",
+      "css_color_var": "var(--cdot-orange)",
+      "cap": 8,
+      "image": ""
+    },
+    {
+      "id": "landuse",
+      "name": "Land use",
+      "css_color_var": "var(--cdot-green)",
+      "cap": 20,
+      "image": ""
+    },
+    {
+      "id": "vanpool",
+      "name": "Vanpool & ridesharing",
+      "css_color_var": "#7A4EA8",
+      "cap": 6,
+      "image": ""
+    },
+    {
+      "id": "support",
+      "name": "Supportive & programmatic",
+      "css_color_var": "var(--cdot-dark-blue-80)",
+      "cap": 10,
+      "image": ""
+    },
+    {
+      "id": "induced",
+      "name": "Induced demand",
+      "css_color_var": "#6D3A5D",
+      "cap": null,
+      "image": ""
+    },
+    {
+      "id": "parking",
+      "name": "Parking management",
+      "css_color_var": "var(--cdot-dark-blue)",
+      "cap": null,
+      "image": ""
+    },
+    {
+      "id": "electrification",
+      "name": "Electrification",
+      "css_color_var": "var(--cdot-green)",
+      "cap": null,
+      "image": ""
+    },
+    {
+      "id": "freight",
+      "name": "Freight",
+      "css_color_var": "#7A4EA8",
+      "cap": null,
+      "image": ""
+    },
+    {
+      "id": "programmatic",
+      "name": "Programmatic",
+      "css_color_var": "var(--cdot-dark-blue-80)",
+      "cap": null,
+      "image": ""
+    },
+    {
+      "id": "technology",
+      "name": "Technology & ramp management",
+      "css_color_var": "#6D3A5D",
+      "cap": null,
+      "image": ""
+    }
+  ],
+  "area_type_thresholds": {
+    "urban_core": 10000,
+    "urban": 3500,
+    "suburban": 1000,
+    "rural": 0
+  },
+  "tag_catalog": {
+    "audience": [
+      "employer",
+      "developer",
+      "local-government",
+      "transit-agency",
+      "mpo"
+    ],
+    "lever": [
+      "infrastructure",
+      "pricing",
+      "service",
+      "program",
+      "policy",
+      "land-use",
+      "technology"
+    ],
+    "trip_purpose": [
+      "commute",
+      "all-trips",
+      "recreational"
+    ],
+    "mode": [
+      "transit",
+      "bike",
+      "walk",
+      "micromobility",
+      "vanpool",
+      "auto"
+    ],
+    "context": [
+      "urban",
+      "suburban",
+      "rural",
+      "corridor",
+      "site"
+    ]
+  },
+  "strategies": [
+    {
+      "id": "car_share_access",
+      "uid": "PK-06",
+      "name": "Carshare",
+      "category": "parking",
+      "status": "implemented",
+      "tags": [
+        "program",
+        "auto",
+        "urban",
+        "local-government"
+      ],
+      "short_description": "Availability of shared vehicles for short-term use as an alternative to personal car ownership.",
+      "extended_description": "Carshare programs provide members access to shared vehicles for short-term use, billed by\nthe hour or trip, as an alternative to owning a personal vehicle. By making it practical to\nlive with fewer (or no) household vehicles, carshare nudges members toward transit, walking,\nbiking, and as-needed driving, reducing overall vehicle miles traveled.\n\nThe effect of carshare depends on how many residents join and how readily transit and\nactive modes can serve their everyday trips. Carshare is most effective in compact,\nmixed-use areas with good transit and parking pressure, where the cost and hassle of car\nownership are highest and members can comfortably go car-light or car-free.\n",
+      "guidance": "Use this strategy where a project supports access to shared vehicles, such as\nround-trip or one-way carshare pods, dedicated parking, or partnerships with a carshare\noperator. Carshare works best alongside density, transit, and parking-management\nstrategies.\n",
+      "images": [],
+      "method": "CAPCOA T-21 (structural; constants pending fact-sheet confirmation)",
+      "formula": "ΔVMT% = −min(participation_rate × service_area_share × member_vmt_reduction, 10%)",
+      "methodology_detail": "Carshare reduces vehicle miles traveled (VMT) primarily by lowering private vehicle\nownership and shifting members toward as-needed vehicle access, transit, and active modes,\nfollowing CAPCOA\n[T-21 (Implement Carshare Program)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-21.pdf).\nThe credit is the share of the service-area population who become members times the\nper-member VMT reduction, capped at the Neighborhood Design subsector maximum (10%):\n\n`ΔVMT% = −min(participation_rate × service_area_share × member_vmt_reduction, 10%)`\n\n> **Constants pending confirmation.** The verbatim T-21 equation and its default constants\n> (member participation rate, per-member VMT reduction, measure maximum) were not captured\n> during research, and the T-21 fact sheet was unreachable at implementation time. The\n> participation rate and per-member reduction are **placeholders** exposed in the code\n> (`CARSHARE_T21`) for recalibration and should be confirmed against the T-21 fact sheet\n> before the numeric results are relied upon. The structural form is unit-consistent and\n> the result is bounded by the subsector cap. Outputs flag this assumption.\n\n**Sources**\n\n- CAPCOA *Handbook* (2021), Measure\n  [T-21 (Implement Carshare Program)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-21.pdf)\n  (also published as T-21-A Conventional and T-21-B Electric).\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Carshare has a measurable effect mainly in compact, transit-served areas; results use placeholder constants pending CAPCOA T-21 confirmation."
+      },
+      "inputs": [
+        {
+          "key": "service_area_share",
+          "label": "Share of area within carshare service area",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 1.0,
+          "prerequisite": true,
+          "summary": "The share of the area's residents who live within walking distance of a shared vehicle or carshare pod.",
+          "source_note": "your carshare program plan / operator service-area map",
+          "tooltip": "Share of the area's population living within the carshare service area (walking distance of a shared vehicle).",
+          "instructions": "Estimate the share of the area's residents who live within the carshare service area,\nroughly walking distance of a shared vehicle or pod. Use 100% if the whole area is\nserved; lower it for a pilot covering only part of the area.\n"
+        }
+      ],
+      "notes": "Promoted from todo. CAPCOA T-21; participation_rate and member_vmt_reduction are PLACEHOLDER constants pending fact-sheet confirmation. Closed-form: math lives in the compute block below (no code calc fn). strategy_carshare in scripts/strategy_calculations.py is retained as the cross-check oracle.",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "participation_rate": 0.02,
+          "member_vmt_reduction": 0.3,
+          "measure_max": 0.1
+        },
+        "let": [
+          {
+            "member_pop_share": "participation_rate * service_area_share"
+          },
+          {
+            "A": "min(member_pop_share * member_vmt_reduction, measure_max)"
+          }
+        ],
+        "formula": "-A"
+      },
+      "_defaults": {
+        "service_area_share": 1.0
+      }
+    },
+    {
+      "id": "commute_incentives",
+      "uid": "SP-04",
+      "name": "Commuter Incentives",
+      "category": "support",
+      "status": "implemented",
+      "tags": [
+        "program",
+        "commute",
+        "employer",
+        "local-government"
+      ],
+      "short_description": "Financial or non-financial rewards (transit benefits, rideshare subsidies, prizes) that pay employees to shift out of driving alone.",
+      "extended_description": "Commuter incentives provide a financial or other tangible benefit for changing travel\nbehavior. The incentive may support transit use, carpooling, vanpooling, bicycling,\ntelework, remote parking, or another specific action, but it should be tied to a\nmeasurable change rather than general awareness.\n\nThe effect is strongest when incentives support repeated behavior or change the relative\ncost of driving alone. Short-term incentives can encourage commuters to try a new mode,\nwhile recurring benefits, like free transit passes provided by employers for example,\nare more likely to influence ongoing commute choices.\n",
+      "guidance": "Use this strategy for incentive-driven programs. For awareness and\npromotion without payments, use [Commute Trip Reduction\nMarketing](#/strategies/commute_marketing).\nAvoid double-counting if an overlapping fare subsidy or parking cash-out is also modeled\nfor the same commuters.\n",
+      "images": [],
+      "method": "CAPCOA T-5 / T-6 (Commute Trip Reduction), incentive-heavy ≈3%",
+      "formula": "Δcommute_VMT% = −%eligible × reduction_per_eligible",
+      "methodology_detail": "Incentive-heavy commute programs reduce commute VMT by roughly 3% per eligible\ncommuter, drawn from the commute-trip-reduction evidence in CAPCOA\n[T-5 (voluntary)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-5.pdf)\nand [T-6 (mandatory)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-6.pdf).\nPrograms that pair financial incentives with outreach land toward the upper end\nof that range:\n\n`Δcommute_VMT% = −%eligible × reduction_per_eligible`\n\nAdjust the per-commuter rate to match the level of incentives antcipated in the program.\n",
+      "applicability": {},
+      "inputs": [
+        {
+          "key": "pct_eligible",
+          "label": "Share of workforce eligible",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.5,
+          "prerequisite": true,
+          "summary": "The share of area employees eligible for the incentive program. For a single employer this is its share of area commuters; for a regional program, use the eligible workforce share.",
+          "source_note": "your project scope / employer or program participation estimate",
+          "tooltip": "Share of area employees eligible for the incentives.",
+          "instructions": "Estimate the share of area employees eligible for the incentive program. For a\nsingle employer, this is its share of area commuters; for a regional program,\nestimate the eligible workforce share.\n"
+        },
+        {
+          "key": "reduction_per_eligible",
+          "label": "Reduction per eligible commuter",
+          "control": "slider",
+          "min": 1,
+          "max": 3,
+          "step": 0.1,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.03,
+          "prerequisite": true,
+          "summary": "The commute-VMT reduction per eligible commuter. Keep 3% for incentive-heavy programs, or lower toward 1-2% for token incentives.",
+          "source_note": "CAPCOA T-5/T-6 default (3%); adjust from your program's incentive level",
+          "tooltip": "3% = incentive-heavy default. Lower to 1-2% for light incentives.",
+          "instructions": "The default 3% reflects programs with meaningful financial incentives. Lower it\ntoward 1-2% for token incentives.\n"
+        }
+      ],
+      "notes": "Split from commute_program. Engine: strategy_commute_program (incentive default ~3%).",
+      "compute": {
+        "pool": "commute",
+        "formula": "-pct_eligible * reduction_per_eligible"
+      },
+      "_defaults": {
+        "pct_eligible": 0.5,
+        "reduction_per_eligible": 0.03
+      }
+    },
+    {
+      "id": "commute_marketing",
+      "uid": "SP-03",
+      "name": "Commute Trip Reduction Marketing",
+      "category": "support",
+      "status": "implemented",
+      "tags": [
+        "program",
+        "commute",
+        "employer",
+        "local-government"
+      ],
+      "short_description": "Outreach, information, and promotion encouraging employees to try alternative-mode commutes.",
+      "extended_description": "Commute trip reduction marketing is a planned outreach effort that connects a defined\naudience with transportation options they can realistically use. These campaigns can\nsupport new or existing services by helping people understand how to take the next step,\nsuch as using transit, joining a vanpool, or biking to work.\n\nMarketing works best when the message is tied to clear travel options. Broad awareness\nalone is unlikely to change travel behavior if the alternative is inconvenient, unclear,\nor unsupported by high quality multimodal infrastructure, transit service, incentives,\nor other tangible TDM measures.\n",
+      "guidance": "Use this strategy for information- and promotion-driven programs. When the\nprogram provides payments, subsidies, rewards, or prizes to encourage mode shift, use\n[Commuter\nIncentives](#/strategies/commute_incentives)\ninstead.\n",
+      "images": [],
+      "method": "CAPCOA T-7 (Commute Trip Reduction Marketing), marketing-only ≈1%",
+      "formula": "Δcommute_VMT% = −%reached × reduction_per_reached",
+      "methodology_detail": "Marketing-only commute programs reduce commute VMT by roughly 1% per reached\ncommuter ([CAPCOA T-7, Implement Commute Trip Reduction Marketing](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-7.pdf), low end):\n\n`Δcommute_VMT% = −%reached × reduction_per_reached`\n\nAdjust the per-commuter rate if local evaluation supports a different value.\n",
+      "applicability": {},
+      "inputs": [
+        {
+          "key": "pct_eligible",
+          "label": "Share of workforce reached",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.5,
+          "prerequisite": true,
+          "summary": "The share of area employees reached by the marketing/outreach program. For a single employer this is its share of area commuters; for a regional campaign, use the workforce share.",
+          "source_note": "your project scope / marketing campaign reach estimate",
+          "tooltip": "Share of area employees at workplaces running the marketing program.",
+          "instructions": "Estimate the share of area employees who work at sites participating in the\nmarketing/outreach program. For a single employer, this is its share of area\ncommuters; for a regional campaign, estimate the share of the workforce impacted by the program.\n"
+        },
+        {
+          "key": "reduction_per_eligible",
+          "label": "Reduction per reached commuter",
+          "control": "slider",
+          "min": 0.5,
+          "max": 3,
+          "step": 0.1,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.01,
+          "prerequisite": true,
+          "summary": "The commute-VMT reduction per reached commuter. Keep the 1% marketing-only default unless local program evaluation supports a higher value.",
+          "source_note": "CAPCOA T-7 default (1%); raise only with local program evaluation",
+          "tooltip": "1% = marketing based program default (CAPCOA T-7 low end). Raise only with local evidence.",
+          "instructions": "The default 1% reflects marketing/outreach-only programs. Increase it only if\nlocal program evaluation documents a stronger response; stronger results\nusually come from pairing outreach with incentives. For more benefits see the Commute-trip reduction incentives strategy.\n"
+        }
+      ],
+      "notes": "Split from commute_program. Engine: strategy_commute_program (marketing default ~1%).",
+      "compute": {
+        "pool": "commute",
+        "formula": "-pct_eligible * reduction_per_eligible"
+      },
+      "_defaults": {
+        "pct_eligible": 0.5,
+        "reduction_per_eligible": 0.01
+      }
+    },
+    {
+      "id": "dynamic_parking_pricing",
+      "uid": "PK-03",
+      "name": "Dynamic Parking Pricing",
+      "category": "parking",
+      "status": "implemented",
+      "tags": [
+        "pricing",
+        "auto",
+        "local-government",
+        "technology"
+      ],
+      "short_description": "Adjust parking prices by demand, time, or location; estimated from the resulting average price drivers pay.",
+      "extended_description": "Dynamic parking pricing adjusts rates by time of day, location, observed occupancy, or\nother factors. The purpose is to keep some spaces available in high-demand areas, reduce\ntime spent searching for parking, and encourage commuters to consider other travel\noptions when appropriate.\n\nThe additional effect of dynamic pricing can be difficult to separate from parking\npricing generally, so results should be interpreted as approximate.\n",
+      "guidance": "Handy et al. (2025) advise against treating dynamic pricing as a distinct\nmeasure because its added effect beyond parking pricing is difficult to isolate. When in\ndoubt, model the average price under [Parking Fees and Curb\nManagement](#/strategies/parking_fees_curb_management)\ninstead.\n",
+      "images": [],
+      "method": "Lehner & Peer (2019) parking elasticity (ε=−0.40) on average price (effect-size estimate)",
+      "formula": "ΔVMT% = %Δprice × ε × share_affected",
+      "methodology_detail": "What reduces driving is the average price drivers pay, not the fact that the price\nvaries. This strategy is therefore estimated the same way as fixed parking fees, using\nthe average resulting price. Raising that average price raises the cost of driving\nto those destinations and reduces vehicle miles traveled (VMT), following CAPCOA\n[T-24 (Implement Market Price Public Parking, On-Street)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-24.pdf)\nand the parking-response relationship in Lehner & Peer (2019).\n\n`ΔVMT% = %Δprice × ε × share_affected`\n\nBecause Handy et al. (2025) do not recommend estimating dynamic pricing on its\nown, treat the result as a rough estimate only.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban"
+        ],
+        "warn_message": "Demand-responsive pricing applies where parking demand is high (urban downtowns and districts) and is rarely relevant at lower densities."
+      },
+      "inputs": [
+        {
+          "key": "new_price",
+          "label": "Average resulting price",
+          "control": "number",
+          "min": 0,
+          "max": 50,
+          "step": 0.5,
+          "default": 8.0,
+          "unit": "$ per day",
+          "prerequisite": true,
+          "summary": "The average full-day price drivers will pay under the demand-responsive scheme (across times and locations), not the peak rate.",
+          "source_note": "your proposed pricing schedule / parking rate policy",
+          "tooltip": "Average price drivers pay under the dynamic scheme. The starting price defaults to the typical price for this type of area.",
+          "instructions": "Enter the average price drivers will pay under the dynamic scheme (a full-day\nequivalent across times and locations), not the peak rate. If parking is free\ntoday, any new average price is treated as a meaningful increase.\n"
+        },
+        {
+          "key": "share_affected",
+          "label": "Share of area VMT priced",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.3,
+          "prerequisite": true,
+          "summary": "The share of the area's driving whose destinations fall within the demand-responsive pricing zone.",
+          "source_note": "your pricing-zone boundary vs. area travel patterns",
+          "tooltip": "Share of the area's driving whose destinations fall under the dynamic pricing.",
+          "instructions": "Estimate the share of the area's driving whose destinations fall within the\ndynamic pricing zone. This input is required.\n"
+        }
+      ],
+      "notes": "Promoted from todo; split from the pricing engine. Engine: strategy_parking_pricing (trip_purpose=all). Handy 2025: standalone quantification not recommended.",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "elasticity": -0.4,
+          "vmt_to_trips": 1.0
+        },
+        "row_defaults": {
+          "parking_price": 0
+        },
+        "let": [
+          {
+            "effective_old": "if(parking_price > 0, parking_price, new_price / 2)"
+          },
+          {
+            "pct_price": "(new_price - effective_old) / effective_old"
+          }
+        ],
+        "formula": "pct_price * elasticity * share_affected * vmt_to_trips"
+      },
+      "_defaults": {
+        "new_price": 8.0,
+        "share_affected": 0.3
+      }
+    },
+    {
+      "id": "employee_commuting_benefits",
+      "uid": "SP-06",
+      "name": "Employee Commuting Benefits",
+      "category": "support",
+      "status": "implemented",
+      "tags": [
+        "pricing",
+        "transit",
+        "employer",
+        "developer",
+        "commute"
+      ],
+      "short_description": "Employer- or development-provided subsidized/free transit passes (ECO passes) and commute benefits, scoped to commute travel.",
+      "extended_description": "Employee commuting benefits reduce the cost or inconvenience of commuting without\ndriving alone. Benefits may include employer-provided transit passes, vanpool support,\ncommuter incentives, workplace bicycle amenities, flexible work options, or other\nassistance that makes non-drive-alone commuting easier.\n\nThe effectiveness of this strategy depends on how well the benefit matches employee\ntravel needs. Transit passes work best with high quality, frequent, and accessible\ntransit. These benefits can also be paired with clear promotion of benefits and other\nTDM measures that make non-single-occupancy vehicle modes more appealing.\n",
+      "guidance": "Use this strategy for employer- or development-provided commute benefits,\nsuch as an RTD EcoPass or other pass or subsidy program. For a general transit pass\nsubsidy that is not tied to a worksite or development, use [Transit Pass\nSubsidies](#/strategies/transit_pass_subsidy).\nAvoid double-counting if parking cash-out or [Commuter\nIncentives](#/strategies/commute_incentives)\nare modeled for the same commuters.\n",
+      "images": [],
+      "method": "Paulley (2006) fare elasticity (ε=−0.30), commute scope",
+      "formula": "Δcommute_VMT% = (Δfare × eligible × ε × transit_MS × 1/AVO × p_drive) / auto_MS",
+      "methodology_detail": "Same short-run fare elasticity as the general pass subsidy (ε = −0.30, Paulley\net al. 2006), here implementing CAPCOA\n[T-9 (Implement Subsidized or Discounted Transit Program)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-9.pdf),\nscoped to commute VMT and discounted by the share of benefiting commuters who\nwould otherwise drive:\n\n`Δcommute_VMT% = (Δfare × eligible × ε × transit_MS × 1/AVO × p_drive) / auto_MS`\n\nWhen the benefit is entered as a dollar subsidy, the effective fare reduction is\nthe subsidy divided by the average fare (statewide default unless provided).\nMode share comes from the American Community Survey (ACS); Average vehicle occupancy is from the 2017 National Household Travel Survey (NHTS) statewide default.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Transit commute benefits depend on employees having a usable transit option, which is limited in rural areas."
+      },
+      "inputs": [
+        {
+          "key": "subsidy_amount",
+          "label": "Monthly/trip subsidy value",
+          "control": "number",
+          "min": 0,
+          "max": 200,
+          "step": 0.5,
+          "default": 2.0,
+          "unit": "$ per trip",
+          "prerequisite": true,
+          "summary": "The per-trip dollar value of the commute benefit; if you have a monthly pass value, divide by the typical monthly commute transit trips to get a per-trip figure.",
+          "source_note": "your employer or development's transit benefit (ECO pass / subsidy) offering",
+          "tooltip": "Dollar value of the commute benefit per transit trip; converted to an effective fare reduction.",
+          "instructions": "Enter the per-trip dollar value of the commute benefit (the calculator\nconverts it to a fare reduction using the average fare). If your benefit is a\nmonthly pass value, divide by the typical number of commute transit trips per\nmonth to get a per-trip figure.\n"
+        },
+        {
+          "key": "pct_eligible",
+          "label": "Share of commuters eligible",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.5,
+          "prerequisite": true,
+          "summary": "The share of area commuters offered the benefit. For a single employer this is its share of area commuters; for a development requirement, use the share at the affected sites.",
+          "source_note": "your project scope / employer or development participation estimate",
+          "tooltip": "Share of area commuters offered the benefit.",
+          "instructions": "Estimate the share of area commuters offered the benefit. For a single\nemployer, this is its share of area commuters; for a development requirement,\nestimate the share of commuters at the affected sites.\n"
+        }
+      ],
+      "notes": "Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy (scope=commute).",
+      "compute": {
+        "pool": "commute",
+        "const": {
+          "avg_fare": 2.5,
+          "elasticity": -0.3,
+          "pct_otherwise_drive": 0.85
+        },
+        "let": [
+          {
+            "pct_fare_reduction": "subsidy_amount / avg_fare"
+          }
+        ],
+        "formula": "pct_fare_reduction * pct_eligible * elasticity * transit_mode_share * (1 / avo) / max(auto_mode_share, 0.000000001) * pct_otherwise_drive"
+      },
+      "_defaults": {
+        "subsidy_amount": 2.0,
+        "pct_eligible": 0.5
+      }
+    },
+    {
+      "id": "employment_density",
+      "uid": "LU-02",
+      "name": "Increased Employment Density",
+      "category": "landuse",
+      "status": "implemented",
+      "tags": [
+        "land-use",
+        "all-trips",
+        "developer",
+        "local-government",
+        "urban"
+      ],
+      "short_description": "Increase jobs per acre (including mixed-use intensification) to shorten trips and support non-auto commuting.",
+      "extended_description": "Increasing employment density concentrates jobs, stores, and services closer together\nand closer to residents. Shorter distances can make walking, bicycling, and transit more\npractical and can reduce the amount of driving required for daily activities.\n\nThe effect is strongest when added jobs or services are located in a mixed-use context\nwith safe walking and bicycling conditions. The same number of jobs in an isolated\noffice park, for example, will generally have less effect if most trips still require a\ncar.\n",
+      "guidance": "Use this strategy for job-focused or mixed-use development. To model a\nproject that adds both homes and jobs, or a broader change in land use mix, combine it\nwith [Increased Residential\nDensity](#/strategies/residential_density).\n",
+      "images": [],
+      "method": "Stevens (2016) employment VMT-density elasticity (ε=−0.07)",
+      "formula": "ΔVMT% = Δemp_density × ε_emp",
+      "methodology_detail": "Adding jobs and destinations to an area shortens trips and makes walking, biking,\nand transit more practical, which lowers vehicle miles traveled (VMT). A 1%\nincrease in employment density has been associated with about a 0.07% reduction\nin VMT (Stevens 2016), the basis CAPCOA uses for\n[T-2 (Increase Job Density)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-2.pdf).\nJob density is a weaker lever than housing density, so the percentage is smaller.\n\n`ΔVMT% = Δemp_density × ε_emp`\n\nTo represent a change in the mix of land uses or a mixed-use development, combine\nthis strategy with Increase residential density.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "The density–driving relationship comes from urban and suburban areas; in rural areas, added density yields little reduction in driving."
+      },
+      "inputs": [
+        {
+          "key": "pct_change_emp_density",
+          "label": "Change in employment density",
+          "control": "slider",
+          "min": -50,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.2,
+          "prerequisite": true,
+          "summary": "The percent change in jobs per acre the project adds, compared with today's baseline for the project area.",
+          "source_note": "your development program / site plan vs. local baseline job density",
+          "tooltip": "Proposed job density vs. today's baseline.",
+          "benchmark": "Jobs/sq mi: suburban office park ~5,000–15,000; dense urban district ~30,000–50,000; downtown Denver core ~60,000.",
+          "instructions": "Enter the percentage change in job density compared with today's baseline for\nthe project area. A project that doubles job density is +100%.\n\nApproximate benchmarks (jobs per square mile):\n\n- Suburban office park or commercial: ~5,000–15,000\n- Dense urban employment district: ~30,000–50,000\n- Downtown Denver office core: ~60,000\n\nThese are order-of-magnitude anchors; local figures vary with how tightly the\ndistrict is drawn.\n"
+        }
+      ],
+      "notes": "Split from density_change. Engine: strategy_density_change (pct_change_res_density=0).",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "emp_elasticity": -0.07
+        },
+        "formula": "pct_change_emp_density * emp_elasticity"
+      },
+      "_defaults": {
+        "pct_change_emp_density": 0.2
+      }
+    },
+    {
+      "id": "end_of_trip_facilities",
+      "uid": "BP-07",
+      "name": "Workplace Bicycle Amenities",
+      "category": "bikeped",
+      "status": "implemented",
+      "tags": [
+        "infrastructure",
+        "bike",
+        "employer",
+        "commute",
+        "site"
+      ],
+      "short_description": "Workplace bike parking, showers, and lockers that raise bike commute mode share by a documented effect size.",
+      "extended_description": "Workplace bicycle amenities provide secure bicycle parking, lockers, showers, changing\nrooms, repair stations, or similar amenities for employees. These amenities address\ncommon barriers that can keep employees from considering biking as a commute option.\n\nThe effect depends on whether employees live within a reasonable bicycling distance and\nwhether the surrounding bike network provides a comfortable and direct connection to the\nworksite. Amenities at a worksite near safe, connected bicycle routes will generally\nhave a stronger effect than the same amenities at a site that is not close to\nhigh-quality bike facilities that are part of a larger bike network.\n",
+      "guidance": "This is a workplace measure, led by an employer or developer, that applies\nto commute trips. For area-wide on-street bicycle infrastructure, use [Striped Bike\nLanes, Neighborhood Bikeways and\nSharrows](#/strategies/sharrows_bike_lanes)\nor [Protected or Buffered Bike\nLanes](#/strategies/separated_bike_lanes)\ninstead.\n",
+      "images": [],
+      "method": "CAPCOA T-10 (Provide End-of-Trip Bicycle Facilities), commute scope",
+      "formula": "Δcommute_VMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)",
+      "methodology_detail": "Showers, lockers, and secure bike parking remove a common reason people don't bike\nto work, leading more employees to bike for their commute and lowering commute\nvehicle miles traveled (VMT). Providing these facilities raises the share of\ncommute trips made by bike by about 5% among employees who have access, following\nCAPCOA\n[T-10 (Provide End-of-Trip Bicycle Facilities)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-10.pdf).\nBecause bike trips are shorter than car trips, the calculator accounts for that\nwhen converting added bike commutes into driving avoided.\n\n`Δcommute_VMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)`\n\nThis applies the same bike effect as [Striped Bike Lanes, Neighborhood Bikeways and\nSharrows](https://high-street.bitbucket.io/cdot_tdm_calculator/#/strategies/sharrows_bike_lanes),\nfocused on commuters at a worksite rather than across an area.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Biking to work is most practical at denser, bike-served worksites; the effect is limited in rural areas."
+      },
+      "inputs": [
+        {
+          "key": "scope_share",
+          "label": "Share of commuters with access",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.4,
+          "prerequisite": true,
+          "summary": "The share of commuters in your area who work at sites that will provide end-of-trip bicycle facilities such as secure parking, showers, and lockers.",
+          "source_note": "your employer roster or development standards / site plans",
+          "tooltip": "Share of area commuters at workplaces that provide end-of-trip facilities.",
+          "instructions": "Estimate the share of commuters in your project area who work at sites that\nwill provide end-of-trip facilities. For a single large employer, this is the\nemployer's share of area commuters; for a development standard applied to new\nworkplaces, estimate the share of commuters those sites represent.\n"
+        }
+      ],
+      "notes": "Split from bike_mode_share_booster. Engine: strategy_bike_mode_share_booster (scope=commute).",
+      "compute": {
+        "pool": "commute",
+        "const": {
+          "adj": 0.05,
+          "bike_len": 1.5
+        },
+        "row_defaults": {
+          "avg_trip_length": 9.0
+        },
+        "formula": "-scope_share * bike_len * (bike_mode_share * adj) / (max(avg_trip_length, 0.5) * max(auto_mode_share, 0.000000001))"
+      },
+      "_defaults": {
+        "scope_share": 0.4
+      }
+    },
+    {
+      "id": "new_transit_service",
+      "uid": "TR-06",
+      "name": "Increased Transit Service",
+      "category": "transit",
+      "status": "implemented",
+      "tags": [
+        "service",
+        "transit",
+        "transit-agency",
+        "mpo"
+      ],
+      "short_description": "New routes, route extensions, or expanded operating hours for an existing transit network, giving more people a transit option.",
+      "extended_description": "Increased transit service introduces transit access where it was not previously available\nor extends service to new markets. This may include a new local route, an extension of an\nexisting route, or a new regional connection. This may also include expanding operating\nhours. The service is most useful when it links people to jobs, schools, services, or\nactivity centers at times that match actual travel needs.\n\nThe effect of increased transit service depends on how many riders the service attracts\nand how many of those trips would otherwise have been made by driving alone. Increased\nservice is most likely to reduce VMT where it connects places people already need to\ntravel, offers reliable travel times, and offers connectivity between transit stops and\nfinal destinations.\n\nThis strategy models **fixed-route** transit service (scheduled routes along a fixed\nalignment). Demand-responsive services such as microtransit and on-demand circulators\nare modeled separately and are not included here.\n",
+      "guidance": "Use this when a project expands fixed-route service, such as new routes, route\nextensions, regional connections, or expanded operating hours. To increase how often existing\nroutes run, use [Transit Service Frequency Increase](#/strategies/transit_service_expansion)\ninstead.\n",
+      "images": [],
+      "method": "TCRP 95 service-miles elasticity (ε=0.75)",
+      "formula": "ΔVMT% = −L × Δservice × transit_MS × ε × (1/AVO) × trip_reduction_ratio",
+      "methodology_detail": "Extending transit into new areas gives more people a usable alternative to\ndriving, so some car trips shift to transit and vehicle miles traveled (VMT) fall.\nThe more service is added relative to what exists today, the larger the ridership\ngain. This follows CAPCOA\n[T-25 (Extend Transit Network Coverage or Hours)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-25.pdf)\nand the service-miles relationship in Transit Cooperative Research Program (TCRP)\nReport 95.\n\n`ΔVMT% = −L × Δservice × transit_MS × ε × (1/AVO) × trip_reduction_ratio`\n\nThe calculator uses local commute mode share from the American Community Survey\n(ACS) and a statewide average for vehicle occupancy (the average number of people\nper car), and it discounts for new transit trips that don't fully replace a car\ntrip. Use the implementation level to phase in service that isn't fully running\nyet.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "New transit coverage reduces the most driving where density supports ridership; expect a limited effect in rural areas."
+      },
+      "inputs": [
+        {
+          "key": "pct_change",
+          "label": "Service-mile change",
+          "control": "slider",
+          "min": -50,
+          "max": 200,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.2,
+          "prerequisite": true,
+          "summary": "The percent change in revenue miles the new or extended service adds, compared with the existing network serving your area.",
+          "resources": [
+            {
+              "label": "CDOT Statewide Transit Routes map",
+              "url": "https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824"
+            }
+          ],
+          "tooltip": "Signed: positive = added revenue miles / new routes, negative = a service cut.",
+          "instructions": "Enter the percentage change in transit revenue miles for the affected area.\nCompare the daily (or annual) revenue miles of the new/extended service\nagainst the existing network serving the area. For a brand-new route in an\narea with little prior service, this can be large; for a modest extension it\nmay be a few percent.\n\nTo check the existing routes, operators, and service in your area, CDOT's\n[Statewide Transit Routes map](https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824)\nmaps fixed-route transit statewide.\n"
+        },
+        {
+          "key": "level_of_implementation",
+          "label": "Implementation level",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 1.0,
+          "prerequisite": true,
+          "summary": "What share of the planned service will actually be operating. Use 100% for a full build-out, less for a pilot or phased roll-out.",
+          "source_note": "your project scope / agency service plan",
+          "tooltip": "Phase-in factor. 100% = the new/expanded service is fully operating.",
+          "instructions": "Use this to phase in the effect. 100% means the new or expanded service is\nfully operating across the impacted area; a pilot or partial roll-out lowers it.\n\nTo check the existing routes, operators, and service in your area, CDOT's\n[Statewide Transit Routes map](https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824)\nmaps fixed-route transit statewide.\n"
+        }
+      ],
+      "auto_filled_summary": [
+        "mode share",
+        "vehicle occupancy",
+        "baseline VMT"
+      ],
+      "notes": "Split from the merged transit service tile. Engine: strategy_transit_service_expansion (basis=service_miles).",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "elasticity": 0.75,
+          "trip_red_ratio": 0.7
+        },
+        "formula": "-level_of_implementation * pct_change * transit_mode_share * elasticity * (1 / avo) * trip_red_ratio"
+      },
+      "_defaults": {
+        "pct_change": 0.2,
+        "level_of_implementation": 1.0
+      }
+    },
+    {
+      "id": "lane_mile_addition",
+      "uid": "ID-01",
+      "name": "Lane Miles Added (Negative Impact on VMT)",
+      "category": "induced",
+      "status": "implemented",
+      "tags": [
+        "infrastructure",
+        "auto",
+        "all-trips",
+        "mpo",
+        "corridor"
+      ],
+      "short_description": "Change in roadway capacity. Added lanes increase VMT via induced demand; a road diet (negative lane miles) reduces it. Magnitude depends on facility class.",
+      "extended_description": "Adding lane miles is an inverse measure that estimates potential VMT increases. Unlike\nthe other measures in this tool, adding lane miles is not seen as a TDM strategy. For\nthe purposes of this tool, this estimate measures the potential negative impacts\nassociated with added lane miles and induced demand.\n\nThe effect of induced demand will vary by roadway type and context, with major freeway\ncapacity typically producing stronger induced travel effects than small changes on\nlower-volume streets.\n\nThis same relationship runs in reverse: removing through-lane capacity (a **road\ndiet**) reduces VMT. To model a road diet, enter a **negative** number of lane miles\n(e.g. `-2` for a project that removes two lane-miles of general-purpose capacity).\n",
+      "guidance": "Use this strategy to estimate added driving from a roadway capacity\nproject, or VMT savings from a road diet (enter negative lane miles). Apply it to\ngeneral-purpose capacity changes; specialized improvements such as turn lanes, bus-only\nlanes, or safety projects should be evaluated based on their specific purpose.\n",
+      "images": [],
+      "method": "Duranton & Turner 2011 long-run induced-demand elasticities",
+      "formula": "ΔVMT% = (new_lane_miles / existing_lane_miles_in_class) × ε",
+      "methodology_detail": "Widening a road or adding lanes makes driving easier, which over time generates\nmore vehicle miles traveled (VMT), an effect known as induced demand. The added\ndriving is proportional to how much the new lanes increase capacity for that type\nof road.\n\n`ΔVMT% = (new_lane_miles / existing_lane_miles_in_class) × ε`\n\nThe strength of the effect depends on the road type: freeways and expressways\nbring out the most new travel, arterials less, and collectors and local streets\nthe least (Duranton & Turner 2011). Induced demand is not a CAPCOA reduction\nmeasure, so no CAPCOA reference applies.\n",
+      "applicability": {},
+      "inputs": [
+        {
+          "key": "new_lane_miles",
+          "label": "Net change in general-purpose lane miles",
+          "control": "number",
+          "step": 0.1,
+          "default": 2.0,
+          "prerequisite": true,
+          "summary": "The net change in through-lane miles the project makes (positive for added lanes, negative for a road diet), excluding turn lanes and shoulders.",
+          "source_note": "your project scope / roadway design",
+          "tooltip": "Signed net change in through-lane miles, excluding turn lanes and shoulders. Positive = lanes added; negative = a road diet (lanes removed).",
+          "instructions": "Enter the net change in through-lane miles the project makes: lane-miles, not\ncenterline miles (a 2-mile project adding one lane each way is 4 lane-miles).\nUse a **positive** value for added capacity and a **negative** value to model a\n**road diet** that removes through-lane capacity (e.g. `-4` for a 2-mile project\nthat removes one lane each way). Exclude turn lanes, auxiliary lanes, and shoulders.\n",
+          "min": -20,
+          "unit": "lane-mi"
+        },
+        {
+          "key": "facility_class",
+          "label": "Facility class",
+          "control": "select",
+          "options": [
+            {
+              "value": "freeway",
+              "label": "Freeway (ε = +1.0)"
+            },
+            {
+              "value": "expressway",
+              "label": "Expressway (ε = +1.0)"
+            },
+            {
+              "value": "major_arterial",
+              "label": "Major arterial (ε = +0.6)"
+            },
+            {
+              "value": "minor_arterial",
+              "label": "Minor arterial (ε = +0.6)"
+            },
+            {
+              "value": "collector",
+              "label": "Collector (ε = +0.4)"
+            },
+            {
+              "value": "local",
+              "label": "Local (ε = +0.4)"
+            }
+          ],
+          "default": "major_arterial",
+          "prerequisite": true,
+          "summary": "The functional classification of the road being widened or narrowed; freeways induce the most new travel, local streets the least.",
+          "source_note": "the functional class of the road in your project scope",
+          "tooltip": "Sets how strongly new capacity brings out traffic. Existing lane miles for the area come from the loaded network.",
+          "instructions": "Pick the class of the road being widened. It sets how strongly the new capacity\nbrings out traffic: freeways and expressways induce the most new travel,\narterials less, and collectors and local streets the least. Match it to the\nfunctional classification of the road you're expanding.\n"
+        }
+      ],
+      "notes": "",
+      "_defaults": {
+        "new_lane_miles": 2.0,
+        "facility_class": "major_arterial"
+      }
+    },
+    {
+      "id": "mixed_use_development",
+      "uid": "LU-05",
+      "name": "Mixed-Use Development (Without Transit)",
+      "category": "landuse",
+      "status": "planned",
+      "tags": [],
+      "short_description": "Co-locating residential, commercial, office, civic, and recreational land uses in a single location, where the development is not tied to a high-quality transit station.",
+      "extended_description": "Mixed-use development permits residential, commercial, office, civic, and/or recreational\nland uses in a single location. By locating housing, jobs, services, and daily needs closer\ntogether, mixed-use development can reduce reliance on long single-occupancy vehicle trips.\n\nThe effect of mixed-use development will vary based on the specific land uses proposed,\ndensity, street connectivity, parking conditions, and access to transit and active\ntransportation. Its VMT reduction potential may be lower where uses are technically mixed\nbut still separated by large blocks, wide roads, excessive parking, or limited pedestrian\nand bicycle connections.\n",
+      "guidance": "Use this strategy for land use projects or policies that bring complementary\nuses closer together but are not specifically tied to high-quality transit. It is most\nappropriate when housing, jobs, services, retail, civic uses, or recreation are co-located\nso that some daily trips can be made by walking, biking, or shorter drives. For development\ncentered on a major transit station, use [Transit-Oriented\nDevelopment](#/strategies/transit_oriented_development)\ninstead.\n",
+      "images": [],
+      "method": "",
+      "formula": "",
+      "methodology_detail": "",
+      "applicability": {},
+      "inputs": [],
+      "notes": "Tier 1 (\"Must Have\"). uid LU-05 assigned here (doc listed it as \"ID not yet assigned\"). No calc reference yet; needs method/formula/inputs before promotion to strategies/.",
+      "_defaults": {}
+    },
+    {
+      "id": "mobility_hub",
+      "uid": "TR-03",
+      "name": "Mobility hub",
+      "category": "transit",
+      "status": "planned",
+      "tags": [],
+      "short_description": "A central location where multiple travel modes (transit, bikeshare, micromobility, ride-hailing, etc.) connect seamlessly.",
+      "extended_description": "Mobility hubs connect multiple travel options in a convenient location, such as transit,\nbikeshare, micromobility, rideshare, carshare, or shuttle services. Mobility hubs can help\nusers transfer between modes, complete first/last-mile connections, and reach destinations\nthat may be difficult to access by one mode alone.\n\nThe effect of a mobility hub will vary based on the number, quality, and usefulness of the\nservices connected through the hub. Mobility hubs are most effective when they link\nreliable transportation options, serve key origins and destinations, and make transfers\nbetween modes simple, visible, and convenient.\n",
+      "guidance": "Use this strategy for projects that create or improve a location where\nmultiple travel options are intentionally connected, such as transit, bikeshare,\nscooter-share, carshare, rideshare, shuttles, or secure bike parking. Mobility hubs should\nbe modeled where the hub improves access to useful services or destinations. Avoid\ndouble-counting individual mobility components that are also modeled separately unless the\ninputs are clearly separated.\n",
+      "images": [],
+      "method": "",
+      "formula": "",
+      "methodology_detail": "",
+      "applicability": {},
+      "inputs": [],
+      "notes": "Tier 1. Sheet: quantification not recommended (Handy et al. 2025), but a composite-stack Python reference exists (strategy_mobility_hub).",
+      "_defaults": {}
+    },
+    {
+      "id": "park_and_ride",
+      "uid": "TR-04",
+      "name": "Park-and-Ride",
+      "category": "transit",
+      "status": "implemented",
+      "tags": [
+        "infrastructure",
+        "transit",
+        "commute",
+        "corridor",
+        "local-government"
+      ],
+      "short_description": "Designated parking facilities where travelers can leave personal vehicles and transfer to transit or carpools.",
+      "extended_description": "Park-and-rides are designated facilities where users can leave personal vehicles and\ntransfer to transit, carpools, vanpools, or shuttle services. Park-and-rides can support\nlonger commute trips, regional travel, first/last-mile access to transit, and connections\nfor users who do not live within walking or biking distance of frequent transit service.\n\nThe effect of a park-and-ride will vary based on its location, utilization, and connection\nto useful transportation services. Park-and-rides are most effective when they are paired\nwith reliable transit, organized carpools or vanpools, frequent shuttle service, or managed\nparking strategies, especially in suburban, rural, and regional corridor contexts where\nthey can shorten drive-alone trips rather than simply adding new vehicle trips to reach\ntransit.\n",
+      "guidance": "Use this strategy for new or improved park-and-ride facilities that connect\ndrivers to various types of transit services. Park-and-rides are most appropriate when\nusers can replace a longer drive-alone trip with a shorter drive to a park-and-ride paired\nwith a transit trip.\n",
+      "images": [],
+      "method": "Derived (Duncan & Cao 2020) with local TAZ catchment",
+      "formula": "ΔCommuteVMT% = −(min(supply, demand) × V_net) / commute_VMT_catchment",
+      "methodology_detail": "A park-and-ride converts a would-be drive-all-the-way commute into a shorter drive to the\nlot plus a transit trip. The credit is the avoided line-haul mileage, net of the access\ndrive, for the riders who would otherwise have driven the whole way. No CAPCOA measure or\nCARB brief quantifies park-and-ride, so this method is built on the only US study that\nisolates the *marginal* VMT effect (Duncan & Cao 2020), with the avoided mileage\nreconstructed from local Colorado trip lengths.\n\n**Spatial catchment.** Savings accrue along the corridor riders come from, not at the lot.\nThe calculator identifies the catchment (the Traffic Analysis Zones, or TAZs, within the\naverage access drive of the facility) and measures the reduction against the commute\nvehicle miles traveled (VMT) *produced by those TAZs*.\n\n**Binding constraint.** Diverted round trips are computed two ways and the lower (binding)\nvalue is used:\n\n- *Supply side* (parking capacity): `spaces × utilization × diversion_fraction`\n- *Demand side* (who actually drives to transit): `transit_commute_trips × drive-to-transit share × diversion_fraction`\n\nThe drive-to-transit access share comes from the area's observed transit-access split (the\nshare of transit riders who reach transit by car versus on foot) rather than a national\ndefault. The avoided VMT per diverted round trip is `V_net = 2 × (commute trip length −\naccess drive length)`, using the area's observed commute trip length. The diversion\nfraction is 0.80 for an isolated facility and 0.32 where a comparable alternative exists\n(Duncan & Cao 2020). Where local trip lengths are unavailable, the method falls back to\nDuncan & Cao's empirical 19 mi (isolated) / 10 mi (alternative) per round trip, which\nalready embed the diversion behavior.\n\n**Context limitation:** This method is defensible for the US auto-oriented commuter\ncontext that matches Colorado. International studies (Mingardo 2013; Parkhurst 2000) find\npark-and-ride can *increase* vehicle travel in some European settings; those are out of\nscope here. Commute-VMT reductions above ~5% of the catchment are flagged for review.\n\n**Sources**\n\n- Duncan, M., & Cao, J. (2020). *Marginal Impacts of Park-and-Ride Facilities in the Twin\n  Cities*. Transportation Research Record 2674. https://doi.org/10.1177/0361198120945696\n- Duncan, M. (2019). *Would the replacement of park-and-ride facilities with\n  transit-oriented development reduce vehicle kilometers traveled...* Transport Policy 81.\n  https://doi.org/10.1016/j.tranpol.2017.12.005\n",
+      "applicability": {
+        "area_types": [
+          "urban",
+          "suburban",
+          "rural"
+        ],
+        "warn_message": "Park-and-ride is most defensible in suburban, rural, and regional commute corridors where it shortens drive-alone trips."
+      },
+      "inputs": [
+        {
+          "key": "n_spaces",
+          "label": "Number of parking spaces",
+          "control": "number",
+          "min": 0,
+          "step": 10,
+          "default": 200,
+          "unit": "spaces",
+          "prerequisite": true,
+          "summary": "The total number of parking spaces planned at the park-and-ride facility, which bounds how many daily round trips it can divert.",
+          "source_note": "your facility design / site plan",
+          "tooltip": "Total parking spaces at the park-and-ride facility.",
+          "instructions": "Enter the total number of parking spaces at the facility. This bounds the supply side:\nthe facility cannot divert more daily round trips than it has occupied spaces.\n"
+        },
+        {
+          "key": "l_access_mi",
+          "label": "Average access drive (one-way)",
+          "control": "number",
+          "min": 0,
+          "max": 30,
+          "step": 0.5,
+          "default": 4,
+          "unit": "miles",
+          "prerequisite": true,
+          "summary": "The average one-way distance riders drive from home to reach the facility, which also defines the catchment area used in the estimate.",
+          "source_note": "your expected rider catchment / corridor travel patterns",
+          "tooltip": "Average one-way distance riders drive from home to the facility. Also defines the catchment.",
+          "instructions": "Enter the average one-way distance riders drive from home to reach the facility. This\nboth nets out of the avoided mileage and defines the catchment (the area riders come\nfrom) used for the VMT denominator.\n"
+        },
+        {
+          "key": "utilization",
+          "label": "Utilization rate",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.7,
+          "prerequisite": true,
+          "summary": "The share of parking spaces you expect to be occupied on a typical day (occupied spaces divided by total spaces).",
+          "source_note": "observed occupancy counts, or the 70% planning default",
+          "tooltip": "Occupied spaces ÷ total spaces (planning default 70%).",
+          "instructions": "Estimate the share of spaces typically occupied. Use observed counts if available;\notherwise the 70% planning default is reasonable.\n"
+        },
+        {
+          "key": "isolated_facility",
+          "label": "Comparable facilities nearby?",
+          "control": "select",
+          "default": "isolated",
+          "options": [
+            {
+              "value": "isolated",
+              "label": "Isolated (no comparable park-and-ride nearby)"
+            },
+            {
+              "value": "alternative",
+              "label": "A comparable park-and-ride exists nearby"
+            }
+          ],
+          "prerequisite": true,
+          "summary": "Whether a comparable park-and-ride facility already exists nearby, which sets how many riders depend on this specific lot to use transit.",
+          "source_note": "your knowledge of nearby park-and-ride facilities",
+          "tooltip": "Whether comparable alternative park-and-ride facilities exist nearby. Drives the diversion fraction (0.80 isolated vs 0.32 with an alternative).",
+          "instructions": "Choose \"Isolated\" if there is no comparable park-and-ride nearby, so riders depend on this\nfacility to use transit (diversion fraction 0.80). Choose the alternative option where a\ncomparable facility exists (0.32), since fewer riders would abandon transit without this\nspecific lot.\n"
+        },
+        {
+          "key": "total_transit_commute_trips_catchment",
+          "label": "Daily transit commute trips in catchment",
+          "control": "number",
+          "min": 0,
+          "step": 50,
+          "default": 0,
+          "unit": "trips/day",
+          "prerequisite": true,
+          "summary": "Optional but recommended - the total daily commute transit trips originating in the catchment, which caps the credit to commuters actually driving to transit.",
+          "source_note": "your regional travel model or transit ridership data",
+          "tooltip": "Optional. Total daily commute transit trips originating in the catchment, used as the demand-side ceiling.",
+          "instructions": "Optional but recommended. Enter the total daily commute transit trips originating in the\ncatchment. Combined with the observed drive-to-transit access share, this caps the credit\nat the number of commuters actually driving to transit. Leave at 0 to use the\nparking-capacity (supply-side) estimate only; the calculator will flag the missing\ndemand ceiling.\n"
+        }
+      ],
+      "notes": "Promoted from todo; replaces the legacy CAPCOA 2010 T-22 credit with a derived Duncan & Cao (2020) method that uses the observed drive/walk transit-access split and a spatial catchment. COMPLEX (cross-TAZ / spatial): stays a Python calc fn (strategy_park_and_ride) and is hand-ported to app/src/strategies/parkAndRide.ts (AGGREGATE_REGISTRY), pinned to Python by parkAndRide.test.ts via scripts/generate_pnr_golden.py. App approximation: the user's selected TAZs are the catchment (no runtime geometry), the commute split is the statewide default (no observed vmt_share_commute on the app TAZ layer), and with no drive-access/transit-trip data the credit is supply-side only (observed trip length is used where avg_trip_length is present). For a geographic sub-catchment or demand ceiling, those fields must be added to the app TAZ layer.",
+      "_defaults": {
+        "n_spaces": 200,
+        "l_access_mi": 4,
+        "utilization": 0.7,
+        "isolated_facility": "isolated",
+        "total_transit_commute_trips_catchment": 0
+      }
+    },
+    {
+      "id": "parking_cashout",
+      "uid": "PK-05",
+      "name": "Parking Cash-Out",
+      "category": "parking",
+      "status": "planned",
+      "tags": [
+        "program",
+        "commute",
+        "employer",
+        "local-government"
+      ],
+      "short_description": "Offering employees cash or equivalent benefits in lieu of a free parking space.",
+      "extended_description": "Parking cash-outs are the practice of offering employees cash or equivalent benefits in\nlieu of a free parking space. Parking cash-outs encourage individuals to choose alternative\nmodes for commuting trips, especially when paired with free transit passes or other TDM\nmeasures that reduce transportation costs for the user.\n\nThe effect of parking cash-outs will depend on the presence of alternative modes of\ntransportation and their ease of use. If alternative modes are accessible, easy to use, and\nlower cost than driving, individuals may be more likely to choose to participate in a\nparking cash-out.\n",
+      "guidance": "Use this strategy for employer programs that offer employees cash or an\nequivalent benefit when they forgo a free or subsidized parking space. This strategy\napplies to commute trips and should be used only for employees who are eligible for an\nemployer-provided parking benefit. Double counting can occur if cash-out benefits are\nalready modeled under [Workplace Parking\nPricing](#/strategies/workplace_parking_pricing),\n[Employee Commuting\nBenefits](#/strategies/employee_commuting_benefits),\nor [Commuter\nIncentives](#/strategies/commute_incentives).\n",
+      "images": [],
+      "method": "CAPCOA T-13 (parking price-elasticity chain)",
+      "formula": "ΔCommuteVMT% = −clamp(|(cash_out / parking_cost) × −0.4 × eligible × veh_MS × p_drive × conv|, 0, 12%)",
+      "methodology_detail": "Offering cash in lieu of a free or subsidized parking space exposes the true cost of\nparking and lets employees pocket the value if they don't drive, shifting commute trips off\nsingle-occupancy driving. Following CAPCOA\n[T-13 (Implement Employee Parking Cash-Out)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-13.pdf),\nthe cash-out amount is treated as a price signal applied to parking and run through the\nparking price-elasticity → mode-share → vehicle-miles-traveled (VMT) chain:\n\n`ΔVMT% = −(cash_out / avg_parking_cost) × −0.4 × pct_eligible × commute_vehicle_mode_share × pct_would_drive × trip_to_VMT`\n\nusing the parking-demand price elasticity of **−0.4** (Lehner & Peirson 2019). The commute\nvehicle mode share comes from the area's observed commute mode share. \"Percent eligible\" is\nthe share of employees who *could* participate (usually 100%), not the share who actually\ndo.\n\nThe reduction is capped at the **~12% empirical ceiling** from Shoup's eight-employer\ncash-out study (1997), corroborated by a ~12% single-occupancy reduction in a Twin Cities\nseven-employer study (FHWA 2023).\n\n> **Constants pending confirmation.** The CAPCOA T-13 fact sheet could not be read at\n> implementation time. The \"share of affected parking trips that would otherwise be driven\"\n> and the trip-to-VMT conversion are **placeholders** exposed in the code\n> (`PARKING_CASHOUT_T13`); whether the elasticity applies to a price *ratio* (used here) or\n> an absolute daily price is also unconfirmed. Confirm against the fact sheet before relying\n> on the numbers. Outputs flag this.\n\n**Sources**\n\n- CAPCOA *Handbook*, Measure\n  [T-13 (Implement Employee Parking Cash-Out)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-13.pdf).\n- Lehner & Peirson (2019), parking price elasticity (−0.4).\n- Shoup, D. (1997), *Evaluating the effects of cashing out employer-paid parking* (~12% VMT).\n- FHWA (2023), *City-Level Parking Cash-Out and Commuter Benefits Ordinances*.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Cash-out works where commuters have viable non-driving options; results use placeholder constants pending CAPCOA T-13 confirmation."
+      },
+      "inputs": [
+        {
+          "key": "cash_out_amount",
+          "label": "Daily cash-out offered",
+          "control": "number",
+          "min": 0,
+          "step": 0.5,
+          "default": 5,
+          "unit": "$/day",
+          "prerequisite": true,
+          "summary": "The daily value of the cash or equivalent benefit offered to employees who forgo an employer-provided parking space.",
+          "source_note": "your proposed employer benefit / program design",
+          "tooltip": "Daily cash (or equivalent benefit) offered to employees who give up their parking space.",
+          "instructions": "Enter the daily value of the cash (or equivalent benefit) offered to employees who forgo\na parking space. Use the same time basis as the parking cost below. A cash-out is\ntypically set equal to the value of the parking subsidy.\n"
+        },
+        {
+          "key": "avg_parking_cost",
+          "label": "Value of the parking space",
+          "control": "number",
+          "min": 0,
+          "step": 0.5,
+          "default": 5,
+          "unit": "$/day",
+          "prerequisite": true,
+          "summary": "The daily market value of the subsidized parking space the employer provides - the rate to lease an equivalent space.",
+          "source_note": "local commercial parking lease rates",
+          "tooltip": "Daily value of the subsidized parking space, same time basis as the cash-out. The price signal is the ratio of the two.",
+          "instructions": "Enter the daily value of the subsidized parking space the employer provides, i.e. the market\nrate to lease an equivalent space. The method uses the ratio of cash-out to parking value\nas the price signal, so a cash-out equal to the parking value is a ratio of 1.0.\n"
+        },
+        {
+          "key": "pct_employees_eligible",
+          "label": "Share of employees eligible",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 1.0,
+          "prerequisite": true,
+          "summary": "The share of employees who could participate if they chose to (usually near 100%), excluding those required to drive or without the benefit.",
+          "source_note": "your employer workforce / benefit eligibility rules",
+          "tooltip": "Share of employees who could participate if they wished (usually ~100%), not the share who actually do.",
+          "instructions": "Estimate the share of employees who *could* participate if they chose to, usually close\nto 100%. Exclude night-shift workers without transit/rideshare access, employees required\nto drive for their job, and contract employees without the benefit. This is not the share\nwho actually take the cash-out.\n"
+        }
+      ],
+      "notes": "Promoted from todo. CAPCOA T-13; pct_would_drive and trip-to-VMT conversion are PLACEHOLDER constants (PARKING_CASHOUT_T13), cap = Shoup ~12% empirical bound. COMMUTE pool; do not stack with T-12/CTR. Engine: strategy_parking_cashout.",
+      "_defaults": {
+        "cash_out_amount": 5,
+        "avg_parking_cost": 5,
+        "pct_employees_eligible": 1.0
+      }
+    },
+    {
+      "id": "parking_fees_curb_management",
+      "uid": "PK-02",
+      "name": "Parking Fees and Curb Management",
+      "category": "parking",
+      "status": "implemented",
+      "tags": [
+        "pricing",
+        "auto",
+        "local-government",
+        "all-trips"
+      ],
+      "short_description": "Price and manage on- and off-street public parking across an area to reduce auto trips and improve turnover.",
+      "extended_description": "Parking fees and curb management price public parking in areas such as metered on-street\nspaces, municipal lots, or managed curb zones. Pricing helps manage limited parking so\nspaces are more likely to be available for people who need them, while also encouraging\nsome commuters to consider lower-cost options such as transit, carpooling, biking,\nwalking, or other travel options.\n\nThe effect depends on the price, whether free parking is still available nearby, and the\nquality of other possible travel options that avoid the need for parking.\n",
+      "guidance": "This strategy applies the price change to a share of area driving\nspecified by the user. For parking charged by employers, use [Workplace Parking\nPricing](#/strategies/workplace_parking_pricing).\nFor rates that change with demand, use [Dynamic Parking\nPricing](#/strategies/dynamic_parking_pricing).\n",
+      "images": [],
+      "method": "Lehner & Peer (2019) parking demand elasticity (ε=−0.40), all trips",
+      "formula": "ΔVMT% = %Δprice × ε × share_affected",
+      "methodology_detail": "Charging for public parking that used to be free or cheap raises the cost of\ndriving to those destinations, so some trips are made another way or not at all,\nreducing vehicle miles traveled (VMT). The larger the price increase and the more\nof the area's driving it covers, the bigger the reduction, following CAPCOA\n[T-24 (Implement Market Price Public Parking, On-Street)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-24.pdf)\nand the parking-response relationship in Lehner & Peer (2019).\n\n`ΔVMT% = %Δprice × ε × share_affected`\n\nWhere parking is free today, introducing a charge is treated as a meaningful price\nincrease. The estimate is most reliable for moderate price changes and overstates\nthe response to very large ones (above about a 50% increase).\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban"
+        ],
+        "warn_message": "Priced public and curb parking is an urban tool with little application in lower-density areas where parking is free and plentiful."
+      },
+      "inputs": [
+        {
+          "key": "new_price",
+          "label": "New parking price",
+          "control": "number",
+          "min": 0,
+          "max": 50,
+          "step": 0.5,
+          "default": 8.0,
+          "unit": "$ per day",
+          "prerequisite": true,
+          "summary": "The new average full-day price for the priced or managed public parking; if parking is free today, any new price counts as an increase.",
+          "source_note": "your proposed parking rate schedule / curb management plan",
+          "tooltip": "New average price for the managed parking. The starting price defaults to the typical price for this type of area.",
+          "instructions": "Enter the new average price for the priced/managed parking (a representative\nfull-day equivalent for the affected spaces). If parking is free today, any new\nprice is treated as a meaningful increase.\n"
+        },
+        {
+          "key": "share_affected",
+          "label": "Share of area VMT priced",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.3,
+          "prerequisite": true,
+          "summary": "The share of the area's driving whose destinations fall under the new parking pricing (for example, trips ending in a priced district).",
+          "source_note": "your pricing-program boundary vs. area travel patterns",
+          "tooltip": "Share of the area's driving whose destinations fall under the new parking pricing.",
+          "instructions": "Estimate the share of the area's driving whose destinations are covered by the\nnew pricing, for example trips ending in a priced downtown or district. A\ndistrict-wide program covers far more than a few metered blocks. This input is\nrequired.\n"
+        }
+      ],
+      "notes": "Promoted from todo; split from the pricing engine. Engine: strategy_parking_pricing (trip_purpose=all).",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "elasticity": -0.4,
+          "vmt_to_trips": 1.0
+        },
+        "row_defaults": {
+          "parking_price": 0
+        },
+        "let": [
+          {
+            "effective_old": "if(parking_price > 0, parking_price, new_price / 2)"
+          },
+          {
+            "pct_price": "(new_price - effective_old) / effective_old"
+          }
+        ],
+        "formula": "pct_price * elasticity * share_affected * vmt_to_trips"
+      },
+      "_defaults": {
+        "new_price": 8.0,
+        "share_affected": 0.3
+      }
+    },
+    {
+      "id": "pedestrian_network_improvements",
+      "uid": "BP-08",
+      "name": "Pedestrian Network Improvements",
+      "category": "bikeped",
+      "status": "implemented",
+      "tags": [
+        "infrastructure",
+        "walk",
+        "local-government"
+      ],
+      "short_description": "New and repaired sidewalks that close gaps in the pedestrian network, shifting short trips from driving to walking.",
+      "extended_description": "Pedestrian network improvements add new sidewalks and repair degraded or substandard ones,\nclosing gaps that make walking impractical. A more complete, comfortable pedestrian network\nencourages people to walk for short trips that would otherwise be made by car, lowering\nvehicle miles traveled.\n\nThe effect depends on how much the sidewalk network expands relative to the street network\nand on how many nearby trips are short enough to walk. Sidewalk investments are most\neffective in compact, mixed-use areas where destinations are close together and the main\nbarrier is a missing or broken pedestrian connection.\n",
+      "guidance": "Use this strategy for projects that add or repair sidewalks within a study\narea (about a 0.6-mile radius, a 6–10 minute walk, around the improvement). Measure\nsidewalk length on both sides of the street: a 0.5-mile street with full coverage is 1.0\nmile of sidewalk.\n",
+      "images": [],
+      "method": "CAPCOA T-18 (verbatim)",
+      "formula": "ΔHouseholdVMT% = ((C / B) − 1) × −0.05",
+      "methodology_detail": "Adding sidewalk coverage shifts some short household trips from driving to walking,\nfollowing CAPCOA\n[T-18 (Provide Pedestrian Network Improvement)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-18.pdf):\n\n`ΔVMT% = ((C / B) − 1) × D`\n\nwhere **B** is existing sidewalk length, **C** is sidewalk length with the measure (both\nmeasured on both sides of the street within a ~0.6-mile study area), and **D = −0.05** is\nthe elasticity of household vehicle travel with respect to the sidewalk-to-street ratio\n(Frank et al. 2011; Handy et al. 2014).\n\nThe reduction is capped at a **6.4% measure maximum**, derived from the share of vehicle\ntrips short enough to shift to walking (FHWA 2019). *Reviewer note:* the fact sheet\nreferences a 3.4% figure in one location and 6.4% in the cap derivation and worked example;\n6.4% is used here per the worked example, flagged for confirmation. The credit applies to\nhousehold vehicle travel; because the calculator does not carry a household-only VMT split,\nit is applied to all-trip VMT and flagged accordingly.\n\n*Worked example:* B = 9 miles, C = 10 miles → `((10/9) − 1) × −0.05 = −0.56%`.\n\n**Sources**\n\n- CAPCOA *Handbook* (2021), Measure\n  [T-18 (Provide Pedestrian Network Improvement)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-18.pdf),\n  pp. 133–136.\n- Frank, L., et al. (2011). WSDOT Research Report WA-RD 765.1.\n- Handy, S., et al. (2014). *Impacts of Pedestrian Strategies on Passenger Vehicle Use and\n  GHG Emissions*. CARB.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Sidewalk improvements shift mostly short trips; the effect is small in low-density areas where destinations are far apart."
+      },
+      "inputs": [
+        {
+          "key": "existing_sidewalk_mi",
+          "label": "Existing sidewalk length",
+          "control": "number",
+          "min": 0,
+          "step": 0.5,
+          "default": 9,
+          "unit": "miles",
+          "prerequisite": true,
+          "summary": "The existing sidewalk length in the study area (about a 0.6-mile radius), measured on both sides of the street.",
+          "source_note": "your sidewalk inventory or GIS layer / study-area measurement",
+          "tooltip": "Existing sidewalk length in the study area, measured on both sides of the street.",
+          "instructions": "Enter the existing sidewalk length in the study area (about a 0.6-mile radius around the\nimprovement). Measure on both sides of the street: a 0.5-mile street with sidewalk on\nboth sides is 1.0 mile; coverage on one side only is 0.5 mile.\n"
+        },
+        {
+          "key": "sidewalk_mi_with_measure",
+          "label": "Sidewalk length with the project",
+          "control": "number",
+          "min": 0,
+          "step": 0.5,
+          "default": 10,
+          "unit": "miles",
+          "prerequisite": true,
+          "summary": "The total sidewalk length in the study area after the project (existing plus new and repaired), measured on both sides of the street.",
+          "source_note": "your project design drawings / plan set",
+          "tooltip": "Sidewalk length in the study area after the project (existing plus new/repaired), both sides of the street.",
+          "instructions": "Enter the sidewalk length after the project (existing sidewalk plus the new and repaired\nsidewalk the project adds), measured the same way (both sides of the street). This must be\nat least the existing length.\n"
+        }
+      ],
+      "notes": "New strategy (CAPCOA T-18, verbatim). Trip pool is household VMT, approximated as all-trip VMT. Amax=6.4% (3.4% discrepancy flagged for reviewer). Closed-form: math lives in the compute block below (no code calc fn). strategy_pedestrian_network_improvements in scripts/strategy_calculations.py is retained as the cross-check oracle.",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "elasticity": -0.05,
+          "measure_max": 0.064
+        },
+        "let": [
+          {
+            "ratio": "sidewalk_mi_with_measure / max(existing_sidewalk_mi, 0.000000001)"
+          },
+          {
+            "a_raw": "(ratio - 1) * elasticity"
+          },
+          {
+            "a": "clamp(a_raw, -1 * measure_max, 0)"
+          }
+        ],
+        "formula": "a"
+      },
+      "_defaults": {
+        "existing_sidewalk_mi": 9,
+        "sidewalk_mi_with_measure": 10
+      }
+    },
+    {
+      "id": "residential_density",
+      "uid": "LU-01",
+      "name": "Increased Residential Density",
+      "category": "landuse",
+      "status": "implemented",
+      "tags": [
+        "land-use",
+        "all-trips",
+        "developer",
+        "local-government",
+        "urban"
+      ],
+      "short_description": "Increase housing units per acre to support shorter trips and more walking, biking, and transit use.",
+      "extended_description": "Increasing residential density adds dense residential development in places where\nresidents can reach jobs, services, transit, and everyday destinations with shorter\ntrips. The VMT reduction benefit is strongest when the development is convenient to key\ndestinations via walking, biking, and transit options. Dense housing alone, without\nnearby destinations or multimodal infrastructure, will not provide significant VMT\nreduction benefits.\n",
+      "guidance": "Use this strategy for housing-focused rezoning or denser residential\ndevelopment. To model a mix of homes and jobs, or a broader change in land use mix,\ncombine it with [Increased Employment\nDensity](#/strategies/employment_density).\n",
+      "images": [],
+      "method": "Stevens (2016) residential VMT-density elasticity (ε=−0.22)",
+      "formula": "ΔVMT% = Δres_density × ε_res",
+      "methodology_detail": "Placing more homes close to destinations shortens trips and makes walking,\nbiking, and transit more viable, which lowers vehicle miles traveled (VMT). A 1%\nincrease in residential density has been associated with about a 0.22% reduction\nin VMT (Stevens 2016), the basis CAPCOA uses for\n[T-1 (Increase Residential Density)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-1.pdf).\nHousing density is a stronger lever than job density.\n\n`ΔVMT% = Δres_density × ε_res`\n\nTo represent a change in the mix of land uses or a mixed-use development, combine\nthis strategy with Increase employment density.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "The density–driving relationship comes from urban and suburban areas; in rural areas, added density yields little reduction in driving or can increase trip lengths."
+      },
+      "inputs": [
+        {
+          "key": "pct_change_res_density",
+          "label": "Change in residential density",
+          "control": "slider",
+          "min": -50,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.2,
+          "prerequisite": true,
+          "summary": "The percent change in housing units per acre the project adds, compared with today's baseline for the project area.",
+          "source_note": "your development program / site plan vs. local baseline (DOLA estimates, zoning)",
+          "tooltip": "Proposed housing density vs. today (compare with Department of Local Affairs and zoning references).",
+          "benchmark": "People/sq mi: single-family suburb ~3,000–5,000; downtown Denver high-rise ~13,000–16,000; Capitol Hill ~25,000.",
+          "instructions": "Enter the percentage change in housing density compared with today's baseline\nfor the project area. A project that doubles density is +100%. The Colorado\nDepartment of Local Affairs (DOLA) housing estimates and local zoning references\n(such as the New Zoning Atlas) can help you compare proposed density against\nexisting conditions.\n\nApproximate benchmarks (people per square mile):\n\n- Standard single-family suburb: ~3,000–5,000\n- Downtown Denver (high-rise): ~13,000–16,000\n- Capitol Hill, Denver's densest neighborhood: ~25,000\n\nThese are order-of-magnitude anchors; local figures vary with lot size,\nbuilding height, and household size.\n"
+        }
+      ],
+      "notes": "Split from density_change. Engine: strategy_density_change (pct_change_emp_density=0).",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "res_elasticity": -0.22
+        },
+        "formula": "pct_change_res_density * res_elasticity"
+      },
+      "_defaults": {
+        "pct_change_res_density": 0.2
+      }
+    },
+    {
+      "id": "separated_bike_lanes",
+      "uid": "BP-01",
+      "name": "Protected or Buffered Bike Lanes",
+      "category": "bikeped",
+      "status": "implemented",
+      "tags": [
+        "infrastructure",
+        "bike",
+        "corridor",
+        "local-government"
+      ],
+      "short_description": "New physically separated bike lanes on roads parallel to a corridor, accounting for ridable days and typical trip lengths.",
+      "extended_description": "Protected bike lanes have physical barriers such as curbs or posts between the bike\nfacility and roadway. Buffered bike lanes provide space between the bike facility and\nthe roadway but do not include physical barriers. Protected bike lanes are typically\nconsidered more high-comfort due to their physically separated nature.\n\nHigh-comfort bike facilities with strong connectivity to the larger bike network and key\ndestinations serve trips that could more reasonably be shifted from driving. Bikeways\nwith unsafe intersection crossings, missing connections or other issues may make biking\nless appealing.\n",
+      "guidance": "Use this strategy for separated bicycle facilities. Facilities that are\nnon-separated bike lanes or just sharrows should select the [Striped Bike Lanes,\nNeighborhood Bikeways and\nSharrows](#/strategies/sharrows_bike_lanes)\nstrategy. The model also factors in seasonality when estimating bike ridership.\n",
+      "images": [],
+      "method": "Adapted CAPCOA T-19-A",
+      "formula": "ΔVMT% = −%VMT_parallel × (days/365) × ε × L_bike / L_veh",
+      "methodology_detail": "A protected lane gives people a comfortable enough route that some who would have\ndriven choose to bike instead, lowering vehicle miles traveled (VMT). The effect\ngrows with the share of nearby driving on the streets the lane parallels and with\nthe number of days a year that are comfortable for cycling, and it is adjusted for\nthe fact that bike trips are typically shorter than car trips, following CAPCOA\n[T-19-A (Construct or Improve Bike Facility)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-19-a.pdf)\nand [T-20 (Expand Bikeway Network)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-20.pdf),\nusing a +0.07 effect size.\n\n`ΔVMT% = −%VMT_parallel × (annual_use_days / 365) × ε × L_bike / L_veh`\n\nLocal commute travel and trip lengths come from the area data; the number of\ncomfortable cycling days is estimated for the area from National Oceanic and\nAtmospheric Administration (NOAA) climate records.\n\n**Sources**\n\n- CAPCOA, *Handbook for Analyzing Greenhouse Gas Emission Reductions* (2021),\n  measures [T-19-A (Construct or Improve Bike Facility)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-19-a.pdf)\n  and [T-20 (Expand Bikeway Network)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-20.pdf).\n- [NOAA NCEI, 1991–2020 U.S. Daily Climate Normals](https://www.ncei.noaa.gov/products/land-based-station/us-climate-normals)\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Protected bike lanes show a limited effect below suburban densities."
+      },
+      "inputs": [
+        {
+          "key": "pct_parallel_vmt_affected",
+          "label": "Share of area VMT on parallel roadways",
+          "control": "slider",
+          "min": 0,
+          "max": 70,
+          "step": 1,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.05,
+          "prerequisite": true,
+          "summary": "The share of your area's driving carried on the street the new bike lane runs along and nearby parallel roads.",
+          "resources": [
+            {
+              "label": "CDOT Traffic Data Explorer",
+              "url": "https://dtdapps.codot.gov/otis/trafficdata"
+            }
+          ],
+          "tooltip": "Engineering judgment: share of the corridor's driving carried on the street the new bike lane runs on and nearby parallel roads.",
+          "instructions": "Estimate the share of your area's driving that happens on the streets your new\nbike lane runs alongside. A quick approach: identify the parallel street(s) the\nlane serves, then judge what fraction of all local driving they carry. A\nprotected lane along a single arterial in a small area might be 5–15%; a lane\nalong a minor street might be 1–3%. If you have a travel demand model or traffic\ncounts, divide the driving on the parallel streets by total area driving. When\nin doubt, start with the 5% default and adjust.\n\nTo check traffic on a specific street, CDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)\nmaps annual average daily traffic (AADT) counts for state highways statewide.\n"
+        },
+        {
+          "key": "annual_use_days",
+          "label": "Annual ridable days",
+          "control": "number",
+          "step": 5,
+          "default": 230,
+          "tooltip": "Filled in from National Oceanic and Atmospheric Administration (NOAA) 1991-2020 climate records for your area. Adjust if you have a project-specific number.",
+          "instructions": "This is the number of days per year the weather is comfortable for cycling: a\ndaytime high between 32°F and 95°F with no rain or snow. You usually don't need\nto look this up: the calculator fills it in from National Oceanic and Atmospheric\nAdministration (NOAA) climate records for your area. Only override it if you have\na local estimate, for example a community with an unusually long riding season.\n",
+          "min": 0,
+          "max": 365,
+          "unit": "days",
+          "prepopulated_from": "annual_bikeable_days_taz"
+        }
+      ],
+      "notes": "",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "elasticity": 0.07,
+          "bike_len": 1.5
+        },
+        "row_defaults": {
+          "avg_trip_length": 9.0
+        },
+        "formula": "-pct_parallel_vmt_affected * (annual_use_days / 365) * elasticity * bike_len / max(avg_trip_length, 0.5)"
+      },
+      "_defaults": {
+        "pct_parallel_vmt_affected": 0.05,
+        "annual_use_days": 230
+      }
+    },
+    {
+      "id": "shared_micromobility",
+      "uid": "BP-03",
+      "name": "Shared Micromobility",
+      "category": "bikeped",
+      "status": "implemented",
+      "tags": [
+        "service",
+        "micromobility",
+        "local-government",
+        "urban"
+      ],
+      "short_description": "Shared bikes, e-bikes, or scooters available for short trips. How much driving they replace varies by device type.",
+      "extended_description": "Shared micromobility provides short-term access to shared bicycles, e-bikes, or scooters\nfor short trips and connections to transit. It is most useful in places where trips are\ntoo long to walk comfortably but short enough that driving is not time or cost\neffective.\n\nThe benefits of shared micromobility depend on how many micromobility trips replace car\ntrips rather than walking, transit, or personal bike trips. Systems located near\ntransit, campuses, downtowns, and dense neighborhoods generally have stronger potential,\nespecially when shared micromobility devices are easy to find and parking is well\nmanaged.\n",
+      "guidance": "Use this strategy for launching or expanding a shared fleet. Enter how\nmuch of the population can reach a vehicle before and after the project, and select the\ndevice type that matches the system.\n",
+      "images": [],
+      "method": "Effect-size estimate (adapted CAPCOA T-22-A / T-22-B / T-22-C; NACTO trip-substitution research)",
+      "formula": "ΔVMT% = −Δaccess × micro_trips × sub_ratio × L_micro / (veh_trips × L_veh)",
+      "methodology_detail": "When a shared bike, e-bike, or scooter is within easy reach, some trips that would\nhave been made by car are made on the device instead, lowering vehicle miles\ntraveled (VMT). The reduction depends on how many more people can reach the system\nand the device type, since each type replaces car trips at a different rate: pedal\nbikes about 20%, e-bikes about 35%, and scooters about 39% (McQueen et al. 2020;\nFitch et al. 2021).\n\n`ΔVMT% = −Δaccess × micro_trips × sub_ratio × L_micro / (veh_trips × L_veh)`\n\nThis estimate is adapted from CAPCOA\n[T-22-A (pedal bikeshare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-a.pdf),\n[T-22-B (electric bikeshare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-b.pdf),\nand [T-22-C (scootershare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-c.pdf),\nwith trip data from the National Association of City Transportation Officials\n(NACTO).\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban"
+        ],
+        "warn_message": "Shared bike and scooter systems need urban densities to attract enough trips and are rarely viable below them."
+      },
+      "inputs": [
+        {
+          "key": "micromobility_type",
+          "label": "Mode type",
+          "control": "select",
+          "options": [
+            {
+              "value": "bikeshare",
+              "label": "Pedal bikeshare (19.6% sub)"
+            },
+            {
+              "value": "e-bikeshare",
+              "label": "E-bike share (35.0% sub)"
+            },
+            {
+              "value": "scootershare",
+              "label": "Scooter share (38.5% sub)"
+            }
+          ],
+          "default": "bikeshare",
+          "prerequisite": true,
+          "summary": "The device type that matches the system (pedal bikeshare, e-bike share, or scooter share), which sets how often it replaces a car trip.",
+          "source_note": "your system plan or vendor / operator agreement",
+          "tooltip": "Determines the default substitution ratio.",
+          "instructions": "Pick the device type that matches the system. It sets the auto-substitution\nratio: e-bikes and scooters replace car trips more often than pedal bikes, so\nthey yield a larger VMT effect for the same number of trips.\n"
+        },
+        {
+          "key": "pct_pop_access_before",
+          "label": "% population with access today",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.0,
+          "prerequisite": true,
+          "summary": "The share of the area's population that already lives within an easy walk (about a quarter mile) of an existing dock, station, or service zone. Enter 0% if none today.",
+          "source_note": "your existing service map / station locations",
+          "tooltip": "Estimate of households within walking distance (≈¼ mi) of an existing dock/station.",
+          "instructions": "Estimate the share of the area's population that already lives within an easy\nwalk (about ¼ mile) of an existing dock, station, or service zone. If there is\nno system today, this is 0%.\n"
+        },
+        {
+          "key": "pct_pop_access_after",
+          "label": "% population with access after",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.3,
+          "prerequisite": true,
+          "summary": "The share of the area's population within an easy walk of the system after the deployment or expansion is complete.",
+          "source_note": "your proposed deployment plan / service-area map",
+          "tooltip": "Estimate after the proposed deployment is complete.",
+          "instructions": "Estimate the share of the population within an easy walk of the system after\nthe deployment or expansion. The difference from today's access drives the\nreduction: a citywide dockless permit reaches far more people than a few\ndowntown stations.\n"
+        }
+      ],
+      "notes": "",
+      "_defaults": {
+        "micromobility_type": "bikeshare",
+        "pct_pop_access_before": 0.0,
+        "pct_pop_access_after": 0.3
+      }
+    },
+    {
+      "id": "sharrows_bike_lanes",
+      "uid": "BP-02",
+      "name": "Striped Bike Lanes, Neighborhood Bikeways and Sharrows",
+      "category": "bikeped",
+      "status": "implemented",
+      "tags": [
+        "infrastructure",
+        "bike",
+        "corridor",
+        "local-government"
+      ],
+      "short_description": "Lower-grade on-street bike infrastructure (sharrows, painted lanes) applied across an area, raising bike mode share by a documented effect size.",
+      "extended_description": "Bike lanes are facilities that do not have separation between the roadway and the\nbikeway. They are typically defined by pavement markings, such as a painted line, rather\nthan by curbs, posts or other physical separation.\n\nSharrows, or shared lane markings, are pavement markings that indicate where bicyclists\nmay ride within a shared travel lane. They can help alert drivers to expect bicyclists\nalong a corridor, but they do not provide any significant comfort and safety\nimprovements for those riding bikes.\n\nNeighborhood bikeways are travel lanes shared by vehicles and bicyclists, but they are\nan improvement over sharrows because they include additional intersection and mid-block\nsafety measures to reduce vehicle speeds and volumes.\n\nThe relative comfortability and safety of each facility type depends on vehicle speed,\nvehicle volume, connectivity to the larger bike network, and other corridor factors.\n",
+      "guidance": "Use this strategy for bike lanes, sharrows or neighborhood bikeways. For\nphysically separated bikeways, use [Protected or Buffered Bike\nLanes](#/strategies/separated_bike_lanes).\nFor workplace amenities such as bicycle parking, showers, and lockers, use [Workplace\nBicycle\nAmenities](#/strategies/end_of_trip_facilities).\n",
+      "images": [],
+      "method": "CAPCOA T-19-A / T-20 (bike facility / network expansion), area_vmt scope",
+      "formula": "ΔVMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)",
+      "methodology_detail": "Making streets more bike-friendly encourages more people to bike for trips they\nwould otherwise drive, lowering vehicle miles traveled (VMT). Sharrows and painted\nlanes raise the share of trips made by bike by about 15% within the area they\ncover, following CAPCOA\n[T-19-A (Construct or Improve Bike Facility)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-19-a.pdf)\nand [T-20 (Expand Bikeway Network)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-20.pdf).\nBecause bike trips are typically shorter than car trips, the calculator accounts\nfor that when converting the added bike trips into driving avoided.\n\n`ΔVMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)`\n\nThis uses the same bike effect as [Workplace Bicycle\nAmenities](https://high-street.bitbucket.io/cdot_tdm_calculator/#/strategies/end_of_trip_facilities),\napplied across an area rather than to commuters at a worksite.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "On-street bike treatments shift the most trips in denser, walkable areas; the effect is limited in rural areas."
+      },
+      "inputs": [
+        {
+          "key": "scope_share",
+          "label": "Share of area VMT treated",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.1,
+          "prerequisite": true,
+          "summary": "The share of your area's driving carried on the streets that will receive the new sharrows or painted bike lanes.",
+          "resources": [
+            {
+              "label": "CDOT Traffic Data Explorer",
+              "url": "https://dtdapps.codot.gov/otis/trafficdata"
+            }
+          ],
+          "tooltip": "Share of area driving on the streets receiving sharrows / painted lanes.",
+          "instructions": "Estimate the share of your area's driving carried on the streets that get the\nnew markings or painted lanes. Identify the treated streets, then judge what\nfraction of local driving they carry. A network of sharrows across many streets\ncovers more than a single painted lane.\n\nTo check traffic on a specific street, CDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)\nmaps annual average daily traffic (AADT) counts for state highways statewide.\n"
+        }
+      ],
+      "notes": "Split from bike_mode_share_booster. Engine: strategy_bike_mode_share_booster (scope=area_vmt).",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "adj": 0.15,
+          "bike_len": 1.5
+        },
+        "row_defaults": {
+          "avg_trip_length": 9.0
+        },
+        "formula": "-scope_share * bike_len * (bike_mode_share * adj) / (max(avg_trip_length, 0.5) * max(auto_mode_share, 0.000000001))"
+      },
+      "_defaults": {
+        "scope_share": 0.1
+      }
+    },
+    {
+      "id": "telework",
+      "uid": "SP-01",
+      "name": "Telework and Flexible Work Schedules",
+      "category": "support",
+      "status": "implemented",
+      "tags": [
+        "policy",
+        "commute",
+        "employer",
+        "site"
+      ],
+      "short_description": "Hybrid or full-remote work policies that eliminate commute trips on telework days.",
+      "extended_description": "Flexible work schedules and telework policies reduce commute travel by changing when,\nhow often, or whether employees commute to their workplace. Telework eliminates commute\ntrips on days where employees work from home, while compressed work schedules, staggered\nshifts, and flexible start times can also reduce peak period commute pressure.\n\nThe largest VMT reductions occur for eligible employees who would otherwise drive long\ndistances. Outcomes depend on job eligibility, participation, and how employers manage\ntheir policies.\n",
+      "guidance": "Use this strategy for hybrid or fully remote policies and compressed work\nweeks. Enter the realistic average number of days worked from home, not the maximum\nallowed by the policy, because actual use is usually lower.\n",
+      "images": [],
+      "method": "Direct commute-trip elimination on telework days",
+      "formula": "Δcommute_VMT% = −%eligible × (telework_days / 5)",
+      "methodology_detail": "When eligible employees work from home, their commute trips disappear on those\ndays, directly reducing commute vehicle miles traveled (VMT). The reduction is the\nshare of workers who can telework multiplied by the average share of the work week\nthey do.\n\n`Δcommute_VMT% = −%eligible × (telework_days / 5)`\n\nNo extra effect size is applied; each skipped commute counts as avoided driving.\n(The 2021 CAPCOA Handbook no longer lists telework as its own measure; it treats\ntelework as one part of a commute trip reduction program.) The default share of\nworkers who can telework is estimated from the area's mix of jobs, drawn from\nAmerican Community Survey (ACS) data.\n\n**Caveat: induced (rebound) travel.** This estimate captures only the commute trips\nthat are eliminated on telework days, so it should be read as a *commute-trip\nreduction* and may overstate net VMT savings. A growing body of research finds that\ntelework can induce offsetting travel: people make additional non-commute trips during\nthe day, and the weaker tie to a daily commute can lead some households to choose homes\nfarther from work, lengthening the trips they do make. The net effect on total VMT is\nuncertain and context-dependent, and in some cases telework can increase overall\ndriving. Treat the figure here as an upper bound on commute-VMT savings rather than a\nguaranteed reduction in total VMT.\n",
+      "applicability": {},
+      "inputs": [
+        {
+          "key": "pct_eligible",
+          "label": "Telework-eligible workforce",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.5,
+          "prerequisite": true,
+          "summary": "The share of the area's workers in jobs that can be done remotely; office and professional roles raise it, manual roles lower it.",
+          "source_note": "your employer's job mix (or the area's occupation mix)",
+          "tooltip": "ACS occupation-mix-derived. Office/professional roles → higher; manual/in-person → lower.",
+          "instructions": "Estimate the share of the area's workers in jobs that can be done remotely. The\ndefault is based on the local mix of jobs: office and professional roles raise\nit, manual and in-person roles lower it. Adjust it if you know the specific\nemployers involved: a single office employer is mostly able to telework, a\nwarehouse is not.\n"
+        },
+        {
+          "key": "telework_days_per_week",
+          "label": "Days/week teleworked",
+          "control": "slider",
+          "min": 0,
+          "max": 5,
+          "step": 0.5,
+          "scale": 1,
+          "suffix": " days",
+          "default": 2,
+          "prerequisite": true,
+          "summary": "The average number of days per week eligible employees actually work remotely, not the policy maximum (typical hybrid is 2-3 days).",
+          "source_note": "your employer's telework policy and actual participation",
+          "tooltip": "Average across eligible workers. Typical hybrid = 2-3 days.",
+          "instructions": "Enter the average number of days per week eligible employees actually work\nremotely, not the policy maximum. A typical hybrid policy lands around 2–3\ndays once you account for staff who come in more often than allowed.\n"
+        }
+      ],
+      "notes": "",
+      "compute": {
+        "pool": "commute",
+        "formula": "-pct_eligible * (telework_days_per_week / 5)"
+      },
+      "_defaults": {
+        "pct_eligible": 0.5,
+        "telework_days_per_week": 2
+      }
+    },
+    {
+      "id": "tmo_coverage",
+      "uid": "SP-05",
+      "name": "TMO Coverage Expansion",
+      "category": "support",
+      "status": "implemented",
+      "tags": [
+        "program",
+        "commute",
+        "employer",
+        "local-government",
+        "mpo"
+      ],
+      "short_description": "Bring more employers under a Transportation Management Organization that coordinates TDM programs across a district.",
+      "extended_description": "A transportation management organization or association is a formal partnership that\ncoordinates travel demand management programs for a defined area, corridor, district, or\nemployment center. TMOs provide shared staff capacity, employer outreach, program\nadministration, and coordination that individual employers or jurisdictions may not be\nable to sustain alone.\n\nThe effect depends on the number of commuters reached, the strength of the services\nprovided, and the availability of practical alternatives to driving alone.\n",
+      "guidance": "Use this strategy to model the creation of a new TMO or the expansion of\nan existing one. The benefit should be based on the additional share of the workforce or\ntravel market covered by active TMO services.\n",
+      "images": [],
+      "method": "CAPCOA T-5 (voluntary CTR) midpoint, 4% per eligible",
+      "formula": "Δcommute_VMT% = −(share_after − share_before) × r_CTR",
+      "methodology_detail": "A Transportation Management Organization helps more employees shift out of driving\nalone by coordinating commute programs across many worksites. Each newly covered\nworker is credited with about a 4% reduction in commute vehicle miles traveled\n(VMT), following the voluntary commute trip reduction evidence in CAPCOA\n[T-5 (Implement Commute Trip Reduction Program, Voluntary)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-5.pdf).\n\n`Δcommute_VMT% = −(share_after − share_before) × r_CTR`\n\nOnly the *change* in coverage counts, so enter the share of the workforce the\norganization covers today and the share it will cover after the expansion.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Transportation Management Organizations rely on a cluster of employers and commute alternatives, which are limited in rural areas."
+      },
+      "inputs": [
+        {
+          "key": "share_before",
+          "label": "Workforce coverage today",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.0,
+          "prerequisite": true,
+          "summary": "The share of the area's employees who already work at TMO-member worksites today (0% for a brand-new TMO).",
+          "source_note": "current TMO membership rolls vs. area employment",
+          "tooltip": "Share of area employees at TMO-member workplaces.",
+          "instructions": "Estimate the share of the area's employees who already work at TMO-member\nworksites today. For a brand-new TMO this is 0%; for an expansion, use the\ncurrent membership's share of area employment.\n"
+        },
+        {
+          "key": "share_after",
+          "label": "Workforce coverage after",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.4,
+          "prerequisite": true,
+          "summary": "The target share of area employees who will work at TMO-member worksites after the new or expanded organization is in place.",
+          "source_note": "your TMO expansion plan / membership targets",
+          "tooltip": "Target share after new TMO is established or existing TMO grows.",
+          "instructions": "Estimate the share of area employees who will work at TMO-member worksites\nafter the new or expanded organization is in place. The difference between\nthis and today's coverage is what drives the reduction.\n"
+        }
+      ],
+      "notes": "",
+      "compute": {
+        "pool": "commute",
+        "const": {
+          "r_ctr": 0.04
+        },
+        "formula": "-(share_after - share_before) * r_ctr"
+      },
+      "_defaults": {
+        "share_before": 0.0,
+        "share_after": 0.4
+      }
+    },
+    {
+      "id": "traffic_calming",
+      "uid": "BP-05",
+      "name": "Traffic Calming",
+      "category": "bikeped",
+      "status": "implemented",
+      "tags": [
+        "infrastructure",
+        "bike",
+        "walk",
+        "local-government"
+      ],
+      "short_description": "Street design measures (e.g., speed humps, curb extensions) that slow vehicle speeds and improve safety.",
+      "extended_description": "Traffic calming helps to reduce vehicle speeds and improve the safety and comfort of people\nwalking, biking, rolling, and accessing transit. While traffic calming alone will likely\nhave little impact on VMT reductions, it makes trips completed by active transportation\nsafer. Traffic calming can include speed humps, curb extensions, chicanes, lane narrowing,\nmedian islands, mini roundabouts, and other changes to the streetscape that slow vehicle\ntraffic and improve perceived and actual safety for users walking, biking, or rolling.\n\nThe effect of traffic calming will vary based on roadway context, surrounding land use, and\nthe strength of the active transportation network. Traffic calming is most effective when\npaired with sidewalks, crossings, bike facilities, and transit access, especially in\nlocations where high vehicle speeds or wide crossing distances discourage individuals from\nchoosing alternative transportation modes.\n",
+      "guidance": "Use this strategy for street design measures that slow vehicle speeds and\nimprove comfort for people walking, biking, rolling, or accessing transit. Traffic calming\nshould generally be applied on local streets, station access routes, school routes, or\nother low- to medium-volume corridors where speed and safety are barriers to non-driving\ntrips.\n",
+      "images": [],
+      "method": "CAPCOA 2010 SDT-2 (legacy)",
+      "formula": "ΔVMT% = −clamp(0.25% + coverage × (1.00% − 0.25%), 0, 1.00%)",
+      "methodology_detail": "Traffic calming is credited using the 2010 CAPCOA measure\n[SDT-2 (Traffic Calming Measures)](https://www.aqmd.gov/docs/default-source/ceqa/handbook/capcoa-quantifying-greenhouse-gas-mitigation-measures.pdf),\nthe only published method that assigns traffic calming a standalone VMT credit. The\nreduction scales SDT-2's documented 0.25%–1.00% range by how much of the project's\nnetwork receives calming, taken as the average of the share of streets and the share of\nintersections with improvements (beyond what the jurisdiction already requires):\n\n`coverage = mean(streets_with_calming / total_streets, intersections_with_calming / total_intersections)`\n\n`ΔVMT% = −(0.25% + coverage × (1.00% − 0.25%))`, capped at the 1.00% measure maximum.\n\nIf only one of the two coverage measures is available, that one is used rather than\naveraging it against a zero.\n\n**Legacy note:** In the 2021/2024 CAPCOA Handbook, traffic calming was reclassified as\nthe *non-quantified* supporting measure T-35 and folded conceptually into pedestrian\nnetwork improvements; it no longer carries a discrete VMT credit. This implementation is\nretained per CDOT's request for a standalone traffic-calming credit and is flagged as a\nlegacy method. Avoid double-counting with the Pedestrian Network Improvements strategy.\n\n**Sources**\n\n- CAPCOA, *Quantifying Greenhouse Gas Mitigation Measures* (2010), Measure SDT-2, p. 190.\n- SMAQMD, *Recommended Guidance for Land Use Emission Reductions v3.0* (SDT-2 coverage\n  variable definitions).\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Traffic calming carries only a small, legacy VMT credit (≤1%) and is most effective paired with active-transportation investments."
+      },
+      "inputs": [
+        {
+          "key": "streets_with_calming",
+          "label": "Streets with calming improvements",
+          "control": "number",
+          "min": 0,
+          "step": 1,
+          "default": 0,
+          "unit": "streets",
+          "prerequisite": true,
+          "summary": "The number of streets or street segments in the project area that will receive traffic-calming features beyond what your jurisdiction already requires.",
+          "source_note": "your project design drawings / plan set",
+          "tooltip": "Number of streets receiving traffic-calming features beyond jurisdiction requirements.",
+          "instructions": "Count the streets (or street segments) in the project area that will receive\ntraffic-calming features (speed humps, curb extensions, chicanes, lane narrowing,\netc.) beyond what your jurisdiction already requires.\n"
+        },
+        {
+          "key": "total_streets",
+          "label": "Total streets in project area",
+          "control": "number",
+          "min": 0,
+          "step": 1,
+          "default": 0,
+          "unit": "streets",
+          "prerequisite": true,
+          "summary": "The total number of streets or street segments in the project area, used to work out the share that receive calming.",
+          "source_note": "your project area map or GIS street layer",
+          "tooltip": "Total number of streets in the project area, used to compute coverage.",
+          "instructions": "Count the total streets (or street segments) in the project area so the calculator\ncan work out the share that receive calming.\n"
+        },
+        {
+          "key": "intersections_with_calming",
+          "label": "Intersections with calming improvements",
+          "control": "number",
+          "min": 0,
+          "step": 1,
+          "default": 0,
+          "unit": "intersections",
+          "prerequisite": true,
+          "summary": "The number of intersections in the project area that will receive calming features such as mini roundabouts, raised crossings, or curb extensions.",
+          "source_note": "your project design drawings / plan set",
+          "tooltip": "Number of intersections receiving traffic-calming features.",
+          "instructions": "Count the intersections receiving calming features such as mini roundabouts, raised\ncrossings, or curb extensions. Leave at 0 if you are only tracking street coverage.\n"
+        },
+        {
+          "key": "total_intersections",
+          "label": "Total intersections in project area",
+          "control": "number",
+          "min": 0,
+          "step": 1,
+          "default": 0,
+          "unit": "intersections",
+          "prerequisite": true,
+          "summary": "The total number of intersections in the project area, used to work out the share that receive calming.",
+          "source_note": "your project area map or GIS intersection layer",
+          "tooltip": "Total number of intersections in the project area, used to compute coverage.",
+          "instructions": "Count the total intersections in the project area. If you provide only street counts\n(or only intersection counts), the calculator uses whichever coverage measure is\navailable rather than averaging against a zero.\n"
+        }
+      ],
+      "notes": "Promoted from todo. Legacy CAPCOA 2010 SDT-2; superseded by the non-quantified T-35 in the 2021/2024 Handbook. Closed-form: math lives in the compute block below (no code calc fn). strategy_traffic_calming in scripts/strategy_calculations.py is retained as the cross-check oracle.",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "min_effect": 0.0025,
+          "max_effect": 0.01
+        },
+        "let": [
+          {
+            "s_ok": "if(total_streets > 0, 1, 0)"
+          },
+          {
+            "i_ok": "if(total_intersections > 0, 1, 0)"
+          },
+          {
+            "any_measure": "if(s_ok or i_ok, 1, 0)"
+          },
+          {
+            "s_cov": "if(s_ok, streets_with_calming / max(total_streets, 1), 0)"
+          },
+          {
+            "i_cov": "if(i_ok, intersections_with_calming / max(total_intersections, 1), 0)"
+          },
+          {
+            "cov_raw": "if(s_ok and i_ok, (s_cov + i_cov) / 2, if(s_ok, s_cov, if(i_ok, i_cov, 0)))"
+          },
+          {
+            "coverage": "clamp(cov_raw, 0, 1)"
+          },
+          {
+            "A": "clamp(min_effect + coverage * (max_effect - min_effect), 0, max_effect) * any_measure"
+          }
+        ],
+        "formula": "-A"
+      },
+      "_defaults": {
+        "streets_with_calming": 0,
+        "total_streets": 0,
+        "intersections_with_calming": 0,
+        "total_intersections": 0
+      }
+    },
+    {
+      "id": "transit_oriented_development",
+      "uid": "LU-03",
+      "name": "Transit Oriented Development",
+      "category": "landuse",
+      "status": "implemented",
+      "tags": [
+        "land-use",
+        "transit",
+        "commute",
+        "developer",
+        "transit-agency",
+        "urban"
+      ],
+      "short_description": "Higher-density mixed-use development around high-quality transit. Residents shift commute trips to transit at a rate documented by CAPCOA T-3.",
+      "extended_description": "Transit-oriented development places compact, mixed-use development within walking\ndistance of high-quality transit, typically around a rail station or major bus hub. The\ntransportation benefit comes from locating more homes, jobs, shops, and services near\nfrequent transit so some trips can be made without driving or with fewer household\nvehicles.\n\nThe effect depends on the quality of both the transit service and the walking\nenvironment around the station area. Compact development near reliable service, safe\ncrossings, limited parking, and active street-level uses will generally shift more\ntravel than similar density near infrequent service or a station that is hard to reach.\n",
+      "guidance": "Use this strategy for development around an existing or planned\nhigh-quality transit station. For density that is not tied to a transit station, use\n[Increased Residential\nDensity](#/strategies/residential_density)\nor [Increased Employment\nDensity](#/strategies/employment_density)\ninstead.\n",
+      "images": [],
+      "method": "CAPCOA T-3 (Transit-Oriented Development); Lund 2004 / Cervero 2007 / Chatman 2013",
+      "formula": "ΔVMT% = −%TAZ_in_TOD × (min(TOD_ratio × transit_MS, cap) − transit_MS) / auto_MS",
+      "methodology_detail": "Living within walking distance of high-quality transit leads residents to ride\ntransit far more and drive far less, lowering vehicle miles traveled (VMT). The\ncalculator gives residents inside the walkshed a transit share equal to the\narea's transit share times a multiplier (4.9× by default, the typical rail-station\nvalue), capped at 50% as a realistic ceiling. This follows CAPCOA\n[T-3 (Provide Transit-Oriented Development)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-3.pdf),\ndrawing on Lund (2004), Cervero (2007), and Chatman (2013).\n\n`ΔVMT% = −%TAZ_in_TOD × (min(TOD_ratio × transit_MS, cap) − transit_MS) / auto_MS`\n\nThe effect grows with the share of the area's population that lives inside the\nwalkshed. Commute mode share comes from American Community Survey (ACS) data.\nLower the multiplier for development served by bus only, which shifts fewer trips\nthan rail.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Transit-oriented development depends on high-quality transit, which is generally limited to urban and suburban areas."
+      },
+      "inputs": [
+        {
+          "key": "pct_taz_in_tod",
+          "label": "Share of TAZ within TOD walkshed",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.1,
+          "prerequisite": true,
+          "summary": "The share of the area's population that will live inside the ½-mile walkshed around the station, based on planned TOD housing.",
+          "source_note": "your development program / site plan vs. the TAZ population",
+          "tooltip": "Share of the area's population estimated to live within the ½-mi transit-oriented development walkshed.",
+          "instructions": "Estimate the share of the TAZ's population that will live inside the TOD\nwalkshed, roughly the ½-mile area around the station that is comfortable to\nwalk. Compare the planned TOD housing (or population) against the TAZ total.\nIf the TOD covers only part of a large TAZ, this share is small.\n"
+        },
+        {
+          "key": "tod_mode_share_ratio",
+          "label": "TOD transit-MS multiplier",
+          "control": "number",
+          "step": 0.1,
+          "default": 4.9,
+          "prerequisite": true,
+          "summary": "The transit mode-share multiplier for the TOD; keep 4.9x for a rail station, or lower it (2-3x) for a bus-served TOD.",
+          "source_note": "the transit service serving your TOD (rail vs. bus)",
+          "tooltip": "CAPCOA T-3 default = 4.9× (rail-station TODs). Lower for bus-served TODs.",
+          "instructions": "Leave at the 4.9× default for development around a rail station (the CAPCOA\nT-3 value). Lower it for TODs served by bus only, which shift fewer trips; a\n2–3× multiplier is more realistic for frequent bus service.\n",
+          "min": 1.0,
+          "max": 10.0
+        }
+      ],
+      "notes": "",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "max_tod_transit_share": 0.5
+        },
+        "let": [
+          {
+            "tod_transit": "min(transit_mode_share * tod_mode_share_ratio, max_tod_transit_share)"
+          },
+          {
+            "delta": "tod_transit - transit_mode_share"
+          }
+        ],
+        "formula": "-pct_taz_in_tod * delta / max(auto_mode_share, 0.000000001)"
+      },
+      "_defaults": {
+        "pct_taz_in_tod": 0.1,
+        "tod_mode_share_ratio": 4.9
+      }
+    },
+    {
+      "id": "transit_pass_subsidy",
+      "uid": "TR-02",
+      "name": "Transit Pass Subsidies",
+      "category": "transit",
+      "status": "implemented",
+      "tags": [
+        "pricing",
+        "transit",
+        "transit-agency",
+        "local-government"
+      ],
+      "short_description": "Reduce the price of transit passes for residents or targeted users, raising ridership and shifting trips off the road.",
+      "extended_description": "Transit pass subsidies reduce the out-of-pocket cost of riding by offering discounted or\nfree passes to residents, students, lower-income riders, or other eligible groups. When\ntransit is less expensive and easily accessible, some trips may shift from driving to\ntransit.\n\nThe effect depends on who receives the subsidy and whether transit serves the trips\nthose users need to make. Subsidies in transit-rich areas with parking pressure are\nlikely to have a stronger effect than the same subsidy in places where service is\ninfrequent or indirect.\n",
+      "guidance": "Use this strategy for general or population-wide fare reductions. For\nemployer- or development-provided commute passes, such as an RTD EcoPass, use [Employee\nCommuting\nBenefits](#/strategies/employee_commuting_benefits),\nwhich focuses the effect on commute trips.\n",
+      "images": [],
+      "method": "Paulley (2006) short-run fare elasticity (ε=−0.30), all trips",
+      "formula": "ΔVMT% = (Δfare × eligible × ε × transit_MS × 1/AVO) / auto_MS",
+      "methodology_detail": "Lowering the fare draws more riders onto transit, and some of those trips would\notherwise have been made by car, so vehicle miles traveled (VMT) fall. A larger\nfare reduction reaching more riders produces a bigger shift. This follows CAPCOA\n[T-29 (Reduce Transit Fares)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-29.pdf)\nand the fare-response relationship in Paulley et al. (2006).\n\n`ΔVMT% = (Δfare × eligible × ε × transit_MS × 1/AVO) / auto_MS`\n\nThe calculator uses local commute mode share from the American Community Survey\n(ACS), with statewide averages for vehicle occupancy and the typical fare. If you\nknow the subsidy in dollars rather than a percentage, divide it by the average\nfare to get the percentage reduction.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Fare reductions work where transit is a viable option; in rural areas with little service the effect is minimal."
+      },
+      "inputs": [
+        {
+          "key": "pct_fare_reduction",
+          "label": "Fare reduction",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.5,
+          "prerequisite": true,
+          "summary": "The percent reduction in the effective fare riders pay (50% for half-price passes, 100% for free); a dollar subsidy divided by the average fare gives this percentage.",
+          "source_note": "your transit agency's fare and pass-subsidy data",
+          "tooltip": "Percent reduction in the effective fare (50% = half-price passes; 100% = free).",
+          "instructions": "Enter the percentage reduction in the effective fare riders pay. A half-price\npass program is 50%; a fully subsidized (free) pass is 100%. If you know the\nsubsidy in dollars instead, divide it by the average fare to get the percentage.\n"
+        },
+        {
+          "key": "pct_eligible",
+          "label": "Share of riders eligible",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.4,
+          "prerequisite": true,
+          "summary": "The share of area transit riders eligible for the subsidized passes, a subset for a targeted program (students, low-income) and approaching 100% for a universal one.",
+          "source_note": "your project scope / eligible-population estimate",
+          "tooltip": "Share of area transit users covered by the subsidy.",
+          "instructions": "Estimate the share of area transit riders eligible for the subsidized passes.\nA program targeting students or low-income riders covers a subset; a universal\nprogram approaches 100%.\n"
+        }
+      ],
+      "notes": "Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy (scope=all).",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "elasticity": -0.3
+        },
+        "formula": "pct_fare_reduction * pct_eligible * elasticity * transit_mode_share * (1 / avo) / max(auto_mode_share, 0.000000001)"
+      },
+      "_defaults": {
+        "pct_fare_reduction": 0.5,
+        "pct_eligible": 0.4
+      }
+    },
+    {
+      "id": "transit_service_expansion",
+      "uid": "TR-01",
+      "name": "Transit Service Frequency Increase",
+      "category": "transit",
+      "status": "implemented",
+      "tags": [
+        "service",
+        "transit",
+        "transit-agency",
+        "mpo",
+        "urban"
+      ],
+      "short_description": "More frequent service (shorter waits) on existing transit routes, drawing riders out of cars.",
+      "extended_description": "Transit service frequency increases make existing buses or trains arrive more often.\nShorter waits make transit easier to use, reduce scheduling challenges and can make\ntransit more time effective.\n\nThe benefit depends on the existing service level, the size of the improvement, corridor\ndemand, and reliability. More frequent service on a high-demand route will generally\nproduce a larger response than small improvements spread across routes with limited\ndemand.\n",
+      "guidance": "Use this strategy for frequency improvements on existing service. For new\nroutes, route extensions, or service added where transit did not previously exist, use\n[New Transit\nService](#/strategies/new_transit_service)\ninstead.\n",
+      "images": [],
+      "method": "Handy 2013 frequency elasticity (ε=0.5)",
+      "formula": "ΔVMT% = −L × Δfreq × transit_MS × ε × (1/AVO) / auto_MS",
+      "methodology_detail": "When transit comes more often, riders spend less time waiting and more people\nchoose transit over driving, lowering vehicle miles traveled (VMT). The bigger the\nimprovement in frequency, the larger the ridership gain. This follows CAPCOA\n[T-26 (Increase Transit Service Frequency)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf)\nand the frequency relationship in Handy et al. (2013).\n\n`ΔVMT% = −L × Δfreq × transit_MS × ε × (1/AVO) / auto_MS`\n\nThe calculator uses local commute mode share from the American Community Survey\n(ACS) and a statewide average for vehicle occupancy. Use the implementation level\nto phase in a change that isn't fully in place yet.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Frequency improvements deliver the most benefit where transit ridership is already established; in rural areas the effect is minimal."
+      },
+      "inputs": [
+        {
+          "key": "pct_change",
+          "label": "Frequency change",
+          "control": "slider",
+          "min": -50,
+          "max": 200,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.25,
+          "prerequisite": true,
+          "summary": "The percent change in how often service runs on the affected routes; positive for more frequent service (30 to 20 min = +50%), negative for a service cut.",
+          "resources": [
+            {
+              "label": "CDOT Statewide Transit Routes map",
+              "url": "https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824"
+            }
+          ],
+          "tooltip": "Signed: positive = more frequent service, negative = a service cut.",
+          "instructions": "Enter the percentage change in how often service runs on the affected routes. If\nservice improves from every 30 minutes to every 20 minutes, frequency rises by\n50% (30 ÷ 20 − 1). Compare the planned trips per hour (or vehicles per day)\nagainst today's schedule on the routes the project touches. Use a negative value\nto model a service cut.\n\nTo check the existing routes, operators, and headways in your area, CDOT's\n[Statewide Transit Routes map](https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824)\nmaps fixed-route transit statewide.\n"
+        },
+        {
+          "key": "level_of_implementation",
+          "label": "Implementation level",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 1.0,
+          "prerequisite": true,
+          "summary": "What share of the frequency change will actually be in place. Use 100% for a full roll-out, less for a pilot on part of the network or a multi-year phase-in.",
+          "source_note": "your project scope / agency service plan",
+          "tooltip": "Phase-in factor. 100% = fully implemented across the impacted service area.",
+          "instructions": "Use this to phase in the effect. 100% means the frequency change is fully in\nplace across the impacted service area; a pilot on part of the network or a\nmulti-year roll-out would be lower.\n\nTo check the existing routes, operators, and headways in your area, CDOT's\n[Statewide Transit Routes map](https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824)\nmaps fixed-route transit statewide.\n"
+        }
+      ],
+      "notes": "Split from the merged transit service tile. Engine: strategy_transit_service_expansion (basis=frequency).",
+      "_defaults": {
+        "pct_change": 0.25,
+        "level_of_implementation": 1.0
+      }
+    },
+    {
+      "id": "transit_shelters",
+      "uid": "TR-09",
+      "name": "Transit Shelters",
+      "category": "transit",
+      "status": "implemented",
+      "tags": [
+        "infrastructure",
+        "transit",
+        "transit-agency",
+        "local-government"
+      ],
+      "short_description": "Shelters and station amenities that make waiting for transit more comfortable, raising ridership.",
+      "extended_description": "Transit shelters and station improvements (covered seating, lighting, real-time arrival\ninformation, and other amenities) make waiting for transit more comfortable and\npredictable. More attractive stops produce a modest ridership gain, and some of those\nriders would otherwise have driven, lowering vehicle miles traveled.\n\nThe effect depends on how many stops are improved and on the area's existing transit mode\nshare, and shelters add the most where transit is already a viable option. Shelters are a\nstation-improvement amenity within the broader transit toolkit and are best paired with\nservice-frequency and fare strategies.\n",
+      "guidance": "Use this strategy for projects that add or upgrade transit shelters and stop\namenities. Do not combine it with Bus Rapid Transit where BRT already covers all community\nroutes, since BRT investments already account for station improvements.\n",
+      "images": [],
+      "method": "CAPCOA T-46 (structural; constants pending fact-sheet confirmation)",
+      "formula": "ΔVMT% = −clamp(LOI × ridership_uplift × transit_MS × (1/AVO) / vehicle_MS, 0, 15%)",
+      "methodology_detail": "Transit shelters and station improvements raise transit's attractiveness, producing a\nsmall ridership gain that converts to a vehicle miles traveled (VMT) reduction through the\nsame ridership-to-VMT machinery as CAPCOA\n[T-26 (Increase Transit Service Frequency)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf),\nfollowing Measure\n[T-46 (Provide Transit Shelters)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-46.pdf):\n\n`ΔVMT% = −(LOI × ridership_uplift × transit_MS × (1/AVO) / vehicle_MS)`, capped at the 15%\nTransit subsector maximum.\n\nThe mode-shift factor uses the area's **observed** average vehicle occupancy (1/AVO) rather\nthan the national default, and local transit and vehicle mode shares come from the area\ndata. T-46 is **mutually exclusive with Bus Rapid Transit** where BRT covers all community\nroutes, and turning on that flag zeroes the credit.\n\n> **Constants pending confirmation.** The verbatim T-46 equation and constants (the\n> shelter ridership uplift and the measure maximum) were not captured during research and\n> the fact sheet was unreadable at implementation time. The ridership uplift and measure\n> maximum are **placeholders** exposed in the code (`TRANSIT_SHELTERS_T46`) for\n> recalibration and should be confirmed against the T-46 fact sheet before the numeric\n> results are relied upon. Outputs flag this assumption.\n\n**Sources**\n\n- CAPCOA *Handbook* (2021), Measure\n  [T-46 (Provide Transit Shelters)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-46.pdf);\n  conversion machinery from Measure\n  [T-26](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf).\n- Handy, S., et al. (2013). *Impacts of Transit Service Strategies on Passenger Vehicle Use\n  and GHG Emissions*. CARB.\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Shelters add ridership mainly where transit is already viable; results use placeholder constants pending CAPCOA T-46 confirmation."
+      },
+      "inputs": [
+        {
+          "key": "level_of_implementation",
+          "label": "Share of stops with shelters/improvements",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 1.0,
+          "prerequisite": true,
+          "summary": "The share of the area's transit stops or stations that will receive new shelters or amenity improvements. Use 100% for a system-wide program, less for a targeted set.",
+          "source_note": "your project scope / stop-improvement plan",
+          "tooltip": "Share of area transit stops receiving shelters or station improvements.",
+          "instructions": "Estimate the share of the area's transit stops or stations that will receive new shelters\nor amenity improvements. Use 100% for a system-wide program; lower it for a targeted set\nof stops.\n"
+        },
+        {
+          "key": "brt_covers_all_routes",
+          "label": "Bus Rapid Transit coverage",
+          "control": "select",
+          "default": "no",
+          "options": [
+            {
+              "value": "no",
+              "label": "Not BRT, or BRT does not cover all routes"
+            },
+            {
+              "value": "yes",
+              "label": "BRT already covers all community routes"
+            }
+          ],
+          "prerequisite": true,
+          "summary": "Whether Bus Rapid Transit already covers all community routes. If yes, shelters are mutually exclusive with BRT and the credit is zeroed to avoid double-counting.",
+          "source_note": "your area's existing/planned BRT coverage",
+          "tooltip": "If Bus Rapid Transit already covers all community routes, shelters are mutually exclusive with BRT and the credit is zeroed.",
+          "instructions": "Choose the BRT option only if Bus Rapid Transit already covers all community routes. BRT\ninvestments account for station improvements, so crediting shelters too would\ndouble-count, and the calculator zeroes the shelter credit in that case.\n"
+        }
+      ],
+      "notes": "New strategy (CAPCOA T-46). shelter_ridership_uplift and measure_max are PLACEHOLDER constants pending fact-sheet confirmation. Mutually exclusive with BRT where it covers all routes. Closed-form: math lives in the compute block below (no code calc fn). strategy_transit_shelters in scripts/strategy_calculations.py is retained as the cross-check oracle. brt_covers_all_routes (select yes/no) is coerced to 1/0 by the host.",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "shelter_ridership_uplift": 0.005,
+          "measure_max": 0.15
+        },
+        "let": [
+          {
+            "a_raw": "level_of_implementation * shelter_ridership_uplift * transit_mode_share * (1 / avo) / max(auto_mode_share, 0.000000001)"
+          },
+          {
+            "a": "clamp(a_raw, 0, measure_max)"
+          },
+          {
+            "credit": "a * (1 - brt_covers_all_routes)"
+          }
+        ],
+        "formula": "-credit"
+      },
+      "_defaults": {
+        "level_of_implementation": 1.0,
+        "brt_covers_all_routes": "no"
+      }
+    },
+    {
+      "id": "unbundled_parking",
+      "uid": "PK-04",
+      "name": "Unbundled Parking for Multifamily Housing",
+      "category": "parking",
+      "status": "planned",
+      "tags": [
+        "pricing",
+        "developer",
+        "urban",
+        "local-government"
+      ],
+      "short_description": "Renting or selling parking spaces separately from housing units.",
+      "extended_description": "Unbundled parking for multifamily housing separates the cost of parking from the cost of\nrenting or purchasing a housing unit. Instead of including parking as part of the housing\ncost, residents rent or buy parking spaces separately. This saves money for residents who\ndo not have a car, and it reduces the incentive for households to own or store multiple\nvehicles on site.\n\nThe effect of unbundled parking will vary based on neighborhood context, parking supply,\nparking pricing, and access to transportation options. It is most effective in areas with\nstrong transit, walking, biking, carshare, or micromobility options, where residents can\nrealistically choose to live car-free or car-light. In areas with limited transportation\nalternatives or abundant free off-site parking, the VMT reduction potential may be lower\nunless unbundled parking is paired with other TDM measures.\n",
+      "guidance": "Use this strategy for multifamily residential projects or policies that price\nparking separately from housing costs. It is most appropriate where residents have\nrealistic alternatives to owning or using a vehicle, such as transit, walking, biking,\ncarshare, or micromobility. For employee parking pricing or cash-out programs, use\n[Workplace Parking\nPricing](#/strategies/workplace_parking_pricing)\nor [Parking\nCash-Out](#/strategies/parking_cashout)\ninstead.\n",
+      "images": [],
+      "method": "CAPCOA T-16 (parking price-elasticity; 15.7% cap)",
+      "formula": "ΔHouseholdVMT% = −clamp(|(charge / reference_cost) × −0.4 × adj|, 0, 15.7%)",
+      "methodology_detail": "Unbundling separates the price of a parking space from the dwelling price, so residents pay\nfor parking only if they keep a vehicle. Revealing the cost lowers car ownership and shifts\ntrips to other modes, reducing household vehicle miles traveled (VMT). Following CAPCOA\n[T-16 (Unbundle Residential Parking Costs from Property Cost)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-16.pdf),\nthe unbundled charge is a price signal relative to the residents' cost of vehicle\nownership, scaled by the parking-demand price elasticity of **−0.4** (Lehner & Peirson\n2019):\n\n`ΔVMT% = −(unbundled_parking_charge / reference_cost) × −0.4 × adjustment_factors`\n\ncapped at the **15.7% measure maximum** (confirmed: Caltrans SB 743 Playbook; USDOT 2025).\n\n**Mandatory condition:** the measure \"will not work if free parking is readily available on\nthe street or elsewhere near the housing project.\" When that is the case, the strategy\nreturns **zero**, because unbundling only changes behavior if residents can't simply park free\nnearby.\n\n> **Constants pending confirmation.** The CAPCOA T-16 fact sheet could not be read at\n> implementation time. The reference-cost denominator (defaulted to the annual vehicle\n> ownership cost basis) and the adjustment factor are **placeholders** exposed in the code\n> (`UNBUNDLE_RESIDENTIAL_T16`); confirm against the fact sheet, including whether CAPCOA\n> uses a fee→reduction lookup table or the closed-form elasticity used here. The 15.7% cap\n> is confirmed. Outputs flag this.\n\n**Sources**\n\n- CAPCOA *Handbook*, Measure\n  [T-16 (Unbundle Residential Parking Costs)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-16.pdf),\n  pp. 126–129.\n- Caltrans *SB 743 Program Mitigation Playbook* (15.7% cap; free-parking caveat).\n- Lehner & Peirson (2019), parking price elasticity (−0.4).\n- USDOT (2025), *Parking Reforms* (~15% figure).\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Effective only where free parking is not readily available nearby and residents have viable non-car options; results use placeholder constants pending CAPCOA T-16 confirmation."
+      },
+      "inputs": [
+        {
+          "key": "unbundled_parking_charge",
+          "label": "Annual charge per parking space",
+          "control": "number",
+          "min": 0,
+          "step": 100,
+          "default": 1200,
+          "unit": "$/year",
+          "prerequisite": true,
+          "summary": "The annual charge a resident will pay for one parking space now priced separately from rent (for example, $100/month = $1,200/year).",
+          "source_note": "your project pro forma / parking pricing policy",
+          "tooltip": "Annual price charged to residents per unbundled parking space (e.g. $100/mo = $1,200/yr).",
+          "instructions": "Enter the annual charge a resident pays for one parking space, now priced separately from\nrent (e.g. $100/month = $1,200/year). For reference, bundled garage parking adds roughly\n$1,700/year to renter housing costs (Gabbe & Pierce 2017). Larger charges produce larger\nreductions, up to the 15.7% cap.\n"
+        },
+        {
+          "key": "free_parking_nearby",
+          "label": "Free parking readily available nearby?",
+          "control": "select",
+          "default": "no",
+          "options": [
+            {
+              "value": "no",
+              "label": "No, free on-street/off-site parking is not readily available"
+            },
+            {
+              "value": "yes",
+              "label": "Yes, free parking is readily available nearby"
+            }
+          ],
+          "prerequisite": true,
+          "summary": "Whether residents can readily park free on-street or nearby; if so, unbundling has no effect and the estimate returns zero.",
+          "source_note": "your knowledge of on-street and off-site parking near the site",
+          "tooltip": "Required precondition. If free parking is readily available on-street or nearby, the measure does not work and returns zero.",
+          "instructions": "Choose \"Yes\" only if residents can readily park free on the street or elsewhere near the\nproject. If so, unbundling has no effect (residents avoid the charge by parking free\nnearby) and the calculator returns a zero reduction. Choose \"No\" where parking is\ngenuinely constrained.\n"
+        }
+      ],
+      "notes": "Promoted from todo. CAPCOA T-16; reference_cost and adjustment_factors are PLACEHOLDER constants (UNBUNDLE_RESIDENTIAL_T16), cap = 15.7% (confirmed). HOUSEHOLD pool (approximated as all-trip VMT). Mandatory free_parking_nearby precondition zeroes the measure. Engine: strategy_unbundled_parking.",
+      "_defaults": {
+        "unbundled_parking_charge": 1200,
+        "free_parking_nearby": "no"
+      }
+    },
+    {
+      "id": "vanpool",
+      "uid": "VP-01",
+      "name": "Vanpool",
+      "category": "vanpool",
+      "status": "implemented",
+      "tags": [
+        "program",
+        "vanpool",
+        "commute",
+        "employer",
+        "mpo"
+      ],
+      "short_description": "Employer-supported or regional vanpools that consolidate commute trips into a single high-occupancy vehicle.",
+      "extended_description": "Vanpools organize commuters with similar origins, destinations, and schedules into a\nshared vehicle, replacing several drive-alone commute trips with one vehicle trip. They\nare most effective for longer commutes, shift-based worksites, and locations that are\nnot well served by fixed-route transit.\n\nThe effect depends on whether enough commuters have compatible schedules and travel\npatterns. A vanpool serving a long commute to a major employment site can reduce more\nvehicle miles than one serving short trips or dispersed schedules, and successful\nprograms require rider matching and reliable vehicle management.\n",
+      "guidance": "Use this strategy for employer-supported or regional vanpool programs.\nEnter the share of area commute trips the program can realistically reach and how fully\nthe program is implemented.\n",
+      "images": [],
+      "method": "Effect-size adaptation of TCRP 95 service-miles elasticity, commute scope (cf. CAPCOA T-11)",
+      "formula": "Δcommute_VMT% = −%trips_impacted × Δservice × transit_MS × ε × 1/AVO",
+      "methodology_detail": "Each vanpool takes several commuters out of their own cars and into one shared\nvehicle, reducing commute vehicle miles traveled (VMT). The reduction grows with\nthe share of the area's commute trips the program carries and how fully it is\nrunning. The approach mirrors CAPCOA\n[T-11 (Provide Employer-Sponsored Vanpool)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-11.pdf).\n\n`Δcommute_VMT% = −%trips_impacted × Δservice × transit_MS × ε × 1/AVO`\n\nThe calculator uses a statewide average of 1.20 people per vehicle (2017 National\nHousehold Travel Survey, NHTS). Regional vanpool participation is usually small, so\nbase the share reached on observed local numbers rather than a target.\n",
+      "applicability": {},
+      "inputs": [
+        {
+          "key": "pct_trips_impacted",
+          "label": "Share of commute trips impacted",
+          "control": "slider",
+          "min": 0,
+          "max": 30,
+          "step": 0.5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.05,
+          "prerequisite": true,
+          "summary": "The share of the area's commute trips the vanpool program will carry, typically a percent or two; use observed local rates rather than an aspirational target.",
+          "source_note": "observed local vanpool participation (e.g. DRCOG Way to Go rates by region)",
+          "tooltip": "DRCOG Way-to-Go statistics on vanpool participation rates by region.",
+          "instructions": "Estimate the share of the area's commute trips the vanpool program will carry.\nRegional participation is typically small (a percent or two), so use observed\nvanpool rates where you have them (DRCOG's Way to Go program publishes\nparticipation by region) rather than an aspirational target.\n"
+        },
+        {
+          "key": "pct_service_change",
+          "label": "Service intensity",
+          "control": "slider",
+          "min": 0,
+          "max": 200,
+          "step": 10,
+          "scale": 100,
+          "suffix": "%",
+          "default": 1.0,
+          "prerequisite": true,
+          "summary": "How fully the vanpool program will operate, from 10% for a small pilot to 100% for a fully deployed program; this scales the effect without changing commuters reached.",
+          "source_note": "your project scope / program deployment plan",
+          "tooltip": "Fraction of full deployment (10% = pilot, 100% = full program).",
+          "instructions": "Use this to scale the program from pilot to full deployment: 10% for a small\npilot, 100% for a fully operating program. It phases in the effect without\nchanging the share of commuters reached.\n"
+        }
+      ],
+      "notes": "",
+      "compute": {
+        "pool": "commute",
+        "const": {
+          "elasticity": 0.75
+        },
+        "formula": "-pct_trips_impacted * pct_service_change * transit_mode_share * elasticity * (1 / avo)"
+      },
+      "_defaults": {
+        "pct_trips_impacted": 0.05,
+        "pct_service_change": 1.0
+      }
+    },
+    {
+      "id": "wayfinding",
+      "uid": "BP-04",
+      "name": "Wayfinding",
+      "category": "bikeped",
+      "status": "implemented",
+      "tags": [
+        "infrastructure",
+        "bike",
+        "walk",
+        "transit",
+        "local-government"
+      ],
+      "short_description": "Signage and navigation tools that help people easily find routes, destinations, and transportation options.",
+      "extended_description": "Wayfinding helps users identify routes, destinations, and transportation options. For the\npurposes of this tool, wayfinding estimates the potential VMT reductions associated with\nmaking walking, biking, and transit connections easier to understand and navigate.\nWayfinding can include directional signage, maps, pavement markings, artwork, and other\nvisual identifiers.\n\nThe effect of wayfinding will vary based on the strength of the underlying transportation\nnetwork and the ease of using the system. Wayfinding is most effective when paired with\nimprovements to the active transportation network, transit access, or first/last-mile\nconnections, especially for users who may be unfamiliar with traveling through the\ncommunity in this way.\n",
+      "guidance": "Use this strategy where a project helps people understand how to navigate\nbetween key destinations while walking, biking, or rolling. Wayfinding should generally be\nmodeled when it supports an existing or planned multimodal network; it will not have a\nmajor impact on its own without multimodal improvements.\n",
+      "images": [],
+      "method": "Derived, two-channel (assumption-bounded)",
+      "formula": "ΔVMT% = −(1 − (1 − ch_transit) × (1 − ch_active))",
+      "methodology_detail": "**No empirical VMT effect size exists for wayfinding in any mode.** Every credible source\ntreats wayfinding as a quality/legibility sub-feature of a larger transit or active-mode\ninvestment, never a standalone strategy. This method credits it only as a small, capped,\nmode-specific friction-reduction uplift, routed through established CAPCOA conversion\nmachinery, with a deliberately conservative assumed uplift.\n\nTwo channels combine multiplicatively:\n\n- **Transit legibility**, routed through the CAPCOA\n  [T-26](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf)\n  ridership-to-VMT conversion:\n  `ch_transit = LOI_transit × 0.25% × transit_MS × (1/AVO) / vehicle_MS`, where the\n  mode-shift factor uses the area's observed average vehicle occupancy (AVO).\n- **Active-mode legibility**, routed through the CAPCOA\n  [T-18](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-18.pdf)\n  pedestrian elasticity as a usability multiplier on the *existing* bike/ped network:\n  `ch_active = LOI_active × 0.25% × |−0.05|`.\n\nEach channel is capped at 0.5%. The assumed 0.25%-per-channel uplift is a conservative,\nclient-selected default exposed for recalibration. Critically, each channel is\n**parent-gated**: the transit channel is credited only where transit service exists and\nthe active channel only where a bike/ped network exists. If the parent investment is\nabsent, that channel returns 0.\n\nThis estimate is **assumption-based, not empirically derived**, and wayfinding should not\nbe claimed as an independent strategy. The active-mode channel is the weaker analogy: the\n−0.05 elasticity is borrowed structure, not a measured wayfinding effect.\n\n**Sources (borrowed conversion machinery only, not wayfinding effect sizes)**\n\n- CAPCOA *Handbook* (2021), Measure\n  [T-26 (Increase Transit Service Frequency)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf)\n  and Measure\n  [T-18 (Provide Pedestrian Network Improvement)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-18.pdf).\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Wayfinding has no standalone empirical effect; it is credited only as a small, capped uplift where a transit or bike/ped network already exists."
+      },
+      "inputs": [
+        {
+          "key": "loi_transit",
+          "label": "Share of transit stops with wayfinding",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0,
+          "prerequisite": true,
+          "summary": "The share of the area's transit stops or stations that will receive wayfinding such as signage, maps, and real-time information.",
+          "source_note": "your wayfinding plan and existing transit stop inventory",
+          "tooltip": "Level of implementation for the transit channel, meaning the share of area transit stops receiving wayfinding. Credited only where transit service exists.",
+          "instructions": "Estimate the share of the area's transit stops or stations that will receive wayfinding\n(signage, maps, real-time information). This channel is credited only in places that\nalready have transit service.\n"
+        },
+        {
+          "key": "loi_active",
+          "label": "Share of bike/ped network with wayfinding",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0,
+          "prerequisite": true,
+          "summary": "The share of the existing bike and pedestrian network that will receive wayfinding such as directional signage, pavement markings, and maps.",
+          "source_note": "your wayfinding plan and existing bike/ped network layer",
+          "tooltip": "Level of implementation for the active-mode channel, meaning the share of the bike/ped network receiving wayfinding. Credited only where a bike/ped network exists.",
+          "instructions": "Estimate the share of the existing bike/pedestrian network that will receive wayfinding\n(directional signage, pavement markings, maps). This channel is credited only where a\nbike/ped network already exists; wayfinding improves usability, it does not add\ninfrastructure.\n"
+        }
+      ],
+      "notes": "Promoted from todo. Derived, assumption-bounded; 0.25%/channel uplift is a conservative default. Closed-form: math lives in the compute block below (no code calc fn). strategy_wayfinding in scripts/strategy_calculations.py is retained as the cross-check oracle. NOTE: the parent-gate fields (transit_vrh, transit_route_count, bike_centerline_mi) and observed avo are NOT yet published on the app TAZ layer; until they are, the app uses row_defaults (gates OFF -> conservative no-credit) and the statewide default AVO, so app numbers approximate Python until those fields are added to queryTaz TAZ_FIELDS + the feature service.",
+      "compute": {
+        "pool": "all",
+        "const": {
+          "r_uplift": 0.0025,
+          "c_uplift": 0.0025,
+          "ped_e": 0.05,
+          "cap": 0.005
+        },
+        "row_defaults": {
+          "transit_vrh": 0,
+          "transit_route_count": 0,
+          "bike_centerline_mi": 0
+        },
+        "let": [
+          {
+            "transit_gate": "if(transit_vrh > 0 or transit_route_count > 0, 1, 0)"
+          },
+          {
+            "active_gate": "if(bike_centerline_mi > 0, 1, 0)"
+          },
+          {
+            "ch_t_raw": "loi_transit * r_uplift * transit_mode_share * (1 / avo) / max(auto_mode_share, 0.000000001)"
+          },
+          {
+            "ch_t": "clamp(ch_t_raw, 0, cap) * transit_gate"
+          },
+          {
+            "ch_a_raw": "loi_active * c_uplift * ped_e"
+          },
+          {
+            "ch_a": "clamp(ch_a_raw, 0, cap) * active_gate"
+          },
+          {
+            "combined": "1 - (1 - ch_t) * (1 - ch_a)"
+          }
+        ],
+        "formula": "-combined"
+      },
+      "_defaults": {
+        "loi_transit": 0,
+        "loi_active": 0
+      }
+    },
+    {
+      "id": "workplace_parking_pricing",
+      "uid": "PK-01",
+      "name": "Workplace Parking Pricing",
+      "category": "parking",
+      "status": "implemented",
+      "tags": [
+        "pricing",
+        "auto",
+        "employer",
+        "commute"
+      ],
+      "short_description": "Charge employees for parking at work (or remove free parking) to discourage driving alone for the commute.",
+      "extended_description": "Workplace parking pricing makes the cost of employee parking visible instead of treating\nit as free or as a hidden benefit. Pricing can help preserve parking for employees who\nneed or value it most, while encouraging others to consider lower-cost commute options\nsuch as transit, carpooling, vanpooling, bicycling, walking, or telework. This measure\nmay also include a 'parking cash-out', where employees who do not use an\nemployer-provided parking space receive a credit for other commuting options.\n\nThe effect depends on the parking price, nearby parking supply, and whether employees\nhave practical alternatives. Pricing is most effective at worksites with parking\npressure, useful travel options, and clear communication about how employees can shift\nto lower-cost choices.\n",
+      "guidance": "This strategy applies to commute trips and should generally be used for\nemployees who currently receive free, subsidized, or underpriced workplace parking. For\npriced public or curb parking across an area, use [Parking Fees and Curb\nManagement](#/strategies/parking_fees_curb_management).\n",
+      "images": [],
+      "method": "Lehner & Peer (2019) parking demand elasticity (ε=−0.40), commute scope",
+      "formula": "Δcommute_VMT% = %Δprice × ε × share_affected",
+      "methodology_detail": "Charging for parking that used to be free raises the cost of driving to work, so\nsome employees carpool, switch modes, or stop driving alone, reducing commute\nvehicle miles traveled (VMT). The larger the price increase and the more employees\nit reaches, the bigger the reduction, following CAPCOA\n[T-12 (Price Workplace Parking)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-12.pdf)\nand the parking-response relationship in Lehner & Peer (2019).\n\n`Δcommute_VMT% = %Δprice × ε × share_affected`\n\nWhere parking is free today, introducing a charge is treated as a meaningful price\nincrease. By default the strategy covers the share of employees who already pay to\npark in this type of area; set it directly if you know how many worksites the\npricing reaches. The estimate is most reliable for moderate price changes and\noverstates the response to very large ones (above about a 50% increase).\n",
+      "applicability": {
+        "area_types": [
+          "urban_core",
+          "urban",
+          "suburban"
+        ],
+        "warn_message": "Parking pricing changes behavior where parking is constrained and alternatives exist; it has little effect in rural areas with abundant free parking."
+      },
+      "inputs": [
+        {
+          "key": "new_price",
+          "label": "New daily parking price",
+          "control": "number",
+          "min": 0,
+          "max": 50,
+          "step": 0.5,
+          "default": 5.0,
+          "unit": "$ per day",
+          "prerequisite": true,
+          "summary": "The new daily price employees will pay to park at work (a typical full-day rate; divide monthly permits by about 21 working days).",
+          "source_note": "your proposed employer parking rate",
+          "tooltip": "New employee parking price per day. The starting price defaults to the typical price for this type of area.",
+          "instructions": "Enter the new daily price employees will pay to park. If parking is free today,\nthe calculator treats the introduction of any price as a meaningful increase.\nUse a typical full-day rate for the area; monthly permits can be divided by ~21\nworking days.\n"
+        },
+        {
+          "key": "share_affected",
+          "label": "Share of commuters whose price changes",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0.25,
+          "prerequisite": true,
+          "summary": "The share of the area's commuters whose parking price actually changes under the policy, or leave the default for the typical local share.",
+          "source_note": "your program scope / count of covered worksites",
+          "tooltip": "Leave at the default to use the typical share of employees who pay for parking in this type of area, or set it directly.",
+          "instructions": "Estimate the share of the area's commuters whose parking price actually changes\nunder the policy. If you leave it at the default, the calculator uses the typical\nshare of employees who already pay for parking in this type of area. Set it\ndirectly if you know how many worksites the pricing covers.\n"
+        }
+      ],
+      "notes": "Promoted from todo; split from the pricing engine. Engine: strategy_parking_pricing (trip_purpose=commute).",
+      "compute": {
+        "pool": "commute",
+        "const": {
+          "elasticity": -0.4,
+          "vmt_to_trips": 1.0
+        },
+        "row_defaults": {
+          "parking_price": 0
+        },
+        "let": [
+          {
+            "effective_old": "if(parking_price > 0, parking_price, new_price / 2)"
+          },
+          {
+            "pct_price": "(new_price - effective_old) / effective_old"
+          }
+        ],
+        "formula": "pct_price * elasticity * share_affected * vmt_to_trips"
+      },
+      "_defaults": {
+        "new_price": 5.0,
+        "share_affected": 0.25
+      }
+    }
+  ]
+}

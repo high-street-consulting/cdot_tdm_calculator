@@ -1,0 +1,4 @@
+weasyprint>=60
+jinja2>=3
+fastapi>=0.110
+uvicorn[standard]>=0.29

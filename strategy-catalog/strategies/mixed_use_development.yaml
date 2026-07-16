@@ -1,0 +1,38 @@
+# LU-05 - Mixed-Use Development (Without Transit)  (STUB: move up to strategies/ when complete)
+# Stubbed from the master TDM strategy list; description integrated from the
+# "TDM Measure Overview Content" doc. Fill in the calc fields, then move to strategies/.
+
+id: mixed_use_development
+uid: LU-05
+name: Mixed-Use Development (Without Transit)
+category: landuse
+status: planned
+tags: []
+short_description: Co-locating residential, commercial, office, civic, and recreational land uses in a
+  single location, where the development is not tied to a high-quality transit station.
+extended_description: |
+  Mixed-use development permits residential, commercial, office, civic, and/or recreational
+  land uses in a single location. By locating housing, jobs, services, and daily needs closer
+  together, mixed-use development can reduce reliance on long single-occupancy vehicle trips.
+
+  The effect of mixed-use development will vary based on the specific land uses proposed,
+  density, street connectivity, parking conditions, and access to transit and active
+  transportation. Its VMT reduction potential may be lower where uses are technically mixed
+  but still separated by large blocks, wide roads, excessive parking, or limited pedestrian
+  and bicycle connections.
+guidance: |
+  Use this strategy for land use projects or policies that bring complementary
+  uses closer together but are not specifically tied to high-quality transit. It is most
+  appropriate when housing, jobs, services, retail, civic uses, or recreation are co-located
+  so that some daily trips can be made by walking, biking, or shorter drives. For development
+  centered on a major transit station, use [Transit-Oriented
+  Development](#/strategies/transit_oriented_development)
+  instead.
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: 'Tier 1 ("Must Have"). uid LU-05 assigned here (doc listed it as "ID not yet assigned"). No calc
+  reference yet; needs method/formula/inputs before promotion to strategies/.'

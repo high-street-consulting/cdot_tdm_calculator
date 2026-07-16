@@ -1,0 +1,96 @@
+# SP-01 - Telework and Flexible Work Schedules
+# Seeded from app/src/strategies/registry.ts. This file is now the source of truth.
+
+id: telework
+uid: SP-01
+name: Telework and Flexible Work Schedules
+category: support
+status: implemented
+tags:
+- policy
+- commute
+- employer
+- site
+short_description: Hybrid or full-remote work policies that eliminate commute trips on telework days.
+extended_description: |
+  Flexible work schedules and telework policies reduce commute travel by changing when,
+  how often, or whether employees commute to their workplace. Telework eliminates commute
+  trips on days where employees work from home, while compressed work schedules, staggered
+  shifts, and flexible start times can also reduce peak period commute pressure.
+
+  The largest VMT reductions occur for eligible employees who would otherwise drive long
+  distances. Outcomes depend on job eligibility, participation, and how employers manage
+  their policies.
+guidance: |
+  Use this strategy for hybrid or fully remote policies and compressed work
+  weeks. Enter the realistic average number of days worked from home, not the maximum
+  allowed by the policy, because actual use is usually lower.
+images: []
+method: Direct commute-trip elimination on telework days
+formula: Δcommute_VMT% = −%eligible × (telework_days / 5)
+methodology_detail: |
+  When eligible employees work from home, their commute trips disappear on those
+  days, directly reducing commute vehicle miles traveled (VMT). The reduction is the
+  share of workers who can telework multiplied by the average share of the work week
+  they do.
+
+  `Δcommute_VMT% = −%eligible × (telework_days / 5)`
+
+  No extra effect size is applied; each skipped commute counts as avoided driving.
+  (The 2021 CAPCOA Handbook no longer lists telework as its own measure; it treats
+  telework as one part of a commute trip reduction program.) The default share of
+  workers who can telework is estimated from the area's mix of jobs, drawn from
+  American Community Survey (ACS) data.
+
+  **Caveat: induced (rebound) travel.** This estimate captures only the commute trips
+  that are eliminated on telework days, so it should be read as a *commute-trip
+  reduction* and may overstate net VMT savings. A growing body of research finds that
+  telework can induce offsetting travel: people make additional non-commute trips during
+  the day, and the weaker tie to a daily commute can lead some households to choose homes
+  farther from work, lengthening the trips they do make. The net effect on total VMT is
+  uncertain and context-dependent, and in some cases telework can increase overall
+  driving. Treat the figure here as an upper bound on commute-VMT savings rather than a
+  guaranteed reduction in total VMT.
+applicability: {}
+inputs:
+- key: pct_eligible
+  label: Telework-eligible workforce
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.5
+  prerequisite: true
+  summary: The share of the area's workers in jobs that can be done remotely; office and professional roles raise it, manual roles lower it.
+  source_note: your employer's job mix (or the area's occupation mix)
+  tooltip: ACS occupation-mix-derived. Office/professional roles → higher; manual/in-person → lower.
+  instructions: |
+    Estimate the share of the area's workers in jobs that can be done remotely. The
+    default is based on the local mix of jobs: office and professional roles raise
+    it, manual and in-person roles lower it. Adjust it if you know the specific
+    employers involved: a single office employer is mostly able to telework, a
+    warehouse is not.
+- key: telework_days_per_week
+  label: Days/week teleworked
+  control: slider
+  min: 0
+  max: 5
+  step: 0.5
+  scale: 1
+  suffix: ' days'
+  default: 2
+  prerequisite: true
+  summary: The average number of days per week eligible employees actually work remotely, not the policy maximum (typical hybrid is 2-3 days).
+  source_note: your employer's telework policy and actual participation
+  tooltip: Average across eligible workers. Typical hybrid = 2-3 days.
+  instructions: |
+    Enter the average number of days per week eligible employees actually work
+    remotely, not the policy maximum. A typical hybrid policy lands around 2–3
+    days once you account for staff who come in more often than allowed.
+notes: ''
+# Closed-form. UI bounds telework_days_per_week to 0-5 (the Python fn raises outside that).
+compute:
+  pool: commute
+  formula: "-pct_eligible * (telework_days_per_week / 5)"

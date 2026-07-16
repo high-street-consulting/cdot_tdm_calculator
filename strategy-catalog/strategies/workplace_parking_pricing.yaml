@@ -1,0 +1,106 @@
+# PK-01 - Workplace Parking Pricing
+# Promoted from strategies/todo and split from the parking-pricing engine: this is
+# the commute/workplace half (trip_purpose=commute). Engine: strategy_parking_pricing.
+
+id: workplace_parking_pricing
+uid: PK-01
+name: Workplace Parking Pricing
+category: parking
+status: implemented
+tags:
+- pricing
+- auto
+- employer
+- commute
+short_description: Charge employees for parking at work (or remove free parking) to discourage driving alone
+  for the commute.
+extended_description: |
+  Workplace parking pricing makes the cost of employee parking visible instead of treating
+  it as free or as a hidden benefit. Pricing can help preserve parking for employees who
+  need or value it most, while encouraging others to consider lower-cost commute options
+  such as transit, carpooling, vanpooling, bicycling, walking, or telework. This measure
+  may also include a 'parking cash-out', where employees who do not use an
+  employer-provided parking space receive a credit for other commuting options.
+
+  The effect depends on the parking price, nearby parking supply, and whether employees
+  have practical alternatives. Pricing is most effective at worksites with parking
+  pressure, useful travel options, and clear communication about how employees can shift
+  to lower-cost choices.
+guidance: |
+  This strategy applies to commute trips and should generally be used for
+  employees who currently receive free, subsidized, or underpriced workplace parking. For
+  priced public or curb parking across an area, use [Parking Fees and Curb
+  Management](#/strategies/parking_fees_curb_management).
+images: []
+method: Lehner & Peer (2019) parking demand elasticity (ε=−0.40), commute scope
+formula: Δcommute_VMT% = %Δprice × ε × share_affected
+methodology_detail: |
+  Charging for parking that used to be free raises the cost of driving to work, so
+  some employees carpool, switch modes, or stop driving alone, reducing commute
+  vehicle miles traveled (VMT). The larger the price increase and the more employees
+  it reaches, the bigger the reduction, following CAPCOA
+  [T-12 (Price Workplace Parking)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-12.pdf)
+  and the parking-response relationship in Lehner & Peer (2019).
+
+  `Δcommute_VMT% = %Δprice × ε × share_affected`
+
+  Where parking is free today, introducing a charge is treated as a meaningful price
+  increase. By default the strategy covers the share of employees who already pay to
+  park in this type of area; set it directly if you know how many worksites the
+  pricing reaches. The estimate is most reliable for moderate price changes and
+  overstates the response to very large ones (above about a 50% increase).
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Parking pricing changes behavior where parking is constrained and alternatives exist; it has little effect in rural areas with abundant free parking.
+inputs:
+- key: new_price
+  label: New daily parking price
+  control: number
+  min: 0
+  max: 50
+  step: 0.5
+  default: 5.0
+  unit: $ per day
+  prerequisite: true
+  summary: The new daily price employees will pay to park at work (a typical full-day rate; divide monthly permits by about 21 working days).
+  source_note: your proposed employer parking rate
+  tooltip: New employee parking price per day. The starting price defaults to the typical price for this type of area.
+  instructions: |
+    Enter the new daily price employees will pay to park. If parking is free today,
+    the calculator treats the introduction of any price as a meaningful increase.
+    Use a typical full-day rate for the area; monthly permits can be divided by ~21
+    working days.
+- key: share_affected
+  label: Share of commuters whose price changes
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.25
+  prerequisite: true
+  summary: The share of the area's commuters whose parking price actually changes under the policy, or leave the default for the typical local share.
+  source_note: your program scope / count of covered worksites
+  tooltip: Leave at the default to use the typical share of employees who pay for parking in this type of area, or set it directly.
+  instructions: |
+    Estimate the share of the area's commuters whose parking price actually changes
+    under the policy. If you leave it at the default, the calculator uses the typical
+    share of employees who already pay for parking in this type of area. Set it
+    directly if you know how many worksites the pricing covers.
+notes: 'Promoted from todo; split from the pricing engine. Engine: strategy_parking_pricing (trip_purpose=commute).'
+# Closed-form (parking pricing, commute). Reads imputed parking_price.
+compute:
+  pool: commute
+  const:
+    elasticity: -0.40    # parking demand elasticity
+    vmt_to_trips: 1.0    # neutral vmt<->trips factor
+  row_defaults:
+    parking_price: 0     # imputed by area_type (host dslRow); 0 -> model as new-pricing
+  let:
+    - effective_old: "if(parking_price > 0, parking_price, new_price / 2)"
+    - pct_price: "(new_price - effective_old) / effective_old"
+  formula: "pct_price * elasticity * share_affected * vmt_to_trips"

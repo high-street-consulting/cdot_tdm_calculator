@@ -1,0 +1,95 @@
+# ID-01 - Lane Miles Added (Negative Impact on VMT)
+# Seeded from app/src/strategies/registry.ts. This file is now the source of truth.
+
+id: lane_mile_addition
+uid: ID-01
+name: Lane Miles Added (Negative Impact on VMT)
+category: induced
+status: implemented
+tags:
+- infrastructure
+- auto
+- all-trips
+- mpo
+- corridor
+short_description: Change in roadway capacity. Added lanes increase VMT via induced demand; a road
+  diet (negative lane miles) reduces it. Magnitude depends on facility class.
+extended_description: |
+  Adding lane miles is an inverse measure that estimates potential VMT increases. Unlike
+  the other measures in this tool, adding lane miles is not seen as a TDM strategy. For
+  the purposes of this tool, this estimate measures the potential negative impacts
+  associated with added lane miles and induced demand.
+
+  The effect of induced demand will vary by roadway type and context, with major freeway
+  capacity typically producing stronger induced travel effects than small changes on
+  lower-volume streets.
+
+  This same relationship runs in reverse: removing through-lane capacity (a **road
+  diet**) reduces VMT. To model a road diet, enter a **negative** number of lane miles
+  (e.g. `-2` for a project that removes two lane-miles of general-purpose capacity).
+guidance: |
+  Use this strategy to estimate added driving from a roadway capacity
+  project, or VMT savings from a road diet (enter negative lane miles). Apply it to
+  general-purpose capacity changes; specialized improvements such as turn lanes, bus-only
+  lanes, or safety projects should be evaluated based on their specific purpose.
+images: []
+method: Duranton & Turner 2011 long-run induced-demand elasticities
+formula: ΔVMT% = (new_lane_miles / existing_lane_miles_in_class) × ε
+methodology_detail: |
+  Widening a road or adding lanes makes driving easier, which over time generates
+  more vehicle miles traveled (VMT), an effect known as induced demand. The added
+  driving is proportional to how much the new lanes increase capacity for that type
+  of road.
+
+  `ΔVMT% = (new_lane_miles / existing_lane_miles_in_class) × ε`
+
+  The strength of the effect depends on the road type: freeways and expressways
+  bring out the most new travel, arterials less, and collectors and local streets
+  the least (Duranton & Turner 2011). Induced demand is not a CAPCOA reduction
+  measure, so no CAPCOA reference applies.
+applicability: {}
+inputs:
+- key: new_lane_miles
+  label: Net change in general-purpose lane miles
+  control: number
+  step: 0.1
+  default: 2.0
+  prerequisite: true
+  summary: The net change in through-lane miles the project makes (positive for added lanes, negative for a road diet), excluding turn lanes and shoulders.
+  source_note: your project scope / roadway design
+  tooltip: 'Signed net change in through-lane miles, excluding turn lanes and shoulders. Positive = lanes added; negative = a road diet (lanes removed).'
+  instructions: |
+    Enter the net change in through-lane miles the project makes: lane-miles, not
+    centerline miles (a 2-mile project adding one lane each way is 4 lane-miles).
+    Use a **positive** value for added capacity and a **negative** value to model a
+    **road diet** that removes through-lane capacity (e.g. `-4` for a 2-mile project
+    that removes one lane each way). Exclude turn lanes, auxiliary lanes, and shoulders.
+  min: -20
+  unit: lane-mi
+- key: facility_class
+  label: Facility class
+  control: select
+  options:
+  - value: freeway
+    label: Freeway (ε = +1.0)
+  - value: expressway
+    label: Expressway (ε = +1.0)
+  - value: major_arterial
+    label: Major arterial (ε = +0.6)
+  - value: minor_arterial
+    label: Minor arterial (ε = +0.6)
+  - value: collector
+    label: Collector (ε = +0.4)
+  - value: local
+    label: Local (ε = +0.4)
+  default: major_arterial
+  prerequisite: true
+  summary: The functional classification of the road being widened or narrowed; freeways induce the most new travel, local streets the least.
+  source_note: the functional class of the road in your project scope
+  tooltip: Sets how strongly new capacity brings out traffic. Existing lane miles for the area come from the loaded network.
+  instructions: |
+    Pick the class of the road being widened. It sets how strongly the new capacity
+    brings out traffic: freeways and expressways induce the most new travel,
+    arterials less, and collectors and local streets the least. Match it to the
+    functional classification of the road you're expanding.
+notes: ''

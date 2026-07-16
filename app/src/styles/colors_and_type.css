@@ -1,0 +1,447 @@
+/* ==========================================================================
+   Calcite Design System: colors, type, space, radius, shadow, motion tokens
+   Source: @esri/calcite-design-tokens (Esri/calcite-design-system@dev)
+   Prefix: --calcite-*  (matches the upstream CSS variables, so components
+   authored against Calcite can drop this file in and Just Work.)
+
+   Brand layer: High Street (Strong Blue / Medium Blue / Gold / Ice Blue)
+   per Branding Guide 2025. Red is reserved for the logo only and is NOT
+   available as a UI token.
+
+   Font substitution: High Street specifies Tenorite (Microsoft cloud font,
+   not openly redistributable). For previews we load Source Sans 3 from
+   Google Fonts as the nearest match. The --calcite-font-family stack keeps
+   Tenorite first, so licensed users get the real thing automatically.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap");
+
+:root {
+  /* ──────────────────────────────────────────────────────────────────────
+     FONT FAMILIES  (Tenorite → Source Sans 3 fallback)
+     ────────────────────────────────────────────────────────────────────── */
+  --calcite-font-family:
+    "Tenorite", "Source Sans 3", "Source Sans Pro", "Segoe UI",
+    "Helvetica Neue", system-ui, sans-serif;
+  --calcite-font-family-code:
+    "Monaco", "Consolas", "Andale Mono", "Lucida Console", ui-monospace, monospace;
+
+  /* ──────────────────────────────────────────────────────────────────────
+     FONT WEIGHTS
+     Calcite maps both "semibold" and "bold" tokens to Avenir Next Demi (600)
+     ────────────────────────────────────────────────────────────────────── */
+  --calcite-font-weight-light: 300;
+  --calcite-font-weight-regular: 400;
+  --calcite-font-weight-medium: 500;
+  --calcite-font-weight-semibold: 600;
+  --calcite-font-weight-bold: 600;
+
+  /* ──────────────────────────────────────────────────────────────────────
+     FONT SIZES: fixed px (for UI chrome)
+     ────────────────────────────────────────────────────────────────────── */
+  --calcite-font-size-xs: 10px;
+  --calcite-font-size-sm: 12px;
+  --calcite-font-size-default: 14px;
+  --calcite-font-size-md: 16px;
+  --calcite-font-size-xl: 20px;
+  --calcite-font-size-2xl: 24px;
+
+  /* FONT SIZES: relative rem (for wrapped body copy, display) */
+  --calcite-font-size-relative-xs: 0.625rem;   /* 10 */
+  --calcite-font-size-relative-sm: 0.75rem;    /* 12 */
+  --calcite-font-size-relative-base: 0.875rem; /* 14 */
+  --calcite-font-size-relative-md: 1rem;       /* 16 */
+  --calcite-font-size-relative-lg: 1.125rem;   /* 18 */
+  --calcite-font-size-relative-xl: 1.25rem;    /* 20 */
+  --calcite-font-size-relative-2xl: 1.625rem;  /* 26 */
+  --calcite-font-size-relative-3xl: 2rem;      /* 32 */
+  --calcite-font-size-relative-4xl: 2.5rem;    /* 40 */
+  --calcite-font-size-relative-5xl: 3rem;      /* 48 */
+  --calcite-font-size-relative-6xl: 3.5rem;    /* 56 */
+  --calcite-font-size-relative-7xl: 4rem;      /* 64 */
+
+  /* LINE HEIGHTS: fixed px (prevents baseline drift in dense UI) */
+  --calcite-line-height-sm: 12px;
+  --calcite-line-height-base: 16px;
+  --calcite-line-height-lg: 20px;
+  --calcite-line-height-xl: 24px;
+  --calcite-line-height-2xl: 32px;
+  --calcite-line-height-3xl: 40px;
+  --calcite-line-height-4xl: 48px;
+  --calcite-line-height-5xl: 64px;
+  --calcite-line-height-6xl: 80px;
+
+  /* LINE HEIGHTS: relative (for wrapped prose) */
+  --calcite-line-height-relative-base: 1;
+  --calcite-line-height-relative-tight: 1.25;
+  --calcite-line-height-relative-snug: 1.375;
+  --calcite-line-height-relative-normal: 1.5;
+  --calcite-line-height-relative-relaxed: 1.625;
+  --calcite-line-height-relative-loose: 2;
+
+  /* ──────────────────────────────────────────────────────────────────────
+     NEUTRAL RAMP (27 steps, pure white → pure black)
+     ────────────────────────────────────────────────────────────────────── */
+  --calcite-color-neutral-blk-000: #ffffff;
+  --calcite-color-neutral-blk-005: #f7f7f7;
+  --calcite-color-neutral-blk-010: #f2f2f2;
+  --calcite-color-neutral-blk-020: #ebebeb;
+  --calcite-color-neutral-blk-030: #dedede;
+  --calcite-color-neutral-blk-040: #d4d4d4;
+  --calcite-color-neutral-blk-050: #c9c9c9;
+  --calcite-color-neutral-blk-060: #bfbfbf;
+  --calcite-color-neutral-blk-070: #b5b5b5;
+  --calcite-color-neutral-blk-080: #ababab;
+  --calcite-color-neutral-blk-090: #9e9e9e;
+  --calcite-color-neutral-blk-100: #949494;
+  --calcite-color-neutral-blk-110: #8a8a8a;
+  --calcite-color-neutral-blk-120: #808080;
+  --calcite-color-neutral-blk-130: #757575;
+  --calcite-color-neutral-blk-140: #6b6b6b;
+  --calcite-color-neutral-blk-150: #616161;
+  --calcite-color-neutral-blk-160: #545454;
+  --calcite-color-neutral-blk-170: #4a4a4a;
+  --calcite-color-neutral-blk-180: #404040;
+  --calcite-color-neutral-blk-190: #363636;
+  --calcite-color-neutral-blk-200: #2b2b2b;
+  --calcite-color-neutral-blk-210: #212121;
+  --calcite-color-neutral-blk-220: #141414;
+  --calcite-color-neutral-blk-230: #0a0a0a;
+  --calcite-color-neutral-blk-235: #050505;
+  --calcite-color-neutral-blk-240: #000000;
+
+  /* ──────────────────────────────────────────────────────────────────────
+     HIGH STREET BRAND COLORS  (Branding Guide 2025)
+     Strong Blue + Medium Blue are primary. Gold + Ice Blue are secondary
+     accents (NEVER use for text). Red is reserved for the logo and must
+     not appear on any UI surface.
+     ────────────────────────────────────────────────────────────────────── */
+
+  /* Primary */
+  --brand-strong-blue:         #002A42;
+  --brand-strong-blue-80:      #335468;  /* from tint row */
+  --brand-strong-blue-60:      #667F8D;
+  --brand-strong-blue-40:      #99AAB3;
+  --brand-strong-blue-20:      #CCD4D9;
+
+  --brand-medium-blue:         #50779B;
+  --brand-medium-blue-hover:   #415F7E;  /* ~12% darker */
+  --brand-medium-blue-press:   #34506B;
+  --brand-medium-blue-80:      #7392AF;
+  --brand-medium-blue-60:      #95AEC3;
+  --brand-medium-blue-40:      #B8C9D7;
+  --brand-medium-blue-20:      #DCE5EB;
+
+  /* Secondary (accents only, never text) */
+  --brand-gold:                #FAAA42;
+  --brand-gold-hover:          #E89824;
+  --brand-gold-press:          #CF860E;
+  --brand-gold-80:              #FBBB68;
+  --brand-gold-60:              #FCCC8E;
+  --brand-gold-40:              #FDDDB4;
+  --brand-gold-20:              #FEEED9;
+
+  --brand-ice-blue:            #DCE4EB;
+
+  /* Logo-only: never apply to UI */
+  --brand-logo-red:            #E31E25;
+
+  /* Semantic brand aliases used by UI kits & preview cards.
+     Change per client by swapping just these 6 tokens. */
+  --brand-primary:             var(--brand-strong-blue);
+  --brand-primary-hover:       #0A3A54;
+  --brand-on-primary:          #FFFFFF;            /* light text on blue */
+  --brand-secondary:           var(--brand-medium-blue);
+  --brand-secondary-hover:     var(--brand-medium-blue-hover);
+  --brand-on-secondary:        #FFFFFF;
+  --brand-accent:              var(--brand-gold);
+  --brand-on-accent:           var(--brand-strong-blue); /* dark text on gold */
+  --brand-surface-soft:        var(--brand-ice-blue);
+  --brand-on-surface-soft:     var(--brand-strong-blue); /* dark text on ice */
+
+  /* HIGH-SATURATION HUES: default chrome + status colors */
+  --calcite-color-blue-h-010: #d6efff;
+  --calcite-color-blue-h-020: #9fd4f3;
+  --calcite-color-blue-h-030: #77bde7;
+  --calcite-color-blue-h-040: #50a7da;
+  --calcite-color-blue-h-050: #2890ce;
+  --calcite-color-blue-h-060: #007ac2;
+  --calcite-color-blue-h-070: #00619b;
+  --calcite-color-blue-h-080: #004874;
+  --calcite-color-blue-h-090: #00304d;
+  --calcite-color-blue-h-100: #001726;
+
+  --calcite-color-green-h-010: #bdf2c4;
+  --calcite-color-green-h-060: #35ac46;
+  --calcite-color-green-h-070: #288835;
+  --calcite-color-green-h-080: #1a6324;
+
+  --calcite-color-red-h-010: #ffc6bf;
+  --calcite-color-red-h-060: #d83020;
+  --calcite-color-red-h-070: #a82b1e;
+  --calcite-color-red-h-080: #7c1d13;
+
+  --calcite-color-orange-yellow-h-050: #ffaf4f;
+  --calcite-color-orange-yellow-h-060: #f89927;
+  --calcite-color-orange-yellow-h-070: #da7c0b;
+  --calcite-color-orange-yellow-h-080: #9a5b10;
+
+  /* VIBRANT HUES: dark-mode callouts, data viz accents */
+  --calcite-color-blue-v-110: #80d1ff;
+  --calcite-color-blue-v-120: #59d6ff;
+  --calcite-color-blue-v-140: #3db8ff;
+  --calcite-color-blue-v-160: #009af2;
+  --calcite-color-blue-v-180: #0089de;
+
+  /* ──────────────────────────────────────────────────────────────────────
+     SEMANTIC COLORS: LIGHT MODE (default)
+     These are what components actually reference.
+     ────────────────────────────────────────────────────────────────────── */
+  --calcite-color-surface-1: #f7f7f7;
+  --calcite-color-surface-2: #ffffff;
+  --calcite-color-surface-3: #f2f2f2;
+  --calcite-color-surface-4: #ebebeb;
+  --calcite-color-surface-highlight: #d6efff;
+
+  --calcite-color-text-1: #141414;
+  --calcite-color-text-2: #4a4a4a;
+  --calcite-color-text-3: #6b6b6b;
+  --calcite-color-text-inverse: #ffffff;
+  --calcite-color-text-link: #00619b;
+  --calcite-color-text-highlight: #004874;
+
+  --calcite-color-border-1: #d4d4d4;
+  --calcite-color-border-2: #dedede;
+  --calcite-color-border-3: #ebebeb;
+  --calcite-color-border-input: #949494;
+
+  --calcite-color-brand: #50779B;            /* High Street Medium Blue */
+  --calcite-color-brand-hover: #415F7E;
+  --calcite-color-brand-press: #34506B;
+  --calcite-color-brand-underline: rgba(80, 119, 155, 0.4);
+
+  --calcite-color-inverse: #363636;
+  --calcite-color-inverse-hover: #2b2b2b;
+  --calcite-color-inverse-press: #212121;
+
+  --calcite-color-status-info: #00619b;
+  --calcite-color-status-info-hover: #004874;
+  --calcite-color-status-info-press: #00304d;
+  --calcite-color-status-success: #288835;
+  --calcite-color-status-success-hover: #1a6324;
+  --calcite-color-status-success-press: #0d3f14;
+  --calcite-color-status-warning: #da7c0b;
+  --calcite-color-status-warning-hover: #ffaf4f;
+  --calcite-color-status-warning-press: #9a5b10;
+  --calcite-color-status-danger: #d83020;
+  --calcite-color-status-danger-hover: #a82b1e;
+  --calcite-color-status-danger-press: #7c1d13;
+
+  --calcite-color-transparent: rgba(0, 0, 0, 0);
+  --calcite-color-transparent-hover: rgba(0, 0, 0, 0.04);
+  --calcite-color-transparent-press: rgba(0, 0, 0, 0.08);
+  --calcite-color-transparent-scrim: rgba(255, 255, 255, 0.85);
+  --calcite-color-transparent-tint: rgba(255, 255, 255, 0.80);
+
+  --calcite-color-focus: var(--calcite-color-brand);
+
+  /* ──────────────────────────────────────────────────────────────────────
+     SPACING SCALE (13 steps, intentionally sparse)
+     ────────────────────────────────────────────────────────────────────── */
+  --calcite-space-none: 0;
+  --calcite-space-px: 1px;
+  --calcite-space-base: 2px;
+  --calcite-space-2xs: 4px;
+  --calcite-space-xs: 6px;
+  --calcite-space-sm: 8px;
+  --calcite-space-sm-plus: 10px;
+  --calcite-space-md: 12px;
+  --calcite-space-md-plus: 14px;
+  --calcite-space-lg: 16px;
+  --calcite-space-xl: 20px;
+  --calcite-space-2xl: 24px;
+  --calcite-space-3xl: 32px;
+  --calcite-space-4xl: 44px;
+
+  /* CORNER RADIUS: sharp by default */
+  --calcite-corner-radius-none: 0;
+  --calcite-corner-radius-xs: 2px;
+  --calcite-corner-radius-sm: 4px;
+  --calcite-corner-radius-pill: 9999px;
+
+  /* BORDER WIDTHS */
+  --calcite-border-width-sm: 1px;
+  --calcite-border-width-md: 2px;
+
+  /* SHADOWS */
+  --calcite-shadow-none: 0 0 0 0 rgba(0, 0, 0, 0);
+  --calcite-shadow-sm:
+    0 2px 8px 0 rgba(0, 0, 0, 0.04),
+    0 4px 16px 0 rgba(0, 0, 0, 0.08);
+  --calcite-shadow-md:
+    0 4px 20px 0 rgba(0, 0, 0, 0.08),
+    0 12px 32px -2px rgba(0, 0, 0, 0.10);
+
+  /* MOTION */
+  --calcite-animation-timing: 300ms;
+  --calcite-internal-animation-timing-fast: 150ms;
+  --calcite-animation-easing: ease-in-out;
+
+  /* CONTAINER / Z-INDEX */
+  --calcite-z-index-deep: -100;
+  --calcite-z-index-default: 0;
+  --calcite-z-index-header: 400;
+  --calcite-z-index-sticky: 300;
+  --calcite-z-index-dropdown: 500;
+  --calcite-z-index-overlay: 600;
+  --calcite-z-index-modal: 700;
+  --calcite-z-index-tooltip: 900;
+  --calcite-z-index-toast: 901;
+}
+
+/* ============================================================================
+   DARK MODE: apply via <html class="calcite-mode-dark"> or prefers-color-scheme
+   ============================================================================ */
+.calcite-mode-dark,
+[data-theme="dark"] {
+  --calcite-color-surface-1: #212121;
+  --calcite-color-surface-2: #2b2b2b;
+  --calcite-color-surface-3: #363636;
+  --calcite-color-surface-4: #404040;
+  --calcite-color-surface-highlight: #00304d;
+
+  --calcite-color-text-1: #ffffff;
+  --calcite-color-text-2: #bfbfbf;
+  --calcite-color-text-3: #9e9e9e;
+  --calcite-color-text-inverse: #141414;
+  --calcite-color-text-link: #80d1ff;
+  --calcite-color-text-highlight: #d6efff;
+
+  --calcite-color-border-1: #545454;
+  --calcite-color-border-2: #4a4a4a;
+  --calcite-color-border-3: #404040;
+  --calcite-color-border-input: #757575;
+
+  --calcite-color-brand: #7392AF;            /* Medium Blue 80 (lighter for dark mode) */
+  --calcite-color-brand-hover: #95AEC3;
+  --calcite-color-brand-press: #B8C9D7;
+
+  --calcite-color-inverse: #f7f7f7;
+  --calcite-color-inverse-hover: #f2f2f2;
+  --calcite-color-inverse-press: #ebebeb;
+
+  --calcite-color-status-info: #80d1ff;
+  --calcite-color-status-success: #6df278;
+  --calcite-color-status-warning: #f89927;
+  --calcite-color-status-danger: #ff624d;
+
+  --calcite-color-transparent-hover: rgba(255, 255, 255, 0.04);
+  --calcite-color-transparent-press: rgba(255, 255, 255, 0.08);
+  --calcite-color-transparent-scrim: rgba(0, 0, 0, 0.85);
+  --calcite-color-transparent-tint: rgba(0, 0, 0, 0.80);
+}
+
+/* ============================================================================
+   SEMANTIC TYPOGRAPHY CLASSES
+   Use these in HTML directly: <h1 class="cd-display-1">…
+   ============================================================================ */
+
+html, body {
+  font-family: var(--calcite-font-family);
+  font-size: var(--calcite-font-size-default);
+  font-weight: var(--calcite-font-weight-regular);
+  line-height: var(--calcite-line-height-base);
+  color: var(--calcite-color-text-1);
+  background: var(--calcite-color-surface-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code, pre, kbd, samp {
+  font-family: var(--calcite-font-family-code);
+}
+
+/* Display: hero copy, marketing surfaces (rarely used in product chrome) */
+.cd-display-1 {
+  font-size: var(--calcite-font-size-relative-2xl);
+  font-weight: var(--calcite-font-weight-semibold);
+  line-height: var(--calcite-line-height-relative-snug);
+  letter-spacing: -0.01em;
+}
+.cd-display-2 {
+  font-size: var(--calcite-font-size-relative-xl);
+  font-weight: var(--calcite-font-weight-semibold);
+  line-height: var(--calcite-line-height-relative-snug);
+}
+
+/* Heading 1–5: use throughout app chrome */
+.cd-heading-1 {
+  font-size: var(--calcite-font-size-relative-2xl);
+  font-weight: var(--calcite-font-weight-medium);
+  line-height: var(--calcite-line-height-relative-snug);
+}
+.cd-heading-2 {
+  font-size: var(--calcite-font-size-relative-xl);
+  font-weight: var(--calcite-font-weight-medium);
+  line-height: var(--calcite-line-height-relative-snug);
+}
+.cd-heading-3 {
+  font-size: var(--calcite-font-size-relative-lg);
+  font-weight: var(--calcite-font-weight-medium);
+  line-height: var(--calcite-line-height-relative-snug);
+}
+.cd-heading-4 {
+  font-size: var(--calcite-font-size-relative-md);
+  font-weight: var(--calcite-font-weight-medium);
+  line-height: var(--calcite-line-height-relative-snug);
+}
+.cd-heading-5 {
+  font-size: var(--calcite-font-size-relative-base);
+  font-weight: var(--calcite-font-weight-medium);
+  line-height: var(--calcite-line-height-relative-snug);
+}
+
+/* Body */
+.cd-body-default {
+  font-size: var(--calcite-font-size-default);
+  font-weight: var(--calcite-font-weight-regular);
+  line-height: var(--calcite-line-height-base);
+}
+.cd-body-snug {
+  font-size: var(--calcite-font-size-default);
+  font-weight: var(--calcite-font-weight-regular);
+  line-height: var(--calcite-line-height-relative-snug);
+}
+
+/* Overline: uppercase, bold, small. Used for section labels. */
+.cd-overline {
+  font-size: var(--calcite-font-size-xs);
+  font-weight: var(--calcite-font-weight-bold);
+  line-height: var(--calcite-line-height-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Caption: secondary metadata */
+.cd-caption {
+  font-size: var(--calcite-font-size-sm);
+  font-weight: var(--calcite-font-weight-regular);
+  line-height: var(--calcite-line-height-base);
+  color: var(--calcite-color-text-3);
+}
+
+/* Code */
+.cd-code {
+  font-family: var(--calcite-font-family-code);
+  font-size: 0.9em;
+  background: var(--calcite-color-surface-3);
+  border: 1px solid var(--calcite-color-border-3);
+  border-radius: var(--calcite-corner-radius-xs);
+  padding: 1px 6px;
+}
+
+/* Focus ring: apply with class or replicate in components */
+.cd-focus {
+  outline: 2px solid var(--calcite-color-focus);
+  outline-offset: 2px;
+}

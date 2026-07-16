@@ -1,0 +1,90 @@
+# BP-07 - Workplace Bicycle Amenities
+# Split from the former "Bike mode-share booster" tile: this is the workplace /
+# commute half (scope=commute). On-street infrastructure is now sharrows_bike_lanes.
+# Engine: strategy_bike_mode_share_booster (scope=commute).
+
+id: end_of_trip_facilities
+uid: BP-07
+name: Workplace Bicycle Amenities
+category: bikeped
+status: implemented
+tags:
+- infrastructure
+- bike
+- employer
+- commute
+- site
+short_description: Workplace bike parking, showers, and lockers that raise bike commute mode share by a
+  documented effect size.
+extended_description: |
+  Workplace bicycle amenities provide secure bicycle parking, lockers, showers, changing
+  rooms, repair stations, or similar amenities for employees. These amenities address
+  common barriers that can keep employees from considering biking as a commute option.
+
+  The effect depends on whether employees live within a reasonable bicycling distance and
+  whether the surrounding bike network provides a comfortable and direct connection to the
+  worksite. Amenities at a worksite near safe, connected bicycle routes will generally
+  have a stronger effect than the same amenities at a site that is not close to
+  high-quality bike facilities that are part of a larger bike network.
+guidance: |
+  This is a workplace measure, led by an employer or developer, that applies
+  to commute trips. For area-wide on-street bicycle infrastructure, use [Striped Bike
+  Lanes, Neighborhood Bikeways and
+  Sharrows](#/strategies/sharrows_bike_lanes)
+  or [Protected or Buffered Bike
+  Lanes](#/strategies/separated_bike_lanes)
+  instead.
+images: []
+method: CAPCOA T-10 (Provide End-of-Trip Bicycle Facilities), commute scope
+formula: Δcommute_VMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)
+methodology_detail: |
+  Showers, lockers, and secure bike parking remove a common reason people don't bike
+  to work, leading more employees to bike for their commute and lowering commute
+  vehicle miles traveled (VMT). Providing these facilities raises the share of
+  commute trips made by bike by about 5% among employees who have access, following
+  CAPCOA
+  [T-10 (Provide End-of-Trip Bicycle Facilities)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-10.pdf).
+  Because bike trips are shorter than car trips, the calculator accounts for that
+  when converting added bike commutes into driving avoided.
+
+  `Δcommute_VMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)`
+
+  This applies the same bike effect as [Striped Bike Lanes, Neighborhood Bikeways and
+  Sharrows](https://high-street.bitbucket.io/cdot_tdm_calculator/#/strategies/sharrows_bike_lanes),
+  focused on commuters at a worksite rather than across an area.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Biking to work is most practical at denser, bike-served worksites; the effect is limited in rural areas.
+inputs:
+- key: scope_share
+  label: Share of commuters with access
+  control: slider
+  min: 0
+  max: 100
+  step: 1
+  scale: 100
+  suffix: '%'
+  default: 0.4
+  prerequisite: true
+  summary: The share of commuters in your area who work at sites that will provide end-of-trip
+    bicycle facilities such as secure parking, showers, and lockers.
+  source_note: your employer roster or development standards / site plans
+  tooltip: Share of area commuters at workplaces that provide end-of-trip facilities.
+  instructions: |
+    Estimate the share of commuters in your project area who work at sites that
+    will provide end-of-trip facilities. For a single large employer, this is the
+    employer's share of area commuters; for a development standard applied to new
+    workplaces, estimate the share of commuters those sites represent.
+notes: 'Split from bike_mode_share_booster. Engine: strategy_bike_mode_share_booster (scope=commute).'
+# Closed-form (bike mode-share booster, commute scope fixed). Reads imputed bike/auto mode share.
+compute:
+  pool: commute
+  const:
+    adj: 0.05       # end-of-trip bike-share boost
+    bike_len: 1.5
+  row_defaults:
+    avg_trip_length: 9.0
+  formula: "-scope_share * bike_len * (bike_mode_share * adj) / (max(avg_trip_length, 0.5) * max(auto_mode_share, 0.000000001))"

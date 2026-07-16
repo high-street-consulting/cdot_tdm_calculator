@@ -1,0 +1,91 @@
+# SP-05 - TMO Coverage Expansion
+# Seeded from app/src/strategies/registry.ts. This file is now the source of truth.
+
+id: tmo_coverage
+uid: SP-05
+name: TMO Coverage Expansion
+category: support
+status: implemented
+tags:
+- program
+- commute
+- employer
+- local-government
+- mpo
+short_description: Bring more employers under a Transportation Management Organization that coordinates
+  TDM programs across a district.
+extended_description: |
+  A transportation management organization or association is a formal partnership that
+  coordinates travel demand management programs for a defined area, corridor, district, or
+  employment center. TMOs provide shared staff capacity, employer outreach, program
+  administration, and coordination that individual employers or jurisdictions may not be
+  able to sustain alone.
+
+  The effect depends on the number of commuters reached, the strength of the services
+  provided, and the availability of practical alternatives to driving alone.
+guidance: |
+  Use this strategy to model the creation of a new TMO or the expansion of
+  an existing one. The benefit should be based on the additional share of the workforce or
+  travel market covered by active TMO services.
+images: []
+method: CAPCOA T-5 (voluntary CTR) midpoint, 4% per eligible
+formula: Δcommute_VMT% = −(share_after − share_before) × r_CTR
+methodology_detail: |
+  A Transportation Management Organization helps more employees shift out of driving
+  alone by coordinating commute programs across many worksites. Each newly covered
+  worker is credited with about a 4% reduction in commute vehicle miles traveled
+  (VMT), following the voluntary commute trip reduction evidence in CAPCOA
+  [T-5 (Implement Commute Trip Reduction Program, Voluntary)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-5.pdf).
+
+  `Δcommute_VMT% = −(share_after − share_before) × r_CTR`
+
+  Only the *change* in coverage counts, so enter the share of the workforce the
+  organization covers today and the share it will cover after the expansion.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Transportation Management Organizations rely on a cluster of employers and commute alternatives, which are limited in rural areas.
+inputs:
+- key: share_before
+  label: Workforce coverage today
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.0
+  prerequisite: true
+  summary: The share of the area's employees who already work at TMO-member worksites today (0% for a brand-new TMO).
+  source_note: current TMO membership rolls vs. area employment
+  tooltip: Share of area employees at TMO-member workplaces.
+  instructions: |
+    Estimate the share of the area's employees who already work at TMO-member
+    worksites today. For a brand-new TMO this is 0%; for an expansion, use the
+    current membership's share of area employment.
+- key: share_after
+  label: Workforce coverage after
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.4
+  prerequisite: true
+  summary: The target share of area employees who will work at TMO-member worksites after the new or expanded organization is in place.
+  source_note: your TMO expansion plan / membership targets
+  tooltip: Target share after new TMO is established or existing TMO grows.
+  instructions: |
+    Estimate the share of area employees who will work at TMO-member worksites
+    after the new or expanded organization is in place. The difference between
+    this and today's coverage is what drives the reduction.
+notes: ''
+# Closed-form. strategy_tmo_coverage retained as oracle.
+compute:
+  pool: commute
+  const:
+    r_ctr: 0.04   # CAPCOA TRT-1 midpoint, per eligible
+  formula: "-(share_after - share_before) * r_ctr"

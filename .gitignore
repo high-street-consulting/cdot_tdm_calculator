@@ -1,0 +1,47 @@
+# Local environment files — keep .env.example committed, never .env
+.env
+.env.local
+.env.*.local
+
+# Private data repo, mounted here via TDM_DATA_DIR / TDM_OUTPUTS_DIR (see
+# scripts/paths.py). Never commit travel-model inputs or generated artifacts.
+# Anchored to the repo root so app/src/data/ (real source) is NOT ignored.
+/data/
+/outputs/
+
+# Python
+.venv/
+.venv_docx/
+*.py[cod]
+__pycache__/
+
+# Node
+node_modules/
+dist/
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Spreadsheets are kept out of the repo (internal working files)
+*.xlsx
+
+# Logs / test reports
+*.log
+TEST*.xml
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Claude Code project config / skills (not part of the shared repo)
+.claude/
+
+# Large media
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv

@@ -1,0 +1,127 @@
+# PK-05 - Parking cash-out
+# Promoted from strategies/todo. Engine: strategy_parking_cashout (CAPCOA T-13).
+
+id: parking_cashout
+uid: PK-05
+name: Parking Cash-Out
+category: parking
+status: planned  # HELD back: not app-wired (YAML method/inputs differ from the Python engine; see reconciliation note)
+tags:
+- program
+- commute
+- employer
+- local-government
+short_description: Offering employees cash or equivalent benefits in lieu of a free parking space.
+extended_description: |
+  Parking cash-outs are the practice of offering employees cash or equivalent benefits in
+  lieu of a free parking space. Parking cash-outs encourage individuals to choose alternative
+  modes for commuting trips, especially when paired with free transit passes or other TDM
+  measures that reduce transportation costs for the user.
+
+  The effect of parking cash-outs will depend on the presence of alternative modes of
+  transportation and their ease of use. If alternative modes are accessible, easy to use, and
+  lower cost than driving, individuals may be more likely to choose to participate in a
+  parking cash-out.
+guidance: |
+  Use this strategy for employer programs that offer employees cash or an
+  equivalent benefit when they forgo a free or subsidized parking space. This strategy
+  applies to commute trips and should be used only for employees who are eligible for an
+  employer-provided parking benefit. Double counting can occur if cash-out benefits are
+  already modeled under [Workplace Parking
+  Pricing](#/strategies/workplace_parking_pricing),
+  [Employee Commuting
+  Benefits](#/strategies/employee_commuting_benefits),
+  or [Commuter
+  Incentives](#/strategies/commute_incentives).
+images: []
+method: CAPCOA T-13 (parking price-elasticity chain)
+formula: ΔCommuteVMT% = −clamp(|(cash_out / parking_cost) × −0.4 × eligible × veh_MS × p_drive × conv|, 0, 12%)
+methodology_detail: |
+  Offering cash in lieu of a free or subsidized parking space exposes the true cost of
+  parking and lets employees pocket the value if they don't drive, shifting commute trips off
+  single-occupancy driving. Following CAPCOA
+  [T-13 (Implement Employee Parking Cash-Out)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-13.pdf),
+  the cash-out amount is treated as a price signal applied to parking and run through the
+  parking price-elasticity → mode-share → vehicle-miles-traveled (VMT) chain:
+
+  `ΔVMT% = −(cash_out / avg_parking_cost) × −0.4 × pct_eligible × commute_vehicle_mode_share × pct_would_drive × trip_to_VMT`
+
+  using the parking-demand price elasticity of **−0.4** (Lehner & Peirson 2019). The commute
+  vehicle mode share comes from the area's observed commute mode share. "Percent eligible" is
+  the share of employees who *could* participate (usually 100%), not the share who actually
+  do.
+
+  The reduction is capped at the **~12% empirical ceiling** from Shoup's eight-employer
+  cash-out study (1997), corroborated by a ~12% single-occupancy reduction in a Twin Cities
+  seven-employer study (FHWA 2023).
+
+  > **Constants pending confirmation.** The CAPCOA T-13 fact sheet could not be read at
+  > implementation time. The "share of affected parking trips that would otherwise be driven"
+  > and the trip-to-VMT conversion are **placeholders** exposed in the code
+  > (`PARKING_CASHOUT_T13`); whether the elasticity applies to a price *ratio* (used here) or
+  > an absolute daily price is also unconfirmed. Confirm against the fact sheet before relying
+  > on the numbers. Outputs flag this.
+
+  **Sources**
+
+  - CAPCOA *Handbook*, Measure
+    [T-13 (Implement Employee Parking Cash-Out)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-13.pdf).
+  - Lehner & Peirson (2019), parking price elasticity (−0.4).
+  - Shoup, D. (1997), *Evaluating the effects of cashing out employer-paid parking* (~12% VMT).
+  - FHWA (2023), *City-Level Parking Cash-Out and Commuter Benefits Ordinances*.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Cash-out works where commuters have viable non-driving options; results use placeholder constants pending CAPCOA T-13 confirmation.
+inputs:
+- key: cash_out_amount
+  label: Daily cash-out offered
+  control: number
+  min: 0
+  step: 0.5
+  default: 5
+  unit: $/day
+  prerequisite: true
+  summary: The daily value of the cash or equivalent benefit offered to employees who forgo an employer-provided parking space.
+  source_note: your proposed employer benefit / program design
+  tooltip: Daily cash (or equivalent benefit) offered to employees who give up their parking space.
+  instructions: |
+    Enter the daily value of the cash (or equivalent benefit) offered to employees who forgo
+    a parking space. Use the same time basis as the parking cost below. A cash-out is
+    typically set equal to the value of the parking subsidy.
+- key: avg_parking_cost
+  label: Value of the parking space
+  control: number
+  min: 0
+  step: 0.5
+  default: 5
+  unit: $/day
+  prerequisite: true
+  summary: The daily market value of the subsidized parking space the employer provides - the rate to lease an equivalent space.
+  source_note: local commercial parking lease rates
+  tooltip: Daily value of the subsidized parking space, same time basis as the cash-out. The price signal is the ratio of the two.
+  instructions: |
+    Enter the daily value of the subsidized parking space the employer provides, i.e. the market
+    rate to lease an equivalent space. The method uses the ratio of cash-out to parking value
+    as the price signal, so a cash-out equal to the parking value is a ratio of 1.0.
+- key: pct_employees_eligible
+  label: Share of employees eligible
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 1.0
+  prerequisite: true
+  summary: The share of employees who could participate if they chose to (usually near 100%), excluding those required to drive or without the benefit.
+  source_note: your employer workforce / benefit eligibility rules
+  tooltip: Share of employees who could participate if they wished (usually ~100%), not the share who actually do.
+  instructions: |
+    Estimate the share of employees who *could* participate if they chose to, usually close
+    to 100%. Exclude night-shift workers without transit/rideshare access, employees required
+    to drive for their job, and contract employees without the benefit. This is not the share
+    who actually take the cash-out.
+notes: 'Promoted from todo. CAPCOA T-13; pct_would_drive and trip-to-VMT conversion are PLACEHOLDER constants (PARKING_CASHOUT_T13), cap = Shoup ~12% empirical bound. COMMUTE pool; do not stack with T-12/CTR. Engine: strategy_parking_cashout.'

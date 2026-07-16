@@ -1,0 +1,110 @@
+# globals.yaml — shared, non-per-strategy catalog data.
+#
+# Categories (with CAPCOA subsector caps), the tag catalog, and the area-type
+# density thresholds the app uses for `applicability` warnings. Numeric
+# elasticities and behavioral defaults are NOT duplicated here — those remain
+# the single source of truth in the calculation engine
+# (app/src/strategies/constants.ts and scripts/strategy_calculations.py).
+
+categories:
+  - id: transit
+    name: Transit strategies
+    css_color_var: "var(--cdot-dark-blue)"
+    cap: 15
+    image: ""          # category fallback image (strategy-catalog/images/), TODO
+  - id: bikeped
+    name: Bike / ped & micromobility
+    css_color_var: "var(--cdot-orange)"
+    cap: 8
+    image: ""
+  - id: landuse
+    name: Land use
+    css_color_var: "var(--cdot-green)"
+    cap: 20
+    image: ""
+  - id: vanpool
+    name: Vanpool & ridesharing
+    css_color_var: "#7A4EA8"
+    cap: 6
+    image: ""
+  - id: support
+    name: Supportive & programmatic
+    css_color_var: "var(--cdot-dark-blue-80)"
+    cap: 10
+    image: ""
+  - id: induced
+    name: Induced demand
+    css_color_var: "#6D3A5D"
+    cap: null
+    image: ""
+  # Categories below are present in the master spreadsheet but not yet wired
+  # into the app. Kept here so `category` enum validation passes for planned
+  # strategies. Set caps when these are implemented.
+  - id: parking
+    name: Parking management
+    css_color_var: "var(--cdot-dark-blue)"
+    cap: null
+    image: ""
+  - id: electrification
+    name: Electrification
+    css_color_var: "var(--cdot-green)"
+    cap: null
+    image: ""
+  - id: freight
+    name: Freight
+    css_color_var: "#7A4EA8"
+    cap: null
+    image: ""
+  - id: programmatic
+    name: Programmatic
+    css_color_var: "var(--cdot-dark-blue-80)"
+    cap: null
+    image: ""
+  - id: technology
+    name: Technology & ramp management
+    css_color_var: "#6D3A5D"
+    cap: null
+    image: ""
+
+# Area-type classification thresholds (activity density = pop+emp per sq mi),
+# mirrored from prepare_taz.py. Used to evaluate per-strategy `applicability`.
+area_type_thresholds:
+  urban_core: 10000   # >= activity density
+  urban: 3500
+  suburban: 1000
+  rural: 0
+
+# Tag catalog (enhancement: tagging & filtering). The controlled vocabulary;
+# strategy `tags` should draw from this list. Extend as needed.
+tag_catalog:
+  audience:
+    - employer
+    - developer
+    - local-government
+    - transit-agency
+    - mpo
+  lever:
+    - infrastructure
+    - pricing
+    - service
+    - program
+    - policy
+    - land-use
+    - technology
+  trip_purpose:
+    - commute
+    - all-trips
+    - recreational
+  mode:
+    - transit
+    - bike
+    - walk
+    - micromobility
+    - vanpool
+    - auto
+  context:
+    - urban
+    - suburban
+    - rural
+    - corridor
+    - site

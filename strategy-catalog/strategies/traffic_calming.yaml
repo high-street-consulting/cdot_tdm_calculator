@@ -1,0 +1,152 @@
+# BP-05 - Traffic calming
+# Promoted from strategies/todo. Engine: strategy_traffic_calming (CAPCOA 2010 SDT-2).
+
+id: traffic_calming
+uid: BP-05
+name: Traffic Calming
+category: bikeped
+status: implemented
+tags:
+- infrastructure
+- bike
+- walk
+- local-government
+short_description: Street design measures (e.g., speed humps, curb extensions) that slow vehicle speeds
+  and improve safety.
+extended_description: |
+  Traffic calming helps to reduce vehicle speeds and improve the safety and comfort of people
+  walking, biking, rolling, and accessing transit. While traffic calming alone will likely
+  have little impact on VMT reductions, it makes trips completed by active transportation
+  safer. Traffic calming can include speed humps, curb extensions, chicanes, lane narrowing,
+  median islands, mini roundabouts, and other changes to the streetscape that slow vehicle
+  traffic and improve perceived and actual safety for users walking, biking, or rolling.
+
+  The effect of traffic calming will vary based on roadway context, surrounding land use, and
+  the strength of the active transportation network. Traffic calming is most effective when
+  paired with sidewalks, crossings, bike facilities, and transit access, especially in
+  locations where high vehicle speeds or wide crossing distances discourage individuals from
+  choosing alternative transportation modes.
+guidance: |
+  Use this strategy for street design measures that slow vehicle speeds and
+  improve comfort for people walking, biking, rolling, or accessing transit. Traffic calming
+  should generally be applied on local streets, station access routes, school routes, or
+  other low- to medium-volume corridors where speed and safety are barriers to non-driving
+  trips.
+images: []
+method: CAPCOA 2010 SDT-2 (legacy)
+formula: ΔVMT% = −clamp(0.25% + coverage × (1.00% − 0.25%), 0, 1.00%)
+methodology_detail: |
+  Traffic calming is credited using the 2010 CAPCOA measure
+  [SDT-2 (Traffic Calming Measures)](https://www.aqmd.gov/docs/default-source/ceqa/handbook/capcoa-quantifying-greenhouse-gas-mitigation-measures.pdf),
+  the only published method that assigns traffic calming a standalone VMT credit. The
+  reduction scales SDT-2's documented 0.25%–1.00% range by how much of the project's
+  network receives calming, taken as the average of the share of streets and the share of
+  intersections with improvements (beyond what the jurisdiction already requires):
+
+  `coverage = mean(streets_with_calming / total_streets, intersections_with_calming / total_intersections)`
+
+  `ΔVMT% = −(0.25% + coverage × (1.00% − 0.25%))`, capped at the 1.00% measure maximum.
+
+  If only one of the two coverage measures is available, that one is used rather than
+  averaging it against a zero.
+
+  **Legacy note:** In the 2021/2024 CAPCOA Handbook, traffic calming was reclassified as
+  the *non-quantified* supporting measure T-35 and folded conceptually into pedestrian
+  network improvements; it no longer carries a discrete VMT credit. This implementation is
+  retained per CDOT's request for a standalone traffic-calming credit and is flagged as a
+  legacy method. Avoid double-counting with the Pedestrian Network Improvements strategy.
+
+  **Sources**
+
+  - CAPCOA, *Quantifying Greenhouse Gas Mitigation Measures* (2010), Measure SDT-2, p. 190.
+  - SMAQMD, *Recommended Guidance for Land Use Emission Reductions v3.0* (SDT-2 coverage
+    variable definitions).
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Traffic calming carries only a small, legacy VMT credit (≤1%) and is most effective paired with active-transportation investments.
+inputs:
+- key: streets_with_calming
+  label: Streets with calming improvements
+  control: number
+  min: 0
+  step: 1
+  default: 0
+  unit: streets
+  prerequisite: true
+  summary: The number of streets or street segments in the project area that will receive
+    traffic-calming features beyond what your jurisdiction already requires.
+  source_note: your project design drawings / plan set
+  tooltip: Number of streets receiving traffic-calming features beyond jurisdiction requirements.
+  instructions: |
+    Count the streets (or street segments) in the project area that will receive
+    traffic-calming features (speed humps, curb extensions, chicanes, lane narrowing,
+    etc.) beyond what your jurisdiction already requires.
+- key: total_streets
+  label: Total streets in project area
+  control: number
+  min: 0
+  step: 1
+  default: 0
+  unit: streets
+  prerequisite: true
+  summary: The total number of streets or street segments in the project area, used to work out
+    the share that receive calming.
+  source_note: your project area map or GIS street layer
+  tooltip: Total number of streets in the project area, used to compute coverage.
+  instructions: |
+    Count the total streets (or street segments) in the project area so the calculator
+    can work out the share that receive calming.
+- key: intersections_with_calming
+  label: Intersections with calming improvements
+  control: number
+  min: 0
+  step: 1
+  default: 0
+  unit: intersections
+  prerequisite: true
+  summary: The number of intersections in the project area that will receive calming features
+    such as mini roundabouts, raised crossings, or curb extensions.
+  source_note: your project design drawings / plan set
+  tooltip: Number of intersections receiving traffic-calming features.
+  instructions: |
+    Count the intersections receiving calming features such as mini roundabouts, raised
+    crossings, or curb extensions. Leave at 0 if you are only tracking street coverage.
+- key: total_intersections
+  label: Total intersections in project area
+  control: number
+  min: 0
+  step: 1
+  default: 0
+  unit: intersections
+  prerequisite: true
+  summary: The total number of intersections in the project area, used to work out the share that
+    receive calming.
+  source_note: your project area map or GIS intersection layer
+  tooltip: Total number of intersections in the project area, used to compute coverage.
+  instructions: |
+    Count the total intersections in the project area. If you provide only street counts
+    (or only intersection counts), the calculator uses whichever coverage measure is
+    available rather than averaging against a zero.
+notes: 'Promoted from todo. Legacy CAPCOA 2010 SDT-2; superseded by the non-quantified T-35 in the 2021/2024 Handbook. Closed-form: math lives in the compute block below (no code calc fn). strategy_traffic_calming in scripts/strategy_calculations.py is retained as the cross-check oracle.'
+# Closed-form math (single source of truth). Evaluated identically in Python and the app.
+# Mirrors strategy_traffic_calming; one app-appropriate change: when NO coverage measure
+# is entered (all totals 0) this returns 0 (no credit) where the Python fn raises.
+compute:
+  pool: all
+  const:
+    min_effect: 0.0025   # 0.25% (CAPCOA 2010 SDT-2 low end)
+    max_effect: 0.0100   # 1.00% (SDT-2 high end = measure max)
+  let:
+    - s_ok: "if(total_streets > 0, 1, 0)"
+    - i_ok: "if(total_intersections > 0, 1, 0)"
+    - any_measure: "if(s_ok or i_ok, 1, 0)"
+    - s_cov: "if(s_ok, streets_with_calming / max(total_streets, 1), 0)"
+    - i_cov: "if(i_ok, intersections_with_calming / max(total_intersections, 1), 0)"
+    # "use whichever measure is available rather than averaging against a zero"
+    - cov_raw: "if(s_ok and i_ok, (s_cov + i_cov) / 2, if(s_ok, s_cov, if(i_ok, i_cov, 0)))"
+    - coverage: "clamp(cov_raw, 0, 1)"
+    - A: "clamp(min_effect + coverage * (max_effect - min_effect), 0, max_effect) * any_measure"
+  formula: "-A"

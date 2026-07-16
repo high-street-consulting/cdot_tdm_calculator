@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+<style>
+  /* WeasyPrint-safe CSS only: no color-mix(), no CSS grid. Block / table /
+     simple flex layouts, solid colors. WeasyPrint embeds fonts and (with
+     --pdf-variant pdf/ua-1) writes the structure tree, XMP + PDF/UA id,
+     figure /Alt from <img alt>, and link tags automatically. */
+  @page {
+    size: letter;
+    margin: 0.75in 0.7in 0.7in;
+    /* NB: no @page margin-box (footer/page-number) content — WeasyPrint does
+       not mark generated margin content as an Artifact, which fails PDF/UA-1
+       rule 7.1-3. Page numbering can be re-added once that's tagged properly. */
+  }
+  html { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: #1a1a1a; font-size: 10pt; line-height: 1.4; }
+  h1 { font-size: 19pt; margin: 0 0 4px; color: #0a2240; }
+  h2 { font-size: 13pt; margin: 18px 0 8px; color: #0a2240; border-bottom: 2px solid #0a2240; padding-bottom: 3px; }
+  h3 { font-size: 11pt; margin: 12px 0 6px; color: #141414; }
+  p { margin: 0 0 8px; }
+  a { color: #0a4ca1; }
+
+  .head { border-bottom: 3px solid #0a2240; padding-bottom: 10px; margin-bottom: 12px; }
+  .head img { height: 44px; margin-bottom: 6px; }
+  .overline { font-size: 8pt; letter-spacing: 0.08em; text-transform: uppercase; color: #6b6b6b; }
+  .meta { font-size: 9pt; color: #4a4a4a; margin-top: 4px; }
+
+  .hero { background: #0a2240; color: #fff; padding: 12px 14px; margin: 10px 0; }
+  .hero .num { font-size: 26pt; font-weight: 700; }
+  /* NB: do NOT use CSS opacity here. WeasyPrint renders opacity<1 as an
+     isolated transparency-group XObject whose marked content is orphaned from
+     the structure tree → PDF/UA-1 rule 7.1-3. Use explicit colors instead. */
+  .hero .num .u { font-size: 11pt; font-weight: 400; color: #b9c5da; }
+  .hero .sub { font-size: 9pt; color: #c3cee0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 9.5pt; margin: 6px 0 10px; }
+  th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid #e2e2e2; vertical-align: top; }
+  thead th { font-size: 8.5pt; text-transform: uppercase; letter-spacing: 0.03em; color: #4a4a4a; }
+  tfoot th { font-weight: 700; border-top: 1.5px solid #bdbdbd; }
+  td.num, th.num { text-align: right; }
+  .tag { font-size: 7.5pt; font-weight: 700; color: #8a4b00; border: 1px solid #d6a55a; padding: 0 4px; margin-left: 5px; }
+
+  .stat td { border: none; padding: 3px 8px; }
+  .stat .k { color: #4a4a4a; font-size: 9pt; }
+  .stat .v { font-weight: 700; }
+
+  .lede { font-size: 9.5pt; color: #4a4a4a; }
+  .map { width: 100%; border: 1px solid #d9d9d9; margin: 0 0 12px; }
+  .cap-note { font-size: 9pt; background: #fbf3e6; border-left: 3px solid #d6a55a; padding: 8px 10px; margin: 8px 0; }
+  .formula { font-family: "Courier New", monospace; font-size: 9pt; background: #f4f6f8; padding: 4px 6px; margin: 4px 0; }
+  .inp { font-size: 9pt; color: #333; }
+  .inp b { color: #141414; }
+  .foot { margin-top: 16px; border-top: 1px solid #d9d9d9; padding-top: 6px; font-size: 8pt; color: #6b6b6b; }
+  .method-strat { margin-bottom: 10px; }
+</style>
+</head>
+<body>
+  <header class="head">
+    {% if logo_data_uri %}<img src="{{ logo_data_uri }}" alt="Colorado Department of Transportation logo">{% endif %}
+    <div class="overline">CDOT TDM Calculator</div>
+    <h1>{{ title }}</h1>
+    <div class="meta">Generated {{ generated }} · {{ strategy_count }} strateg{{ "y" if strategy_count == 1 else "ies" }} · {{ taz_count }} TAZ{{ "" if taz_count == 1 else "s" }}</div>
+  </header>
+
+  <section>
+    <h2>Results summary</h2>
+    <div class="hero">
+      <div class="num">{{ "−" if results.total_pct >= 0 else "+" }}{{ "%.2f"|format(results.total_pct|abs) }}<span class="u"> % VMT</span></div>
+      <div class="sub">{{ "reduction" if results.total_pct >= 0 else "increase" }} vs. baseline</div>
+    </div>
+    <table class="stat">
+      <tbody>
+        <tr><td class="k">Baseline VMT</td><td class="v">{{ "{:,}".format(results.baseline_vmt) }} mi/day</td>
+            <td class="k">Daily VMT reduced</td><td class="v">{{ "{:,}".format(results.daily_reduced) }} mi/day</td></tr>
+        <tr><td class="k">Annual VMT reduced</td><td class="v">{{ "%.2f"|format(results.annual_reduced_m) }} M mi/yr</td>
+            <td class="k">GHG avoided</td><td class="v">{{ "{:,}".format(results.ghg_tonnes) }} t CO₂e/yr</td></tr>
+        <tr><td class="k">Cars off-road equiv.</td><td class="v">{{ "{:,}".format(results.cars_equiv) }} vehicles</td>
+            <td class="k">Strategies</td><td class="v">{{ strategy_count }} selected</td></tr>
+      </tbody>
+    </table>
+    {% if results.capped_categories %}
+    <p class="cap-note"><b>Subsector cap applied</b> to {{ results.capped_categories|join(", ") }}. Per CAPCOA methodology, combined reductions within a category are capped to prevent double-counting; affected strategies are flagged below.</p>
+    {% endif %}
+
+    <h3>Per-strategy contribution</h3>
+    <table>
+      <thead><tr><th scope="col">Strategy</th><th scope="col">Category</th><th scope="col" class="num">% VMT</th><th scope="col" class="num">Daily mi</th><th scope="col" class="num">Annual mi/yr</th></tr></thead>
+      <tbody>
+        {% for s in per_strategy %}
+        <tr>
+          <td>{% if s.uid %}{{ s.uid }} · {% endif %}{{ s.name }}{% if s.capped %}<span class="tag">CAPPED</span>{% endif %}</td>
+          <td>{{ s.category }}</td>
+          <td class="num">−{{ "%.2f"|format(s.pct|abs) }}%</td>
+          <td class="num">−{{ "{:,}".format(s.daily|abs) }}</td>
+          <td class="num">−{{ "{:,}".format(s.annual|abs) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot><tr><th>Combined (after caps)</th><th></th>
+        <th class="num">−{{ "%.2f"|format(results.total_pct|abs) }}%</th>
+        <th class="num">−{{ "{:,}".format(results.daily_reduced) }}</th>
+        <th class="num">−{{ "{:,}".format((results.annual_reduced_m * 1000000)|round|int) }}</th></tr></tfoot>
+    </table>
+  </section>
+
+  <section>
+    <h2>Project area &amp; configured inputs</h2>
+    <p class="lede">The estimate applies the selected strategies to the {{ taz_count }} traffic analysis zone{{ "" if taz_count == 1 else "s" }} below. Baseline VMT, mode share, and density are aggregated from the Colorado Statewide Travel Model, U.S. Census ACS, and CDOT public layers.</p>
+    {% if map_data_uri %}<img class="map" src="{{ map_data_uri }}" alt="{{ map_alt }}">{% endif %}
+
+    <h3>Selected traffic analysis zones</h3>
+    <table>
+      <thead><tr><th scope="col">TAZ</th><th scope="col">Area type</th><th scope="col" class="num">Daily VMT</th><th scope="col" class="num">Population</th><th scope="col" class="num">Employment</th></tr></thead>
+      <tbody>
+        {% for t in tazs %}
+        <tr><td>{{ t.id }}</td><td>{{ t.area_type }}</td><td class="num">{{ "{:,}".format(t.daily_vmt) }}</td><td class="num">{{ "{:,}".format(t.population) if t.population is not none else "—" }}</td><td class="num">{{ "{:,}".format(t.employment) if t.employment is not none else "—" }}</td></tr>
+        {% endfor %}
+      </tbody>
+      <tfoot><tr><th>Total ({{ taz_count }})</th><th></th><th class="num">{{ "{:,}".format(results.baseline_vmt) }}</th><th></th><th></th></tr></tfoot>
+    </table>
+
+    <h3>Configured strategy parameters</h3>
+    {% for s in per_strategy %}
+    <p class="inp"><b>{% if s.uid %}{{ s.uid }} · {% endif %}{{ s.name }}</b>{% if s.inputs %} — {% for i in s.inputs %}{{ i.label }}: {{ i.value }}{{ "; " if not loop.last }}{% endfor %}{% else %} — uses modeled defaults.{% endif %}</p>
+    {% endfor %}
+  </section>
+
+  <section>
+    <h2>Selected strategies &amp; methodology</h2>
+    <p class="lede">Each strategy lists its calculation method, formula, and source citations. Figures follow effect-size estimation adapted from the CAPCOA Handbook (2021), localized with Colorado-specific parameters.</p>
+    {% for s in per_strategy %}
+    <div class="method-strat">
+      <h3>{% if s.uid %}{{ s.uid }} · {% endif %}{{ s.name }} <span style="font-weight:400;color:#6b6b6b;font-size:9pt">({{ s.method }})</span></h3>
+      {% if s.formula %}<div class="formula">{{ s.formula }}</div>{% endif %}
+      <p>{{ s.citation_html|safe }}</p>
+    </div>
+    {% endfor %}
+  </section>
+
+  <footer class="foot">
+    CDOT TDM Calculator · Estimates are screening-level and intended to support planning and grant applications. · Generated {{ generated }}
+  </footer>
+</body>
+</html>

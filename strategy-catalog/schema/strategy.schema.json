@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://high-street.bitbucket.io/cdot_tdm_calculator/schema/strategy.schema.json",
+  "title": "CDOT TDM Strategy",
+  "description": "One TDM strategy record. One YAML file per strategy in strategy-catalog/strategies/. This file is the source of truth that the calculator app consumes (after compilation to strategies.json by build.py).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "uid", "name", "category", "status", "short_description"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "Stable snake_case key. MUST match the StrategyKey used by the app (app/src/strategies/strategies.ts) for implemented strategies. Never rename once published."
+    },
+    "uid": {
+      "type": "string",
+      "pattern": "^[A-Z]{2,3}-[0-9]{2}$",
+      "description": "Stable human-facing identifier, e.g. TR-01, LU-03. Two-three letter category prefix + zero-padded number."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Display name shown in the picker and detail header."
+    },
+    "category": {
+      "type": "string",
+      "description": "Category id. Must exist in globals.yaml -> categories[].id.",
+      "enum": ["transit", "bikeped", "landuse", "vanpool", "support", "induced", "parking", "electrification", "freight", "programmatic", "technology"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["implemented", "planned", "not_recommended"],
+      "description": "implemented = live in the app with a calc fn; planned = catalogued but not yet built; not_recommended = quantification not recommended (Handy et al. 2025 etc.)."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Filtering tags. Values should come from globals.yaml -> tag_catalog. Enhancement: tagging & filtering."
+    },
+    "short_description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "1-2 sentence summary shown on the strategy card and detail header."
+    },
+    "extended_description": {
+      "type": "string",
+      "description": "Markdown. 2-3 paragraph narrative (FHU). May reference images. Empty string = not yet written."
+    },
+    "images": {
+      "type": "array",
+      "description": "Illustrative images/diagrams. Files live in strategy-catalog/images/. If empty, the app falls back to the category image (globals.yaml -> categories[].image).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["file", "alt"],
+        "properties": {
+          "file": { "type": "string", "description": "Path relative to strategy-catalog/images/." },
+          "alt": { "type": "string", "description": "Accessibility alt text (required)." },
+          "caption": { "type": "string" },
+          "credit": { "type": "string", "description": "Attribution / license, e.g. 'Adobe Stock #12345'." }
+        }
+      }
+    },
+    "method": {
+      "type": "string",
+      "description": "Short methodology label, e.g. 'CAPCOA LUT-4'. Shown under the detail header."
+    },
+    "formula": {
+      "type": "string",
+      "description": "Human-readable formula string."
+    },
+    "methodology_detail": {
+      "type": "string",
+      "description": "Markdown. The full methodology write-up for the accordion + methods page: the prose explanation of the method, the elasticities/effect sizes and where they come from, plus citations and source links written inline as Markdown (e.g. [CAPCOA Handbook](https://...))."
+    },
+    "guidance": {
+      "type": "string",
+      "description": "Markdown. \"When to use this strategy\" copy shown in the Applicability section. Split out of extended_description (the former '**Guidance:** …' paragraph). May include a relative hash cross-link to a related strategy, e.g. [Name](#/strategies/other_id)."
+    },
+    "auto_filled_summary": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Human-readable list of context values filled automatically from the selected TAZs (e.g. ['mode share','vehicle occupancy','baseline VMT']). Feeds the 'filled automatically' reassurance line in the What-you'll-need checklist."
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Where the strategy is valid. The app warns (or filters) when a selected project area does not meet these thresholds. Enhancement: minimum densities + recommended-for-you.",
+      "properties": {
+        "min_pop_density": { "type": ["number", "null"], "description": "Minimum population per sq mi." },
+        "min_emp_density": { "type": ["number", "null"], "description": "Minimum employment per sq mi." },
+        "min_activity_density": { "type": ["number", "null"], "description": "Minimum (pop+emp) per sq mi." },
+        "area_types": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["urban_core", "urban", "suburban", "rural"] },
+          "description": "Area types where the strategy is recommended. Empty = all."
+        },
+        "warn_message": { "type": "string", "description": "Message shown when thresholds are not met." }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "description": "User-supplied inputs rendered in the Configure section.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "label", "control", "default"],
+        "properties": {
+          "key": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "Argument name passed to the calc fn." },
+          "label": { "type": "string" },
+          "control": { "type": "string", "enum": ["slider", "number", "select"] },
+          "min": { "type": ["number", "null"], "description": "slider/number: minimum in display units." },
+          "max": { "type": ["number", "null"], "description": "slider/number: maximum in display units." },
+          "step": { "type": ["number", "null"] },
+          "scale": { "type": ["number", "null"], "description": "slider: display = stored * scale (e.g. 100 for a '%' suffix). Default 1." },
+          "suffix": { "type": ["string", "null"], "description": "slider: display suffix, e.g. '%'." },
+          "unit": { "type": ["string", "null"], "description": "number: unit label." },
+          "options": {
+            "type": "array",
+            "description": "select: choices.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["value", "label"],
+              "properties": {
+                "value": { "type": "string" },
+                "label": { "type": "string" }
+              }
+            }
+          },
+          "default": {
+            "type": ["number", "string"],
+            "description": "Stored in the unit the calc fn expects (fractions for %, miles for distance)."
+          },
+          "tooltip": { "type": "string", "description": "Short one-line hint shown in the (i) tooltip." },
+          "instructions": { "type": "string", "description": "Markdown/HTML. A paragraph on how the user finds or determines this value (SR). Empty = not yet written." },
+          "benchmark": { "type": "string", "description": "Optional contextual benchmark text (e.g. peer-city values)." },
+          "prepopulated_from": { "type": ["string", "null"], "description": "Optional: TAZ data field that seeds this input's baseline value." },
+          "prerequisite": { "type": "boolean", "description": "True when the user must gather this value ahead of time; drives the 'What you'll need' checklist." },
+          "summary": { "type": "string", "description": "Short, plain (non-markdown) one-liner for the checklist card, distinct from the longer `instructions`." },
+          "source_note": { "type": "string", "description": "For a prerequisite input with no resource link: the 'Source: …' provenance line (e.g. 'your project scope / agency service plan')." },
+          "resources": {
+            "type": "array",
+            "description": "Structured reference links, rendered as buttons in the checklist and the always-open help block.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["label", "url"],
+              "properties": {
+                "label": { "type": "string" },
+                "url": { "type": "string" }
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "control": { "const": "select" } } },
+            "then": { "required": ["options"] }
+          }
+        ]
+      }
+    },
+    "notes": { "type": "string", "description": "Internal notes for editors; not surfaced in the app." },
+    "compute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pool", "formula"],
+      "description": "Closed-form math, authored once in YAML and evaluated identically by scripts/strategy_compute.py (analysis) and app/src/strategies/computeDsl.ts (app) — no hand-written calc function. Strategies WITHOUT this block fall back to the code-side STRATEGY_REGISTRY (used for complex/spatial methods that can't be expressed as a formula). Sign convention: the formula returns pct_vmt_reduction, negative = reduction.",
+      "properties": {
+        "pool": {
+          "type": "string",
+          "enum": ["all", "commute", "recreational", "other"],
+          "description": "Base-VMT trip pool the reduction applies to."
+        },
+        "const": {
+          "type": "object",
+          "additionalProperties": { "type": "number" },
+          "description": "Named numeric constants available to every expression (cite the source in methodology_detail)."
+        },
+        "row_defaults": {
+          "type": "object",
+          "additionalProperties": { "type": "number" },
+          "description": "Fallback values for per-TAZ row fields the formula reads that may be absent from the app's TAZ layer (e.g. transit_vrh). Applied below the actual row value, so present data always wins."
+        },
+        "let": {
+          "type": "array",
+          "description": "Ordered intermediate bindings; each item is a single-key { name: expression } map. Later bindings may reference earlier ones.",
+          "items": {
+            "type": "object",
+            "minProperties": 1,
+            "maxProperties": 1,
+            "additionalProperties": { "type": "string" }
+          }
+        },
+        "formula": {
+          "type": "string",
+          "description": "Final expression -> pct_vmt_reduction. Grammar: + - * / , comparisons, and/or/not, and clamp/min/max/mean/abs/if(); operands are const/row_defaults/row/params/let names."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+# PK-07 - School pool  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: school_pool
+uid: PK-07
+name: School pool
+category: parking
+status: not_recommended
+tags: []
+short_description: Organized carpooling or shared transportation programs for students traveling to and
+  from school.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: 'Tier 2. Sheet: quantification not recommended (Handy et al. 2025).'

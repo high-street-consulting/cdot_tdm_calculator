@@ -1,0 +1,40 @@
+{
+  "name": "cdot-tdm-calculator",
+  "private": true,
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "sync:catalog": "node scripts/sync-catalog.mjs",
+    "predev": "npm run sync:catalog",
+    "dev": "vite --port 5180",
+    "prebuild": "npm run sync:catalog",
+    "build": "tsc -b --noEmit && VITE_BUILD_SHA=\"$(git rev-parse --short HEAD 2>/dev/null || echo dev)\" VITE_BUILD_TIME=\"$(date -u +%Y-%m-%dT%H:%MZ)\" vite build --base=/cdot_tdm_calculator/",
+    "build:cf": "npm run sync:catalog && tsc -b --noEmit && VITE_BUILD_SHA=\"$(git rev-parse --short HEAD 2>/dev/null || echo dev)\" VITE_BUILD_TIME=\"$(date -u +%Y-%m-%dT%H:%MZ)\" vite build --base=/",
+    "preview": "vite preview",
+    "pretest": "npm run sync:catalog",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "typecheck": "tsc -b --noEmit"
+  },
+  "dependencies": {
+    "@arcgis/core": "^5.0.19",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "^5.7.2",
+    "vite": "^7.0.0",
+    "vitest": "^4.0.0"
+  }
+}

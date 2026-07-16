@@ -1,0 +1,19 @@
+# SP-07 - Guaranteed ride home  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: guaranteed_ride_home
+uid: SP-07
+name: Guaranteed ride home
+category: support
+status: planned
+tags: []
+short_description: A program that provides a free or subsidized ride home in case of emergencies for those
+  using alternative commute modes.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: Tier 2. Likely a near-duplicate of Emergency ride homes (SP-10).

@@ -1,0 +1,113 @@
+# BP-03 - Shared Micromobility
+# Seeded from app/src/strategies/registry.ts. This file is now the source of truth.
+
+id: shared_micromobility
+uid: BP-03
+name: Shared Micromobility
+category: bikeped
+status: implemented
+tags:
+- service
+- micromobility
+- local-government
+- urban
+short_description: Shared bikes, e-bikes, or scooters available for short trips. How much driving they
+  replace varies by device type.
+extended_description: |
+  Shared micromobility provides short-term access to shared bicycles, e-bikes, or scooters
+  for short trips and connections to transit. It is most useful in places where trips are
+  too long to walk comfortably but short enough that driving is not time or cost
+  effective.
+
+  The benefits of shared micromobility depend on how many micromobility trips replace car
+  trips rather than walking, transit, or personal bike trips. Systems located near
+  transit, campuses, downtowns, and dense neighborhoods generally have stronger potential,
+  especially when shared micromobility devices are easy to find and parking is well
+  managed.
+guidance: |
+  Use this strategy for launching or expanding a shared fleet. Enter how
+  much of the population can reach a vehicle before and after the project, and select the
+  device type that matches the system.
+images: []
+method: Effect-size estimate (adapted CAPCOA T-22-A / T-22-B / T-22-C; NACTO trip-substitution research)
+formula: ΔVMT% = −Δaccess × micro_trips × sub_ratio × L_micro / (veh_trips × L_veh)
+methodology_detail: |
+  When a shared bike, e-bike, or scooter is within easy reach, some trips that would
+  have been made by car are made on the device instead, lowering vehicle miles
+  traveled (VMT). The reduction depends on how many more people can reach the system
+  and the device type, since each type replaces car trips at a different rate: pedal
+  bikes about 20%, e-bikes about 35%, and scooters about 39% (McQueen et al. 2020;
+  Fitch et al. 2021).
+
+  `ΔVMT% = −Δaccess × micro_trips × sub_ratio × L_micro / (veh_trips × L_veh)`
+
+  This estimate is adapted from CAPCOA
+  [T-22-A (pedal bikeshare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-a.pdf),
+  [T-22-B (electric bikeshare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-b.pdf),
+  and [T-22-C (scootershare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-c.pdf),
+  with trip data from the National Association of City Transportation Officials
+  (NACTO).
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  warn_message: Shared bike and scooter systems need urban densities to attract enough trips and are rarely viable below them.
+inputs:
+- key: micromobility_type
+  label: Mode type
+  control: select
+  options:
+  - value: bikeshare
+    label: Pedal bikeshare (19.6% sub)
+  - value: e-bikeshare
+    label: E-bike share (35.0% sub)
+  - value: scootershare
+    label: Scooter share (38.5% sub)
+  default: bikeshare
+  prerequisite: true
+  summary: The device type that matches the system (pedal bikeshare, e-bike share, or scooter
+    share), which sets how often it replaces a car trip.
+  source_note: your system plan or vendor / operator agreement
+  tooltip: Determines the default substitution ratio.
+  instructions: |
+    Pick the device type that matches the system. It sets the auto-substitution
+    ratio: e-bikes and scooters replace car trips more often than pedal bikes, so
+    they yield a larger VMT effect for the same number of trips.
+- key: pct_pop_access_before
+  label: '% population with access today'
+  control: slider
+  min: 0
+  max: 100
+  step: 1
+  scale: 100
+  suffix: '%'
+  default: 0.0
+  prerequisite: true
+  summary: The share of the area's population that already lives within an easy walk (about a
+    quarter mile) of an existing dock, station, or service zone. Enter 0% if none today.
+  source_note: your existing service map / station locations
+  tooltip: Estimate of households within walking distance (≈¼ mi) of an existing dock/station.
+  instructions: |
+    Estimate the share of the area's population that already lives within an easy
+    walk (about ¼ mile) of an existing dock, station, or service zone. If there is
+    no system today, this is 0%.
+- key: pct_pop_access_after
+  label: '% population with access after'
+  control: slider
+  min: 0
+  max: 100
+  step: 1
+  scale: 100
+  suffix: '%'
+  default: 0.3
+  prerequisite: true
+  summary: The share of the area's population within an easy walk of the system after the
+    deployment or expansion is complete.
+  source_note: your proposed deployment plan / service-area map
+  tooltip: Estimate after the proposed deployment is complete.
+  instructions: |
+    Estimate the share of the population within an easy walk of the system after
+    the deployment or expansion. The difference from today's access drives the
+    reduction: a citywide dockless permit reaches far more people than a few
+    downtown stations.
+notes: ''

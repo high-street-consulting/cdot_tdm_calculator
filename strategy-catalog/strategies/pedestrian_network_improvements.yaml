@@ -1,0 +1,113 @@
+# BP-08 - Pedestrian network improvements
+# New strategy (CAPCOA T-18). No master-sheet stub existed. Engine: strategy_pedestrian_network_improvements.
+
+id: pedestrian_network_improvements
+uid: BP-08
+name: Pedestrian Network Improvements
+category: bikeped
+status: implemented
+tags:
+- infrastructure
+- walk
+- local-government
+short_description: New and repaired sidewalks that close gaps in the pedestrian network, shifting short
+  trips from driving to walking.
+extended_description: |
+  Pedestrian network improvements add new sidewalks and repair degraded or substandard ones,
+  closing gaps that make walking impractical. A more complete, comfortable pedestrian network
+  encourages people to walk for short trips that would otherwise be made by car, lowering
+  vehicle miles traveled.
+
+  The effect depends on how much the sidewalk network expands relative to the street network
+  and on how many nearby trips are short enough to walk. Sidewalk investments are most
+  effective in compact, mixed-use areas where destinations are close together and the main
+  barrier is a missing or broken pedestrian connection.
+guidance: |
+  Use this strategy for projects that add or repair sidewalks within a study
+  area (about a 0.6-mile radius, a 6–10 minute walk, around the improvement). Measure
+  sidewalk length on both sides of the street: a 0.5-mile street with full coverage is 1.0
+  mile of sidewalk.
+images: []
+method: CAPCOA T-18 (verbatim)
+formula: ΔHouseholdVMT% = ((C / B) − 1) × −0.05
+methodology_detail: |
+  Adding sidewalk coverage shifts some short household trips from driving to walking,
+  following CAPCOA
+  [T-18 (Provide Pedestrian Network Improvement)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-18.pdf):
+
+  `ΔVMT% = ((C / B) − 1) × D`
+
+  where **B** is existing sidewalk length, **C** is sidewalk length with the measure (both
+  measured on both sides of the street within a ~0.6-mile study area), and **D = −0.05** is
+  the elasticity of household vehicle travel with respect to the sidewalk-to-street ratio
+  (Frank et al. 2011; Handy et al. 2014).
+
+  The reduction is capped at a **6.4% measure maximum**, derived from the share of vehicle
+  trips short enough to shift to walking (FHWA 2019). *Reviewer note:* the fact sheet
+  references a 3.4% figure in one location and 6.4% in the cap derivation and worked example;
+  6.4% is used here per the worked example, flagged for confirmation. The credit applies to
+  household vehicle travel; because the calculator does not carry a household-only VMT split,
+  it is applied to all-trip VMT and flagged accordingly.
+
+  *Worked example:* B = 9 miles, C = 10 miles → `((10/9) − 1) × −0.05 = −0.56%`.
+
+  **Sources**
+
+  - CAPCOA *Handbook* (2021), Measure
+    [T-18 (Provide Pedestrian Network Improvement)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-18.pdf),
+    pp. 133–136.
+  - Frank, L., et al. (2011). WSDOT Research Report WA-RD 765.1.
+  - Handy, S., et al. (2014). *Impacts of Pedestrian Strategies on Passenger Vehicle Use and
+    GHG Emissions*. CARB.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Sidewalk improvements shift mostly short trips; the effect is small in low-density areas where destinations are far apart.
+inputs:
+- key: existing_sidewalk_mi
+  label: Existing sidewalk length
+  control: number
+  min: 0
+  step: 0.5
+  default: 9
+  unit: miles
+  prerequisite: true
+  summary: The existing sidewalk length in the study area (about a 0.6-mile radius), measured on
+    both sides of the street.
+  source_note: your sidewalk inventory or GIS layer / study-area measurement
+  tooltip: Existing sidewalk length in the study area, measured on both sides of the street.
+  instructions: |
+    Enter the existing sidewalk length in the study area (about a 0.6-mile radius around the
+    improvement). Measure on both sides of the street: a 0.5-mile street with sidewalk on
+    both sides is 1.0 mile; coverage on one side only is 0.5 mile.
+- key: sidewalk_mi_with_measure
+  label: Sidewalk length with the project
+  control: number
+  min: 0
+  step: 0.5
+  default: 10
+  unit: miles
+  prerequisite: true
+  summary: The total sidewalk length in the study area after the project (existing plus new and
+    repaired), measured on both sides of the street.
+  source_note: your project design drawings / plan set
+  tooltip: Sidewalk length in the study area after the project (existing plus new/repaired), both sides of the street.
+  instructions: |
+    Enter the sidewalk length after the project (existing sidewalk plus the new and repaired
+    sidewalk the project adds), measured the same way (both sides of the street). This must be
+    at least the existing length.
+notes: 'New strategy (CAPCOA T-18, verbatim). Trip pool is household VMT, approximated as all-trip VMT. Amax=6.4% (3.4% discrepancy flagged for reviewer). Closed-form: math lives in the compute block below (no code calc fn). strategy_pedestrian_network_improvements in scripts/strategy_calculations.py is retained as the cross-check oracle.'
+# Closed-form math (single source of truth). Evaluated identically in Python and the app.
+# Mirrors strategy_pedestrian_network_improvements. B (existing) is guarded > 0 via max().
+compute:
+  pool: all
+  const:
+    elasticity: -0.05    # household VMT w.r.t. sidewalk-to-street ratio (Frank 2011; Handy 2014)
+    measure_max: 0.064   # 6.4% measure maximum (FHWA 2019)
+  let:
+    - ratio: "sidewalk_mi_with_measure / max(existing_sidewalk_mi, 0.000000001)"
+    - a_raw: "(ratio - 1) * elasticity"
+    - a: "clamp(a_raw, -1 * measure_max, 0)"
+  formula: "a"

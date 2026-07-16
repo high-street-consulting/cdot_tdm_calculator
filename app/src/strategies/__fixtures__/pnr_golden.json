@@ -1,0 +1,222 @@
+[
+  {
+    "label": "isolated_local_vnet",
+    "taz_inputs": [
+      {
+        "taz_id": "1",
+        "daily_vmt": 120000.0,
+        "avg_trip_length": 12.0,
+        "tdm_avg_trip_length_mi": null,
+        "drive_to_transit_share": null,
+        "vmt_share_commute": null
+      },
+      {
+        "taz_id": "2",
+        "daily_vmt": 80000.0,
+        "avg_trip_length": 8.0,
+        "tdm_avg_trip_length_mi": null,
+        "drive_to_transit_share": null,
+        "vmt_share_commute": null
+      },
+      {
+        "taz_id": "3",
+        "daily_vmt": 50000.0,
+        "avg_trip_length": 15.0,
+        "tdm_avg_trip_length_mi": null,
+        "drive_to_transit_share": null,
+        "vmt_share_commute": null
+      }
+    ],
+    "args": {
+      "n_spaces": 200,
+      "l_access_mi": 4,
+      "utilization": 0.7,
+      "isolated_facility": "isolated"
+    },
+    "expected": [
+      {
+        "taz_id": "1",
+        "pct_vmt_reduction": -0.0218624,
+        "base_vmt": 36000.0,
+        "daily_vmt_reduction": 787.0464000000001
+      },
+      {
+        "taz_id": "2",
+        "pct_vmt_reduction": -0.0218624,
+        "base_vmt": 24000.0,
+        "daily_vmt_reduction": 524.6976
+      },
+      {
+        "taz_id": "3",
+        "pct_vmt_reduction": -0.0218624,
+        "base_vmt": 15000.0,
+        "daily_vmt_reduction": 327.93600000000004
+      }
+    ]
+  },
+  {
+    "label": "alternative_facility",
+    "taz_inputs": [
+      {
+        "taz_id": "10",
+        "daily_vmt": 90000.0,
+        "avg_trip_length": 10.0,
+        "tdm_avg_trip_length_mi": null,
+        "drive_to_transit_share": null,
+        "vmt_share_commute": null
+      },
+      {
+        "taz_id": "11",
+        "daily_vmt": 60000.0,
+        "avg_trip_length": 6.0,
+        "tdm_avg_trip_length_mi": null,
+        "drive_to_transit_share": null,
+        "vmt_share_commute": null
+      }
+    ],
+    "args": {
+      "n_spaces": 500,
+      "l_access_mi": 2,
+      "utilization": 0.6,
+      "isolated_facility": "alternative"
+    },
+    "expected": [
+      {
+        "taz_id": "10",
+        "pct_vmt_reduction": -0.02730666666666667,
+        "base_vmt": 27000.0,
+        "daily_vmt_reduction": 737.2800000000001
+      },
+      {
+        "taz_id": "11",
+        "pct_vmt_reduction": -0.02730666666666667,
+        "base_vmt": 18000.0,
+        "daily_vmt_reduction": 491.52000000000004
+      }
+    ]
+  },
+  {
+    "label": "no_trip_length_fallback_vnet",
+    "taz_inputs": [
+      {
+        "taz_id": "20",
+        "daily_vmt": 70000.0,
+        "avg_trip_length": null,
+        "tdm_avg_trip_length_mi": null,
+        "drive_to_transit_share": null,
+        "vmt_share_commute": null
+      },
+      {
+        "taz_id": "21",
+        "daily_vmt": 40000.0,
+        "avg_trip_length": null,
+        "tdm_avg_trip_length_mi": null,
+        "drive_to_transit_share": null,
+        "vmt_share_commute": null
+      }
+    ],
+    "args": {
+      "n_spaces": 300,
+      "l_access_mi": 3,
+      "utilization": 0.7,
+      "isolated_facility": "isolated"
+    },
+    "expected": [
+      {
+        "taz_id": "20",
+        "pct_vmt_reduction": -0.12090909090909091,
+        "base_vmt": 21000.0,
+        "daily_vmt_reduction": 2539.090909090909
+      },
+      {
+        "taz_id": "21",
+        "pct_vmt_reduction": -0.12090909090909091,
+        "base_vmt": 12000.0,
+        "daily_vmt_reduction": 1450.909090909091
+      }
+    ]
+  },
+  {
+    "label": "tdm_trip_length_preferred",
+    "taz_inputs": [
+      {
+        "taz_id": "30",
+        "daily_vmt": 100000.0,
+        "avg_trip_length": 8.0,
+        "tdm_avg_trip_length_mi": 14.0,
+        "drive_to_transit_share": null,
+        "vmt_share_commute": null
+      },
+      {
+        "taz_id": "31",
+        "daily_vmt": 50000.0,
+        "avg_trip_length": 7.0,
+        "tdm_avg_trip_length_mi": 11.0,
+        "drive_to_transit_share": null,
+        "vmt_share_commute": null
+      }
+    ],
+    "args": {
+      "n_spaces": 250,
+      "l_access_mi": 4,
+      "utilization": 0.7,
+      "isolated_facility": "isolated"
+    },
+    "expected": [
+      {
+        "taz_id": "30",
+        "pct_vmt_reduction": -0.056,
+        "base_vmt": 30000.0,
+        "daily_vmt_reduction": 1680.0
+      },
+      {
+        "taz_id": "31",
+        "pct_vmt_reduction": -0.056,
+        "base_vmt": 15000.0,
+        "daily_vmt_reduction": 840.0
+      }
+    ]
+  },
+  {
+    "label": "demand_ceiling_observed",
+    "taz_inputs": [
+      {
+        "taz_id": "40",
+        "daily_vmt": 80000.0,
+        "avg_trip_length": 10.0,
+        "tdm_avg_trip_length_mi": null,
+        "drive_to_transit_share": 0.5,
+        "vmt_share_commute": 0.35
+      },
+      {
+        "taz_id": "41",
+        "daily_vmt": 40000.0,
+        "avg_trip_length": 9.0,
+        "tdm_avg_trip_length_mi": null,
+        "drive_to_transit_share": 0.6,
+        "vmt_share_commute": 0.28
+      }
+    ],
+    "args": {
+      "n_spaces": 200,
+      "l_access_mi": 4,
+      "utilization": 0.7,
+      "isolated_facility": "isolated",
+      "total_transit_commute_trips_catchment": 100
+    },
+    "expected": [
+      {
+        "taz_id": "40",
+        "pct_vmt_reduction": -0.01232819658475635,
+        "base_vmt": 28000.0,
+        "daily_vmt_reduction": 345.18950437317784
+      },
+      {
+        "taz_id": "41",
+        "pct_vmt_reduction": -0.01232819658475635,
+        "base_vmt": 11200.000000000002,
+        "daily_vmt_reduction": 138.07580174927114
+      }
+    ]
+  }
+]

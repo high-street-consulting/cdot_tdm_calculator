@@ -1,0 +1,1271 @@
+{
+  "_meta": {
+    "generator": "scripts/generate_golden_fixtures.py",
+    "python_source": "scripts/strategy_calculations.py",
+    "sample_taz_ids": [
+      "3764",
+      "6789",
+      "7728",
+      "3765",
+      "3748",
+      "5440",
+      "7473",
+      "9377",
+      "3844",
+      "9309",
+      "3700",
+      "3717"
+    ],
+    "strategies": [
+      "lane_mile_addition",
+      "shared_micromobility",
+      "transit_service_expansion"
+    ]
+  },
+  "taz_inputs": {
+    "3764": {
+      "acs_bike_share": 0.0,
+      "acs_carpool_share": 0.19994,
+      "acs_drove_alone_share": 0.306019,
+      "acs_total_workers": 3356.0,
+      "acs_transit_share": 0.0,
+      "acs_walk_share": 0.468117,
+      "annual_bikeable_days_county": null,
+      "annual_bikeable_days_taz": 282.8,
+      "area_type": "urban_core",
+      "avg_trip_length": 0.848447402257122,
+      "daily_trips": 49903.491716,
+      "daily_vmt": 42340.48791,
+      "employment": 18279.0,
+      "lane_mi_collector": 0.063817,
+      "lane_mi_expressway": 0.0,
+      "lane_mi_freeway": 0.0,
+      "lane_mi_local": 0.41345699999999996,
+      "lane_mi_major_arterial": 0.06893,
+      "lane_mi_minor_arterial": 0.0,
+      "population": 6857.0,
+      "taz_id": "3764"
+    },
+    "6789": {
+      "acs_bike_share": 0.058104,
+      "acs_carpool_share": 0.015291,
+      "acs_drove_alone_share": 0.219164,
+      "acs_total_workers": 981.0,
+      "acs_transit_share": 0.073394,
+      "acs_walk_share": 0.158002,
+      "annual_bikeable_days_county": 206.6,
+      "annual_bikeable_days_taz": 263.9,
+      "area_type": "urban_core",
+      "avg_trip_length": 2.141255774328088,
+      "daily_trips": 41858.424706,
+      "daily_vmt": 89629.593606,
+      "employment": 11625.0,
+      "lane_mi_collector": 0.833317,
+      "lane_mi_expressway": 0.0,
+      "lane_mi_freeway": 0.360828,
+      "lane_mi_local": 0.580176,
+      "lane_mi_major_arterial": 3.0927320000000003,
+      "lane_mi_minor_arterial": 0.832276,
+      "population": 7625.0,
+      "taz_id": "6789"
+    },
+    "7728": {
+      "acs_bike_share": 0.012107,
+      "acs_carpool_share": 0.05569,
+      "acs_drove_alone_share": 0.446731,
+      "acs_total_workers": 826.0,
+      "acs_transit_share": 0.176755,
+      "acs_walk_share": 0.16586,
+      "annual_bikeable_days_county": null,
+      "annual_bikeable_days_taz": 250.4,
+      "area_type": "urban_core",
+      "avg_trip_length": 2.1772357145285803,
+      "daily_trips": 21806.345489,
+      "daily_vmt": 47477.554202,
+      "employment": 9480.0,
+      "lane_mi_collector": 0.0,
+      "lane_mi_expressway": 0.0,
+      "lane_mi_freeway": 1.410054,
+      "lane_mi_local": 0.329938,
+      "lane_mi_major_arterial": 0.0,
+      "lane_mi_minor_arterial": 3.088233,
+      "population": 64.0,
+      "taz_id": "7728"
+    },
+    "3765": {
+      "acs_bike_share": 0.0,
+      "acs_carpool_share": 0.19994,
+      "acs_drove_alone_share": 0.306019,
+      "acs_total_workers": 3356.0,
+      "acs_transit_share": 0.0,
+      "acs_walk_share": 0.468117,
+      "annual_bikeable_days_county": null,
+      "annual_bikeable_days_taz": 282.7,
+      "area_type": "urban",
+      "avg_trip_length": 2.065370048444394,
+      "daily_trips": 33848.584813,
+      "daily_vmt": 69909.853255,
+      "employment": 10557.0,
+      "lane_mi_collector": 0.237105,
+      "lane_mi_expressway": 0.330232,
+      "lane_mi_freeway": 0.0,
+      "lane_mi_local": 1.822588,
+      "lane_mi_major_arterial": 1.621782,
+      "lane_mi_minor_arterial": 0.21182,
+      "population": 5262.0,
+      "taz_id": "3765"
+    },
+    "3748": {
+      "acs_bike_share": 0.0,
+      "acs_carpool_share": 0.109065,
+      "acs_drove_alone_share": 0.784703,
+      "acs_total_workers": 706.0,
+      "acs_transit_share": 0.0,
+      "acs_walk_share": 0.031161,
+      "annual_bikeable_days_county": null,
+      "annual_bikeable_days_taz": 282.5,
+      "area_type": "urban",
+      "avg_trip_length": 1.5770519434741783,
+      "daily_trips": 31409.72732,
+      "daily_vmt": 49534.771514,
+      "employment": 8744.0,
+      "lane_mi_collector": 0.0,
+      "lane_mi_expressway": 3.121892,
+      "lane_mi_freeway": 0.0,
+      "lane_mi_local": 1.18319,
+      "lane_mi_major_arterial": 0.0,
+      "lane_mi_minor_arterial": 1.546705,
+      "population": 1684.0,
+      "taz_id": "3748"
+    },
+    "5440": {
+      "acs_bike_share": 0.0,
+      "acs_carpool_share": 0.311047,
+      "acs_drove_alone_share": 0.598837,
+      "acs_total_workers": 344.0,
+      "acs_transit_share": 0.040698,
+      "acs_walk_share": 0.008721,
+      "annual_bikeable_days_county": 276.3,
+      "annual_bikeable_days_taz": 269.8,
+      "area_type": "urban",
+      "avg_trip_length": 0.5159845054785438,
+      "daily_trips": 14986.846845,
+      "daily_vmt": 7732.980758,
+      "employment": 5586.0,
+      "lane_mi_collector": 1.147049,
+      "lane_mi_expressway": 0.0,
+      "lane_mi_freeway": 0.0,
+      "lane_mi_local": 0.0,
+      "lane_mi_major_arterial": 0.0,
+      "lane_mi_minor_arterial": 0.0,
+      "population": 1030.0,
+      "taz_id": "5440"
+    },
+    "7473": {
+      "acs_bike_share": 0.0,
+      "acs_carpool_share": 0.062725,
+      "acs_drove_alone_share": 0.717224,
+      "acs_total_workers": 1945.0,
+      "acs_transit_share": 0.009769,
+      "acs_walk_share": 0.007198,
+      "annual_bikeable_days_county": null,
+      "annual_bikeable_days_taz": 251.0,
+      "area_type": "suburban",
+      "avg_trip_length": 1.9631029889504845,
+      "daily_trips": 14644.403588,
+      "daily_vmt": 28748.472455,
+      "employment": 418.0,
+      "lane_mi_collector": 0.783274,
+      "lane_mi_expressway": 0.0,
+      "lane_mi_freeway": 0.0,
+      "lane_mi_local": 0.0,
+      "lane_mi_major_arterial": 0.498493,
+      "lane_mi_minor_arterial": 0.0,
+      "population": 5715.0,
+      "taz_id": "7473"
+    },
+    "9377": {
+      "acs_bike_share": 0.0,
+      "acs_carpool_share": 0.069199,
+      "acs_drove_alone_share": 0.755767,
+      "acs_total_workers": 737.0,
+      "acs_transit_share": 0.0,
+      "acs_walk_share": 0.0,
+      "annual_bikeable_days_county": 276.3,
+      "annual_bikeable_days_taz": 252.5,
+      "area_type": "suburban",
+      "avg_trip_length": 3.1133407120044914,
+      "daily_trips": 15374.269644,
+      "daily_vmt": 47865.3396,
+      "employment": 667.0,
+      "lane_mi_collector": 10.975561,
+      "lane_mi_expressway": 0.0,
+      "lane_mi_freeway": 0.0,
+      "lane_mi_local": 0.0,
+      "lane_mi_major_arterial": 3.48074,
+      "lane_mi_minor_arterial": 0.0,
+      "population": 5336.0,
+      "taz_id": "9377"
+    },
+    "3844": {
+      "acs_bike_share": null,
+      "acs_carpool_share": null,
+      "acs_drove_alone_share": null,
+      "acs_total_workers": null,
+      "acs_transit_share": null,
+      "acs_walk_share": null,
+      "annual_bikeable_days_county": null,
+      "annual_bikeable_days_taz": 281.9,
+      "area_type": "suburban",
+      "avg_trip_length": 6.558756260261719,
+      "daily_trips": 12274.565498,
+      "daily_vmt": 80505.883302,
+      "employment": 149.0,
+      "lane_mi_collector": 0.107956,
+      "lane_mi_expressway": 4.501005999999999,
+      "lane_mi_freeway": 0.0,
+      "lane_mi_local": 0.0,
+      "lane_mi_major_arterial": 1.85464,
+      "lane_mi_minor_arterial": 0.0,
+      "population": 6691.0,
+      "taz_id": "3844"
+    },
+    "9309": {
+      "acs_bike_share": 0.0,
+      "acs_carpool_share": 0.0,
+      "acs_drove_alone_share": 0.776042,
+      "acs_total_workers": 384.0,
+      "acs_transit_share": 0.0,
+      "acs_walk_share": 0.028646,
+      "annual_bikeable_days_county": 276.3,
+      "annual_bikeable_days_taz": 254.2,
+      "area_type": "rural",
+      "avg_trip_length": 3.628419526429629,
+      "daily_trips": 17520.868162,
+      "daily_vmt": 63573.060159,
+      "employment": 817.0,
+      "lane_mi_collector": 10.411586,
+      "lane_mi_expressway": 0.0,
+      "lane_mi_freeway": 0.0,
+      "lane_mi_local": 0.0,
+      "lane_mi_major_arterial": 3.042048,
+      "lane_mi_minor_arterial": 5.003369,
+      "population": 6731.0,
+      "taz_id": "9309"
+    },
+    "3700": {
+      "acs_bike_share": 0.0,
+      "acs_carpool_share": 0.060261,
+      "acs_drove_alone_share": 0.915309,
+      "acs_total_workers": 614.0,
+      "acs_transit_share": 0.0,
+      "acs_walk_share": 0.0,
+      "annual_bikeable_days_county": null,
+      "annual_bikeable_days_taz": 263.9,
+      "area_type": "rural",
+      "avg_trip_length": 21.333466446564014,
+      "daily_trips": 47236.018296,
+      "daily_vmt": 1007708.011387,
+      "employment": 6265.0,
+      "lane_mi_collector": 0.240233,
+      "lane_mi_expressway": 0.0,
+      "lane_mi_freeway": 46.803529,
+      "lane_mi_local": 7.914153,
+      "lane_mi_major_arterial": 5.486656,
+      "lane_mi_minor_arterial": 0.0,
+      "population": 6582.0,
+      "taz_id": "3700"
+    },
+    "3717": {
+      "acs_bike_share": null,
+      "acs_carpool_share": null,
+      "acs_drove_alone_share": null,
+      "acs_total_workers": null,
+      "acs_transit_share": null,
+      "acs_walk_share": null,
+      "annual_bikeable_days_county": null,
+      "annual_bikeable_days_taz": 260.7,
+      "area_type": "rural",
+      "avg_trip_length": 5.05146945997507,
+      "daily_trips": 7356.471958,
+      "daily_vmt": 37160.993429,
+      "employment": 236.0,
+      "lane_mi_collector": 2.440344,
+      "lane_mi_expressway": 0.0,
+      "lane_mi_freeway": 0.0,
+      "lane_mi_local": 0.0,
+      "lane_mi_major_arterial": 2.095428,
+      "lane_mi_minor_arterial": 2.790051,
+      "population": 2720.0,
+      "taz_id": "3717"
+    }
+  },
+  "cases": [
+    {
+      "label": "transit_freq25_imp60",
+      "strategy": "transit_service_expansion",
+      "kwargs": {
+        "pct_change": 0.25,
+        "basis": "frequency",
+        "level_of_implementation": 0.6
+      },
+      "inputs_str": "basis=frequency, \u0394=+25%, L=60%, \u03b5=0.5",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": -0.019565055127849694,
+          "daily_vmt_reduction": 1753.6079399881544,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": -0.02198790954199765,
+          "daily_vmt_reduction": 1043.9321670688664,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": -0.002795548663346097,
+          "daily_vmt_reduction": 21.617924021707985,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": -0.0007828236205187775,
+          "daily_vmt_reduction": 22.50498329160745,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": -0.001358695652173913,
+          "daily_vmt_reduction": 109.38299361684783,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": -0.0006648936170212767,
+          "daily_vmt_reduction": 24.708107333111705,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        }
+      ]
+    },
+    {
+      "label": "transit_svc20",
+      "strategy": "transit_service_expansion",
+      "kwargs": {
+        "pct_change": 0.2,
+        "basis": "service_miles"
+      },
+      "inputs_str": "basis=service_miles, \u0394=+20%, L=100%, \u03b5=0.75, trip_red_ratio=0.7",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": -0.006421975000000001,
+          "daily_vmt_reduction": 575.5990093978919,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": -0.0154660625,
+          "daily_vmt_reduction": 734.2908206352696,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": -0.0035610750000000004,
+          "daily_vmt_reduction": 27.53772445279485,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": -0.0008547874999999999,
+          "daily_vmt_reduction": 24.57383489862831,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": -0.0017499999999999998,
+          "daily_vmt_reduction": 140.8852957785,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": -0.0008749999999999999,
+          "daily_vmt_reduction": 32.515869250375,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        }
+      ]
+    },
+    {
+      "label": "transit_freq50",
+      "strategy": "transit_service_expansion",
+      "kwargs": {
+        "pct_change": 0.5,
+        "basis": "frequency"
+      },
+      "inputs_str": "basis=frequency, \u0394=+50%, L=100%, \u03b5=0.5",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": -0.06521685042616565,
+          "daily_vmt_reduction": 5845.3597999605145,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": -0.07329303180665883,
+          "daily_vmt_reduction": 3479.7738902295546,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": -0.00931849554448699,
+          "daily_vmt_reduction": 72.05974673902662,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": -0.002609412068395925,
+          "daily_vmt_reduction": 75.01661097202482,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": -0.004528985507246377,
+          "daily_vmt_reduction": 364.6099787228261,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": -0.0,
+          "daily_vmt_reduction": 0.0,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": -0.002216312056737589,
+          "daily_vmt_reduction": 82.36035777703901,
+          "data_assumptions": "mode_share=imputed_from_area_type; avo=statewide_default"
+        }
+      ]
+    },
+    {
+      "label": "micromobility_0_30",
+      "strategy": "shared_micromobility",
+      "kwargs": {
+        "pct_pop_access_before": 0.0,
+        "pct_pop_access_after": 0.3
+      },
+      "inputs_str": "type=bikeshare, access 0%\u219230%, micro_trips/pp=0.05, sub=19.6%, micro_len=1.0mi",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": -0.001745370534158306,
+          "daily_vmt_reduction": 73.89984,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": -0.0006314320719648047,
+          "daily_vmt_reduction": 56.594999999999985,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": -0.0005910026426512509,
+          "daily_vmt_reduction": 28.05936,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": -0.000665254722111346,
+          "daily_vmt_reduction": 46.50786,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": -0.000618925232981746,
+          "daily_vmt_reduction": 30.658320000000003,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": -0.0025153353679145418,
+          "daily_vmt_reduction": 19.451040000000003,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": -0.0006271992373933595,
+          "daily_vmt_reduction": 18.03102,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": -0.0003687181611472365,
+          "daily_vmt_reduction": 17.64882,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": -0.0002497904398435489,
+          "daily_vmt_reduction": 20.1096,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": -0.00034906483885624966,
+          "daily_vmt_reduction": 22.19112,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": -3.748127391387261e-05,
+          "daily_vmt_reduction": 37.77018,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": -0.00023386457675315876,
+          "daily_vmt_reduction": 8.69064,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=bikeshare=20%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        }
+      ]
+    },
+    {
+      "label": "micromobility_0_30_ebike",
+      "strategy": "shared_micromobility",
+      "kwargs": {
+        "pct_pop_access_before": 0.0,
+        "pct_pop_access_after": 0.3,
+        "micromobility_type": "e-bikeshare"
+      },
+      "inputs_str": "type=e-bikeshare, access 0%\u219230%, micro_trips/pp=0.05, sub=35.0%, micro_len=1.0mi",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": -0.00311673309671126,
+          "daily_vmt_reduction": 131.96399999999997,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": -0.0011275572713657226,
+          "daily_vmt_reduction": 101.06249999999997,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": -0.0010553618618772335,
+          "daily_vmt_reduction": 50.105999999999995,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": -0.0011879548609131177,
+          "daily_vmt_reduction": 83.04974999999999,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": -0.0011052236303245463,
+          "daily_vmt_reduction": 54.747,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": -0.004491670299847396,
+          "daily_vmt_reduction": 34.734,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": -0.0011199986382024274,
+          "daily_vmt_reduction": 32.198249999999994,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": -0.0006584252877629222,
+          "daily_vmt_reduction": 31.515749999999997,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": -0.00044605435686348015,
+          "daily_vmt_reduction": 35.91,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": -0.0006233300693861601,
+          "daily_vmt_reduction": 39.627,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": -6.69308462747725e-05,
+          "daily_vmt_reduction": 67.44675,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": -0.00041761531563064063,
+          "daily_vmt_reduction": 15.518999999999998,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=e-bikeshare=35%_per_Fitch_et_al._2021; avg_micro_trip_length=NACTO_default"
+        }
+      ]
+    },
+    {
+      "label": "micromobility_0_50_scooter",
+      "strategy": "shared_micromobility",
+      "kwargs": {
+        "pct_pop_access_before": 0.0,
+        "pct_pop_access_after": 0.5,
+        "micromobility_type": "scootershare"
+      },
+      "inputs_str": "type=scootershare, access 0%\u219250%, micro_trips/pp=0.05, sub=38.5%, micro_len=1.0mi",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": -0.005714010677303979,
+          "daily_vmt_reduction": 241.93400000000005,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": -0.0020671883308371586,
+          "daily_vmt_reduction": 185.28125,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": -0.0019348300801082623,
+          "daily_vmt_reduction": 91.86100000000002,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": -0.002177917245007383,
+          "daily_vmt_reduction": 152.257875,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": -0.002026243322261669,
+          "daily_vmt_reduction": 100.36950000000003,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": -0.008234728883053561,
+          "daily_vmt_reduction": 63.679000000000016,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": -0.002053330836704451,
+          "daily_vmt_reduction": 59.030125000000005,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": -0.0012071130275653579,
+          "daily_vmt_reduction": 57.77887500000001,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": -0.0008177663209163804,
+          "daily_vmt_reduction": 65.83500000000001,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": -0.001142771793874627,
+          "daily_vmt_reduction": 72.6495,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": -0.00012270655150374964,
+          "daily_vmt_reduction": 123.65237500000003,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": -0.0007656280786561747,
+          "daily_vmt_reduction": 28.451500000000006,
+          "data_assumptions": "daily_micro_trips_per_person=NACTO_default; substitution_ratio=scootershare=38%_per_McQueen_et_al._2020; avg_micro_trip_length=NACTO_default"
+        }
+      ]
+    },
+    {
+      "label": "lane_mi_2_majorart",
+      "strategy": "lane_mile_addition",
+      "kwargs": {
+        "new_lane_miles": 2.0,
+        "facility_class": "major_arterial"
+      },
+      "inputs_str": "new_lane_mi=2.00, class=major_arterial, \u03b5=0.6",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": 17.408965617292903,
+          "daily_vmt_reduction": -737104.0982445959,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": 0.3880064616009405,
+          "daily_vmt_reduction": -34776.86146979434,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": 0.7399268212373796,
+          "daily_vmt_reduction": -51728.175492143826,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": 2.407255467980493,
+          "daily_vmt_reduction": -69204.91751338534,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": 0.34475427638950334,
+          "daily_vmt_reduction": -16501.78051793584,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": 0.64702583789846,
+          "daily_vmt_reduction": -52089.386599232195,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": 0.3944710931582934,
+          "daily_vmt_reduction": -25077.734536338678,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": 0.21871245436200118,
+          "daily_vmt_reduction": -220398.2924507022,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": 0.572675367514417,
+          "daily_vmt_reduction": -21281.185569153415,
+          "data_assumptions": ""
+        }
+      ]
+    },
+    {
+      "label": "lane_mi_1_freeway",
+      "strategy": "lane_mile_addition",
+      "kwargs": {
+        "new_lane_miles": 1.0,
+        "facility_class": "freeway"
+      },
+      "inputs_str": "new_lane_mi=1.00, class=freeway, \u03b5=1.0",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": 2.7714035496136664,
+          "daily_vmt_reduction": -248399.77387009875,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": 0.7091926975846315,
+          "daily_vmt_reduction": -33670.73473923694,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": 0.02136591025005828,
+          "daily_vmt_reduction": -21530.59892955935,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        }
+      ]
+    },
+    {
+      "label": "lane_mi_5_collector",
+      "strategy": "lane_mile_addition",
+      "kwargs": {
+        "new_lane_miles": 5.0,
+        "facility_class": "collector"
+      },
+      "inputs_str": "new_lane_mi=5.00, class=collector, \u03b5=0.4",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": 31.339611702211013,
+          "daily_vmt_reduction": -1326934.45038156,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": 2.4000470409220025,
+          "daily_vmt_reduction": -215115.24091312193,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": 8.435081503975033,
+          "daily_vmt_reduction": -589695.3101368592,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": 0.0,
+          "daily_vmt_reduction": -0.0,
+          "data_assumptions": "no_existing_lane_miles_in_class"
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": 1.7436046759990202,
+          "daily_vmt_reduction": -13483.261409059247,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": 2.55338489468564,
+          "daily_vmt_reduction": -73405.9153118832,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": 0.18222303169742304,
+          "daily_vmt_reduction": -8722.167295138719,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": 18.52606617510838,
+          "daily_vmt_reduction": -1491457.3215384048,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": 0.19209369254597716,
+          "daily_vmt_reduction": -12211.983872389856,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": 8.325250902249067,
+          "daily_vmt_reduction": -8389422.031003235,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": 0.8195565871041132,
+          "daily_vmt_reduction": -30455.536948069617,
+          "data_assumptions": ""
+        }
+      ]
+    }
+  ]
+}

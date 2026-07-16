@@ -1,0 +1,87 @@
+# LU-02 - Increased Employment Density
+# Split from the former merged "Employment / residential density" tile: this is the
+# employment / job-density half (CAPCOA T-2). Engine: strategy_density_change
+# (residential held at 0).
+
+id: employment_density
+uid: LU-02
+name: Increased Employment Density
+category: landuse
+status: implemented
+tags:
+- land-use
+- all-trips
+- developer
+- local-government
+- urban
+short_description: Increase jobs per acre (including mixed-use intensification) to shorten trips and
+  support non-auto commuting.
+extended_description: |
+  Increasing employment density concentrates jobs, stores, and services closer together
+  and closer to residents. Shorter distances can make walking, bicycling, and transit more
+  practical and can reduce the amount of driving required for daily activities.
+
+  The effect is strongest when added jobs or services are located in a mixed-use context
+  with safe walking and bicycling conditions. The same number of jobs in an isolated
+  office park, for example, will generally have less effect if most trips still require a
+  car.
+guidance: |
+  Use this strategy for job-focused or mixed-use development. To model a
+  project that adds both homes and jobs, or a broader change in land use mix, combine it
+  with [Increased Residential
+  Density](#/strategies/residential_density).
+images: []
+method: Stevens (2016) employment VMT-density elasticity (ε=−0.07)
+formula: ΔVMT% = Δemp_density × ε_emp
+methodology_detail: |
+  Adding jobs and destinations to an area shortens trips and makes walking, biking,
+  and transit more practical, which lowers vehicle miles traveled (VMT). A 1%
+  increase in employment density has been associated with about a 0.07% reduction
+  in VMT (Stevens 2016), the basis CAPCOA uses for
+  [T-2 (Increase Job Density)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-2.pdf).
+  Job density is a weaker lever than housing density, so the percentage is smaller.
+
+  `ΔVMT% = Δemp_density × ε_emp`
+
+  To represent a change in the mix of land uses or a mixed-use development, combine
+  this strategy with Increase residential density.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: The density–driving relationship comes from urban and suburban areas; in rural areas, added density yields little reduction in driving.
+inputs:
+- key: pct_change_emp_density
+  label: Change in employment density
+  control: slider
+  min: -50
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.2
+  prerequisite: true
+  summary: The percent change in jobs per acre the project adds, compared with today's baseline for the project area.
+  source_note: your development program / site plan vs. local baseline job density
+  tooltip: Proposed job density vs. today's baseline.
+  benchmark: 'Jobs/sq mi: suburban office park ~5,000–15,000; dense urban district ~30,000–50,000; downtown Denver core ~60,000.'
+  instructions: |
+    Enter the percentage change in job density compared with today's baseline for
+    the project area. A project that doubles job density is +100%.
+
+    Approximate benchmarks (jobs per square mile):
+
+    - Suburban office park or commercial: ~5,000–15,000
+    - Dense urban employment district: ~30,000–50,000
+    - Downtown Denver office core: ~60,000
+
+    These are order-of-magnitude anchors; local figures vary with how tightly the
+    district is drawn.
+notes: 'Split from density_change. Engine: strategy_density_change (pct_change_res_density=0).'
+# Closed-form (densityChange with res=0). strategy_employment_density retained as oracle.
+compute:
+  pool: all
+  const:
+    emp_elasticity: -0.07   # Stevens 2016
+  formula: "pct_change_emp_density * emp_elasticity"

@@ -1,0 +1,97 @@
+# TR-02 Transit Pass Subsidies
+# Promoted from strategies/todo and split from the transit fare-subsidy engine:
+# this is the general, all-trip half (scope=all). The commute/employer half is
+# employee_commuting_benefits.yaml. Engine: strategy_transit_fare_subsidy.
+
+id: transit_pass_subsidy
+uid: TR-02
+name: Transit Pass Subsidies
+category: transit
+status: implemented
+tags:
+- pricing
+- transit
+- transit-agency
+- local-government
+short_description: Reduce the price of transit passes for residents or targeted users, raising ridership
+  and shifting trips off the road.
+extended_description: |
+  Transit pass subsidies reduce the out-of-pocket cost of riding by offering discounted or
+  free passes to residents, students, lower-income riders, or other eligible groups. When
+  transit is less expensive and easily accessible, some trips may shift from driving to
+  transit.
+
+  The effect depends on who receives the subsidy and whether transit serves the trips
+  those users need to make. Subsidies in transit-rich areas with parking pressure are
+  likely to have a stronger effect than the same subsidy in places where service is
+  infrequent or indirect.
+guidance: |
+  Use this strategy for general or population-wide fare reductions. For
+  employer- or development-provided commute passes, such as an RTD EcoPass, use [Employee
+  Commuting
+  Benefits](#/strategies/employee_commuting_benefits),
+  which focuses the effect on commute trips.
+images: []
+method: Paulley (2006) short-run fare elasticity (ε=−0.30), all trips
+formula: ΔVMT% = (Δfare × eligible × ε × transit_MS × 1/AVO) / auto_MS
+methodology_detail: |
+  Lowering the fare draws more riders onto transit, and some of those trips would
+  otherwise have been made by car, so vehicle miles traveled (VMT) fall. A larger
+  fare reduction reaching more riders produces a bigger shift. This follows CAPCOA
+  [T-29 (Reduce Transit Fares)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-29.pdf)
+  and the fare-response relationship in Paulley et al. (2006).
+
+  `ΔVMT% = (Δfare × eligible × ε × transit_MS × 1/AVO) / auto_MS`
+
+  The calculator uses local commute mode share from the American Community Survey
+  (ACS), with statewide averages for vehicle occupancy and the typical fare. If you
+  know the subsidy in dollars rather than a percentage, divide it by the average
+  fare to get the percentage reduction.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: Fare reductions work where transit is a viable option; in rural areas with little service the effect is minimal.
+inputs:
+- key: pct_fare_reduction
+  label: Fare reduction
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.5
+  prerequisite: true
+  summary: The percent reduction in the effective fare riders pay (50% for half-price passes, 100% for free); a dollar subsidy divided by the average fare gives this percentage.
+  source_note: your transit agency's fare and pass-subsidy data
+  tooltip: Percent reduction in the effective fare (50% = half-price passes; 100% = free).
+  instructions: |
+    Enter the percentage reduction in the effective fare riders pay. A half-price
+    pass program is 50%; a fully subsidized (free) pass is 100%. If you know the
+    subsidy in dollars instead, divide it by the average fare to get the percentage.
+- key: pct_eligible
+  label: Share of riders eligible
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.4
+  prerequisite: true
+  summary: The share of area transit riders eligible for the subsidized passes, a subset for a targeted program (students, low-income) and approaching 100% for a universal one.
+  source_note: your project scope / eligible-population estimate
+  tooltip: Share of area transit users covered by the subsidy.
+  instructions: |
+    Estimate the share of area transit riders eligible for the subsidized passes.
+    A program targeting students or low-income riders covers a subset; a universal
+    program approaches 100%.
+notes: 'Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy (scope=all).'
+# Closed-form (transit fare subsidy, scope=all). Reads imputed transit/auto mode share + avo.
+compute:
+  pool: all
+  const:
+    elasticity: -0.30   # Paulley 2006 short-run transit fare elasticity
+  formula: "pct_fare_reduction * pct_eligible * elasticity * transit_mode_share * (1 / avo) / max(auto_mode_share, 0.000000001)"

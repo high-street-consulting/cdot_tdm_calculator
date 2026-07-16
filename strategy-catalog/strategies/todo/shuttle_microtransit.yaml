@@ -1,0 +1,19 @@
+# TR-07 - Shuttle / microtransit  (STUB: move up to strategies/ when complete)
+# Stubbed from the master Google Sheet. Fill in fields, then move the file to strategies/.
+
+id: shuttle_microtransit
+uid: TR-07
+name: Shuttle / microtransit
+category: transit
+status: planned
+tags: []
+short_description: Flexible or fixed-route shared transportation services that provide first/last mile
+  or local circulation options.
+extended_description: ''
+images: []
+method: ''
+formula: ''
+methodology_detail: ''
+applicability: {}
+inputs: []
+notes: 'Tier 2. Sheet note: more research required, no definitive method.'

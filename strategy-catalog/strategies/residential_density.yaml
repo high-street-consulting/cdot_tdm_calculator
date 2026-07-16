@@ -1,0 +1,87 @@
+# LU-01 - Increased Residential Density
+# Split from the former merged "Employment / residential density" tile: this is the
+# residential half (CAPCOA T-1). Engine: strategy_density_change (employment held at 0).
+
+id: residential_density
+uid: LU-01
+name: Increased Residential Density
+category: landuse
+status: implemented
+tags:
+- land-use
+- all-trips
+- developer
+- local-government
+- urban
+short_description: Increase housing units per acre to support shorter trips and more walking, biking, and
+  transit use.
+extended_description: |
+  Increasing residential density adds dense residential development in places where
+  residents can reach jobs, services, transit, and everyday destinations with shorter
+  trips. The VMT reduction benefit is strongest when the development is convenient to key
+  destinations via walking, biking, and transit options. Dense housing alone, without
+  nearby destinations or multimodal infrastructure, will not provide significant VMT
+  reduction benefits.
+guidance: |
+  Use this strategy for housing-focused rezoning or denser residential
+  development. To model a mix of homes and jobs, or a broader change in land use mix,
+  combine it with [Increased Employment
+  Density](#/strategies/employment_density).
+images: []
+method: Stevens (2016) residential VMT-density elasticity (ε=−0.22)
+formula: ΔVMT% = Δres_density × ε_res
+methodology_detail: |
+  Placing more homes close to destinations shortens trips and makes walking,
+  biking, and transit more viable, which lowers vehicle miles traveled (VMT). A 1%
+  increase in residential density has been associated with about a 0.22% reduction
+  in VMT (Stevens 2016), the basis CAPCOA uses for
+  [T-1 (Increase Residential Density)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-1.pdf).
+  Housing density is a stronger lever than job density.
+
+  `ΔVMT% = Δres_density × ε_res`
+
+  To represent a change in the mix of land uses or a mixed-use development, combine
+  this strategy with Increase employment density.
+applicability:
+  area_types:
+  - urban_core
+  - urban
+  - suburban
+  warn_message: The density–driving relationship comes from urban and suburban areas; in rural areas, added density yields little reduction in driving or can increase trip lengths.
+inputs:
+- key: pct_change_res_density
+  label: Change in residential density
+  control: slider
+  min: -50
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0.2
+  prerequisite: true
+  summary: The percent change in housing units per acre the project adds, compared with today's baseline for the project area.
+  source_note: your development program / site plan vs. local baseline (DOLA estimates, zoning)
+  tooltip: Proposed housing density vs. today (compare with Department of Local Affairs and zoning references).
+  benchmark: 'People/sq mi: single-family suburb ~3,000–5,000; downtown Denver high-rise ~13,000–16,000; Capitol Hill ~25,000.'
+  instructions: |
+    Enter the percentage change in housing density compared with today's baseline
+    for the project area. A project that doubles density is +100%. The Colorado
+    Department of Local Affairs (DOLA) housing estimates and local zoning references
+    (such as the New Zoning Atlas) can help you compare proposed density against
+    existing conditions.
+
+    Approximate benchmarks (people per square mile):
+
+    - Standard single-family suburb: ~3,000–5,000
+    - Downtown Denver (high-rise): ~13,000–16,000
+    - Capitol Hill, Denver's densest neighborhood: ~25,000
+
+    These are order-of-magnitude anchors; local figures vary with lot size,
+    building height, and household size.
+notes: 'Split from density_change. Engine: strategy_density_change (pct_change_emp_density=0).'
+# Closed-form: math lives here (densityChange with emp=0). strategy_residential_density retained as oracle.
+compute:
+  pool: all
+  const:
+    res_elasticity: -0.22   # Stevens 2016
+  formula: "pct_change_res_density * res_elasticity"
