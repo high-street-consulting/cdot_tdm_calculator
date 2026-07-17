@@ -1,0 +1,15 @@
+{
+  // Cloudflare Workers Static Assets config for the CDOT TDM Calculator SPA.
+  // Deployed by the connected Git build: `npm run build:cf` produces ./dist,
+  // then `npx wrangler deploy` uploads it as an assets-only Worker (no server
+  // code). The CF build's root directory is /app, so paths here are relative
+  // to /app.
+  "name": "cdot-tdm-calculator-app",
+  "compatibility_date": "2025-01-01",
+  "assets": {
+    "directory": "./dist",
+    // The app uses HashRouter, but serve index.html for any unmatched path so
+    // deep links and refreshes never hit a hard 404.
+    "not_found_handling": "single-page-application"
+  }
+}
