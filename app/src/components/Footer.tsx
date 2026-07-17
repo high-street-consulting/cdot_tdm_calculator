@@ -14,6 +14,14 @@ export function Footer() {
         >
           Accessibility
         </a>
+        <span className="app-footer-sep" aria-hidden="true"> · </span>
+        <a
+          href="https://github.com/high-street-consulting/cdot_tdm_calculator"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Source code
+        </a>
       </div>
       <div className="app-footer-right">
         Built for Office of Innovative Mobility by{" "}
