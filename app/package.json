@@ -13,7 +13,7 @@
     "dev": "vite --port 5180",
     "prebuild": "npm run sync:catalog",
     "build": "tsc -b --noEmit && VITE_BUILD_SHA=\"$(git rev-parse --short HEAD 2>/dev/null || echo dev)\" VITE_BUILD_TIME=\"$(date -u +%Y-%m-%dT%H:%MZ)\" vite build --base=/cdot_tdm_calculator/",
-    "build:cf": "npm run sync:catalog && tsc -b --noEmit && VITE_BUILD_SHA=\"$(git rev-parse --short HEAD 2>/dev/null || echo dev)\" VITE_BUILD_TIME=\"$(date -u +%Y-%m-%dT%H:%MZ)\" vite build --base=/",
+    "build:cf": "npm run sync:catalog && tsc -b --noEmit && NODE_OPTIONS=--max-old-space-size=4096 VITE_BUILD_SHA=\"$(git rev-parse --short HEAD 2>/dev/null || echo dev)\" VITE_BUILD_TIME=\"$(date -u +%Y-%m-%dT%H:%MZ)\" vite build --base=/",
     "preview": "vite preview",
     "pretest": "npm run sync:catalog",
     "test": "vitest run",
