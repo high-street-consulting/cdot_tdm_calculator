@@ -97,7 +97,9 @@ function viewFromPath(pathname: string): AppView {
   if (pathname === "/report") return "report";
   if (pathname === "/methodology") return "methodology";
   if (pathname === "/data") return "datasources";
-  return "area";
+  // "/" (the landing), "/strategies", and anything else are the strategy list.
+  // Note: "area" is NOT a route — it's derived from the map-overlay state below.
+  return "shop";
 }
 
 // ─── Shared layout context ───────────────────────────────────────────
@@ -168,16 +170,19 @@ export function App() {
     <HashRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<Navigate to="/strategies" replace />} />
+          {/* "/" is the canonical landing (clean URL, no redirect). */}
+          <Route index element={<ShopRoute />} />
+          {/* "/strategies" kept as an alias for old links / bookmarks. */}
           <Route path="/strategies" element={<ShopRoute />} />
           <Route path="/strategies/:id" element={<DetailRoute />} />
           <Route path="/cart" element={<CartRoute />} />
           <Route path="/report" element={<ReportRoute />} />
           <Route path="/methodology" element={<MethodologyView />} />
           <Route path="/data" element={<DataSourcesView />} />
-          {/* The map is a toggled overlay, not a route; keep old /area links working. */}
-          <Route path="/area" element={<Navigate to="/strategies" replace />} />
-          <Route path="*" element={<Navigate to="/strategies" replace />} />
+          {/* The map is a toggled overlay, not a route; old /area links and any
+              unknown path land on the clean root. */}
+          <Route path="/area" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
     </HashRouter>
@@ -506,7 +511,7 @@ function Layout() {
         return [...prev, entry];
       });
       setJustAdded(id);
-      navigate("/strategies");
+      navigate("/");
     },
     [
       navigate,
@@ -538,7 +543,7 @@ function Layout() {
     setBaselineVmtOverride(null);
     setBaselineVmtNote("");
     setJustAdded(null);
-    navigate("/strategies");
+    navigate("/");
     setMapOpen(true);
   }
 
@@ -554,7 +559,7 @@ function Layout() {
       routeView === "datasources" ||
       routeView === "report"
     ) {
-      navigate("/strategies");
+      navigate("/");
     }
     setMapOpen(true);
   }, [routeView, navigate]);
@@ -680,7 +685,7 @@ function Layout() {
             setNote={setBaselineVmtNote}
             onSelectStrategies={() => {
               setMapOpen(false);
-              navigate("/strategies");
+              navigate("/");
             }}
           />
           <div className="map-host">
@@ -815,9 +820,9 @@ function BasketBar(props: {
   // returns them exactly where they left off after a detour to the map (the
   // config draft itself already persists at the AppLayout level). BasketBar is
   // mounted in the persistent layout, so this ref survives route changes.
-  const lastStrategiesPath = useRef("/strategies");
+  const lastStrategiesPath = useRef("/");
   useEffect(() => {
-    if (location.pathname.startsWith("/strategies")) {
+    if (location.pathname === "/" || location.pathname.startsWith("/strategies")) {
       lastStrategiesPath.current = location.pathname;
     }
   }, [location.pathname]);
@@ -1344,7 +1349,7 @@ function DetailRoute() {
   // catalog (isKnownStrategy), NOT STRATEGY_REGISTRY: the registry holds only
   // the code-backed strategies; closed-form (compute-block) ones are live too.
   if (!id || !isKnownStrategy(id)) {
-    return <Navigate to="/strategies" replace />;
+    return <Navigate to="/" replace />;
   }
   const strategyId = id as StrategyKey;
 
@@ -1365,11 +1370,11 @@ function DetailRoute() {
       baselineVmt={results.baseline_vmt}
       baselineVmtOverride={baselineVmtOverride}
       onPickArea={showMap}
-      onBack={() => navigate("/strategies")}
+      onBack={() => navigate("/")}
       onAdd={() => commitBasket(strategyId, workingValues)}
       onRemove={() => {
         removeFromBasket(strategyId);
-        navigate("/strategies");
+        navigate("/");
       }}
     />
   );
@@ -1397,7 +1402,7 @@ function CartRoute() {
       baselineVmtNote={baselineVmtNote}
       onEdit={(id) => openDetail(id)}
       onRemove={(id) => removeFromBasket(id)}
-      onBrowse={() => navigate("/strategies")}
+      onBrowse={() => navigate("/")}
       onExportPdf={() => navigate("/report")}
     />
   );
