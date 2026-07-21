@@ -244,7 +244,7 @@ export function CartView({
           <h4>Co-benefits</h4>
           <div className="co-row">
             <span className="nm">GHG avoided</span>
-            <span className="v">{Math.round(ghgTonnes).toLocaleString()} tons/yr</span>
+            <span className="v">{Math.round(ghgTonnes).toLocaleString()} metric tons/yr</span>
           </div>
           <div className="co-row">
             <span className="nm">Cars off-road equivalent</span>
