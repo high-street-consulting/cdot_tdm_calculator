@@ -744,6 +744,18 @@ function BasketBar(props: {
   onReset: () => void;
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  // Remember the last strategies-flow location — the list, or the specific
+  // strategy detail the user was configuring — so the "Strategy selection" step
+  // returns them exactly where they left off after a detour to the map (the
+  // config draft itself already persists at the AppLayout level). BasketBar is
+  // mounted in the persistent layout, so this ref survives route changes.
+  const lastStrategiesPath = useRef("/strategies");
+  useEffect(() => {
+    if (location.pathname.startsWith("/strategies")) {
+      lastStrategiesPath.current = location.pathname;
+    }
+  }, [location.pathname]);
   const step =
     props.view === "area"
       ? 1
@@ -831,7 +843,7 @@ function BasketBar(props: {
           className={`step ${step > 2 ? "done" : ""} ${step === 2 ? "active" : ""}`}
           aria-current={step === 2 ? "step" : undefined}
           onMouseEnter={() => setHoverIndex(1)}
-          onClick={() => navigate("/strategies")}
+          onClick={() => navigate(lastStrategiesPath.current)}
         >
           <span className="n">2</span> Strategy selection
         </button>
