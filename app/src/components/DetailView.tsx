@@ -289,7 +289,12 @@ export function DetailView({
     meta.autoFilledSummary && meta.autoFilledSummary.length > 0
       ? meta.autoFilledSummary
       : contextRows.map((r) => r.label.toLowerCase());
-  const autoFilledPhrase = joinWithAnd(autoFilled);
+  // Sentence-case the reassurance line: derived context labels are lower-cased
+  // above (and authored summaries vary), so capitalize the first letter so the
+  // sentence never starts lowercase.
+  const autoFilledJoined = joinWithAnd(autoFilled);
+  const autoFilledPhrase =
+    autoFilledJoined.charAt(0).toUpperCase() + autoFilledJoined.slice(1);
 
   const areaTypes = meta.applicability?.area_types ?? [];
 
@@ -409,7 +414,7 @@ export function DetailView({
             <div className="dsection applicability-section">
               <h3>Applicability</h3>
               <div className="section-sub">
-                Where this strategy fits, and when to use it.
+                Where this strategy fits.
               </div>
 
               {areaTypes.length > 0 && (
@@ -559,7 +564,7 @@ export function DetailView({
                   {signedPct}
                 </span>
                 <span className="commit-caption">
-                  VMT · {annualM} M mi/yr {directionLabel}
+                  VMT · {annualM} Million mi/yr {directionLabel}
                 </span>
               </div>
             </div>
@@ -629,9 +634,9 @@ export function DetailView({
               <div className="overline">Annual VMT {directionLabel}</div>
               <div className="impact-annual">
                 {annualM}
-                <span className="u">M mi/yr</span>
+                <span className="u">Million mi/yr</span>
               </div>
-              <div className="impact-baseline">of {baselineM} M mi/yr baseline</div>
+              <div className="impact-baseline">of {baselineM} Million mi/yr baseline</div>
             </div>
           </div>
 

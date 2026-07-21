@@ -925,7 +925,7 @@ function BasketBar(props: {
           </div>
           <div className="val">
             {(props.baselineVmt / 1000).toLocaleString("en-US", { maximumFractionDigits: 0 })}
-            <span className="u">k mi/day</span>
+            <span className="u">Thousand mi/day</span>
           </div>
         </div>
         <div>
@@ -942,7 +942,7 @@ function BasketBar(props: {
           <div className="lab">Annual {props.annualVMT >= 0 ? "reduction" : "increase"}</div>
           <div className="val">
             {props.annualVMT >= 0 ? "" : "+"}{(Math.abs(props.annualVMT) / 1e6).toFixed(2)}
-            <span className="u">M mi/yr</span>
+            <span className="u">Million mi/yr</span>
           </div>
         </div>
       </div>

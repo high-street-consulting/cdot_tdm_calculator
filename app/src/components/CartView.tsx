@@ -96,7 +96,7 @@ export function CartView({
                 <div className="lab">Annual VMT {netReduces ? "reduced" : "added"}</div>
                 <div className="v">
                   {(Math.abs(annualReduced) / 1e6).toFixed(2)}
-                  <span className="u">M mi/yr</span>
+                  <span className="u">Million mi/yr</span>
                 </div>
               </div>
               <div className="c">
