@@ -408,10 +408,12 @@
   position: sticky; top: 16px;
   display: flex; flex-direction: column; gap: 14px;
   min-width: 0;
-  /* When the rail's content is taller than the viewport it scrolls internally
-     (instead of clipping the bottom rows) while staying sticky. Height budget =
-     viewport minus the sticky top (16px) plus a little breathing room. */
-  max-height: calc(100vh - 24px);
+  /* When the rail's content is taller than the space it has, it scrolls
+     internally (instead of running off the bottom of the page and past the
+     footer) while staying sticky. Height budget = viewport minus the chrome
+     the rail sits between: 56px header + 64px basket bar above, the "← Back"
+     link, the footer, and a little breathing room. */
+  max-height: calc(100vh - 210px);
   overflow-y: auto;
 }
 
@@ -1384,15 +1386,30 @@
 /* Methodology accordion (native <details>; inherits .dsection's 24px 32px padding) */
 .shop-detail .methodology-accordion > summary {
   list-style: none; cursor: pointer; display: flex; align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; gap: 12px;
+  /* Full-width click target + hover cue so the header reads as an expandable
+     control, not just another static section. Negative margins pull the hover
+     band out to the card's padding edges. */
+  margin: -24px -30px; padding: 24px 30px; border-radius: 2px;
 }
+.shop-detail .methodology-accordion > summary:hover { background: var(--cdot-dark-blue-05); }
 .shop-detail .methodology-accordion > summary::-webkit-details-marker { display: none; }
 .shop-detail .methodology-accordion > summary h3 { margin: 0; }
 .shop-detail .methodology-accordion > summary:focus-visible { outline: 2px solid var(--cdot-dark-blue); outline-offset: 2px; }
-/* Chevron points sideways (right) when collapsed, swinging down to point at
-   the revealed content when open, the natural disclosure direction. */
-.shop-detail .methodology-accordion .acc-chevron { color: #6B6B6B; font-size: 18px; transition: transform .15s; transform: rotate(-90deg); }
-.shop-detail .methodology-accordion[open] .acc-chevron { transform: rotate(0deg); }
+/* Explicit Show/Hide pill (mirrors the app's other pills) so it's unmistakably
+   an accordion; the label flips with the open state. */
+.shop-detail .methodology-accordion .acc-toggle {
+  display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
+  font-size: 13px; font-weight: 600; color: var(--cdot-dark-blue);
+  background: var(--cdot-dark-blue-05); border: 1px solid var(--cdot-dark-blue-10);
+  border-radius: 999px; padding: 5px 12px;
+}
+.shop-detail .methodology-accordion > summary:hover .acc-toggle { border-color: var(--cdot-dark-blue); }
+.shop-detail .methodology-accordion .acc-toggle-label::before { content: "Show details"; }
+.shop-detail .methodology-accordion[open] .acc-toggle-label::before { content: "Hide details"; }
+/* Chevron points down (expand) when collapsed, flips up (collapse) when open. */
+.shop-detail .methodology-accordion .acc-chevron { font-size: 13px; line-height: 1; transition: transform .15s; }
+.shop-detail .methodology-accordion[open] .acc-chevron { transform: rotate(180deg); }
 .shop-detail .methodology-body { margin-top: 14px; }
 /* Extra breathing room below the methodology section (it's the last block on
    the detail page), overrides .dsection's default 14px. */

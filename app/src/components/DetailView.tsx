@@ -592,7 +592,10 @@ export function DetailView({
           <details className="dsection methodology-accordion">
             <summary>
               <h3>Methodology</h3>
-              <span className="acc-chevron" aria-hidden="true">⌄</span>
+              <span className="acc-toggle" aria-hidden="true">
+                <span className="acc-toggle-label"></span>
+                <span className="acc-chevron">⌄</span>
+              </span>
             </summary>
             <div className="methodology-body">
               <div className="method-meta">
