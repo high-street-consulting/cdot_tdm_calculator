@@ -304,14 +304,14 @@ export function ReportView({
                 <dt>Annual VMT reduced</dt>
                 <dd>
                   {(annualReduced / 1e6).toFixed(2)}
-                  <span className="u">Million mi/yr</span>
+                  <span className="u">million mi/yr</span>
                 </dd>
               </div>
               <div>
                 <dt>GHG avoided</dt>
                 <dd>
                   {Math.round(ghgTonnes).toLocaleString()}
-                  <span className="u">t CO₂e/yr</span>
+                  <span className="u">tons CO₂e/yr</span>
                 </dd>
               </div>
               <div>

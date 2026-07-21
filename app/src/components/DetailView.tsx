@@ -565,7 +565,7 @@ export function DetailView({
                   {signedPct}
                 </span>
                 <span className="commit-caption">
-                  VMT · {annualM} Million mi/yr {directionLabel}
+                  VMT · {annualM} million mi/yr {directionLabel}
                 </span>
               </div>
             </div>
@@ -638,9 +638,9 @@ export function DetailView({
               <div className="overline">Annual VMT {directionLabel}</div>
               <div className="impact-annual">
                 {annualM}
-                <span className="u">Million mi/yr</span>
+                <span className="u">million mi/yr</span>
               </div>
-              <div className="impact-baseline">of {baselineM} Million mi/yr baseline</div>
+              <div className="impact-baseline">of {baselineM} million mi/yr baseline</div>
             </div>
           </div>
 

@@ -1027,6 +1027,9 @@
 .cart-section-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
 .cart-section-head h2 { margin: 0; font-size: 20px; font-weight: 600; color: #141414; line-height: 1.25; }
 .cart-section-head .meta { font-size: 14px; color: #6B6B6B; }
+/* Per-category grouping header in the results list — a little breathing room
+   before the strategy card below it. */
+.cart-view .cat-section-head { margin-bottom: 6px; }
 
 .cart-line {
   background: #fff; border: 1px solid #EBEBEB; border-radius: 2px;
@@ -1419,7 +1422,7 @@
 /* Chevron points down (expand) when collapsed, flips up (collapse) when open. */
 .shop-detail .methodology-accordion .acc-chevron { font-size: 13px; line-height: 1; transition: transform .15s; }
 .shop-detail .methodology-accordion[open] .acc-chevron { transform: rotate(180deg); }
-.shop-detail .methodology-body { margin-top: 14px; }
+.shop-detail .methodology-body { margin-top: 22px; }
 /* Extra breathing room below the methodology section (it's the last block on
    the detail page), overrides .dsection's default 14px. */
 .shop-detail .methodology-accordion { margin-bottom: 32px; }

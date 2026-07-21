@@ -96,14 +96,14 @@ export function CartView({
                 <div className="lab">Annual VMT {netReduces ? "reduced" : "added"}</div>
                 <div className="v">
                   {(Math.abs(annualReduced) / 1e6).toFixed(2)}
-                  <span className="u">Million mi/yr</span>
+                  <span className="u">million mi/yr</span>
                 </div>
               </div>
               <div className="c">
                 <div className="lab">{netReduces ? "GHG avoided" : "GHG increase"}</div>
                 <div className="v">
                   {Math.round(Math.abs(ghgTonnes)).toLocaleString()}
-                  <span className="u">t CO₂e/yr</span>
+                  <span className="u">tons CO₂e/yr</span>
                 </div>
               </div>
             </div>
@@ -244,7 +244,7 @@ export function CartView({
           <h4>Co-benefits</h4>
           <div className="co-row">
             <span className="nm">GHG avoided</span>
-            <span className="v">{Math.round(ghgTonnes).toLocaleString()} t/yr</span>
+            <span className="v">{Math.round(ghgTonnes).toLocaleString()} tons/yr</span>
           </div>
           <div className="co-row">
             <span className="nm">Cars off-road equivalent</span>
