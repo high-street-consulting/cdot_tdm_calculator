@@ -21,25 +21,34 @@
    content takes the full width and the map-host is hidden. The
    data-view attribute is set from the active route in App.tsx. */
 .shop-main-region {
-  display: flex;
+  display: block;              /* route-outlet fills; the map layers over it */
+  position: relative;         /* containing block for the map overlay */
   min-height: 0; min-width: 0;
   overflow: hidden;
 }
 .shop-main-region > * { min-height: 0; min-width: 0; }
-.shop-main-region > .map-host { flex: 1; overflow: hidden; order: 2; }
-.shop-main-region > .map-host > .map { width: 100%; height: 100%; }
+
+/* Strategy flow content fills the region and is ALWAYS mounted. */
 .shop-main-region > .route-outlet {
   display: flex; flex-direction: column;
   overflow: hidden;
-  flex: 1;
+  height: 100%;
 }
 .shop-main-region > .route-outlet > * { flex: 1; min-height: 0; }
 
-.shop-main-region[data-view="area"] > .route-outlet {
-  flex: 0 0 360px;
-  width: 360px;
+/* Map overlay — the area panel (left) + the persistent map (right). Layered on
+   top of the strategy content when the map is open (data-view="area"). The map
+   stays in the DOM when the overlay is hidden, so pan/zoom + the selection
+   layer survive; and the strategy page underneath keeps its scroll + state. */
+.shop-main-region > .map-overlay { display: none; }
+.shop-main-region[data-view="area"] > .map-overlay {
+  display: flex;
+  position: absolute; inset: 0; z-index: 5;
+  background: #fff;
 }
-.shop-main-region:not([data-view="area"]) > .map-host { display: none; }
+.map-overlay > .area-panel { flex: 0 0 360px; }
+.map-overlay > .map-host { flex: 1; overflow: hidden; order: 2; }
+.map-overlay > .map-host > .map { width: 100%; height: 100%; }
 
 /* ── Top header (minimal, reuses .hdr styling) ───────────────────────── */
 

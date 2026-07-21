@@ -11,7 +11,6 @@
 // (rail last) below ~980px. See app/src/styles/shop.css `.detail-grid` etc.
 
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   CATEGORIES,
   getStrategy,
@@ -68,6 +67,8 @@ interface DetailViewProps {
       preview reflect the same baseline the aggregate results do. */
   baselineVmtOverride: number | null;
   onBack: () => void;
+  /** Open the map overlay (the "Choose a project area" affordance). */
+  onPickArea: () => void;
   onAdd: () => void;
   onRemove: () => void;
 }
@@ -188,10 +189,10 @@ export function DetailView({
   baselineVmt,
   baselineVmtOverride,
   onBack,
+  onPickArea,
   onAdd,
   onRemove,
 }: DetailViewProps) {
-  const navigate = useNavigate();
   const meta = getStrategy(strategyId);
   const cat = CATEGORIES.find((c) => c.id === meta.category);
   const hero = heroImage(meta, cat);
@@ -518,7 +519,7 @@ export function DetailView({
                   <button
                     type="button"
                     className="configure-hint-link"
-                    onClick={() => navigate("/area")}
+                    onClick={onPickArea}
                   >
                     Choose a project area →
                   </button>

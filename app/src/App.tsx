@@ -150,6 +150,8 @@ interface LayoutContext {
   justAdded: StrategyKey | null;
   setJustAdded: (k: StrategyKey | null) => void;
   openDetail: (id: StrategyKey) => void;
+  /** Open the map overlay (used by "pick a project area" affordances). */
+  showMap: () => void;
   commitBasket: (id: StrategyKey, vals: Record<string, number | string>) => void;
   removeFromBasket: (id: StrategyKey) => void;
   /** Open the confirm-reset modal (CMT-03/15: "Start over" on the results page). */
@@ -166,15 +168,16 @@ export function App() {
     <HashRouter>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<Navigate to="/area" replace />} />
-          <Route path="/area" element={<AreaRoute />} />
+          <Route index element={<Navigate to="/strategies" replace />} />
           <Route path="/strategies" element={<ShopRoute />} />
           <Route path="/strategies/:id" element={<DetailRoute />} />
           <Route path="/cart" element={<CartRoute />} />
           <Route path="/report" element={<ReportRoute />} />
           <Route path="/methodology" element={<MethodologyView />} />
           <Route path="/data" element={<DataSourcesView />} />
-          <Route path="*" element={<Navigate to="/area" replace />} />
+          {/* The map is a toggled overlay, not a route; keep old /area links working. */}
+          <Route path="/area" element={<Navigate to="/strategies" replace />} />
+          <Route path="*" element={<Navigate to="/strategies" replace />} />
         </Route>
       </Routes>
     </HashRouter>
@@ -188,7 +191,23 @@ export function App() {
 function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const view = viewFromPath(location.pathname);
+  // The map is a visibility-toggled overlay layered over the strategy flow —
+  // NOT a route — so toggling it never unmounts the strategy list/detail
+  // underneath (scroll + working state survive). `mapOpen` drives the overlay
+  // and the "area" step presentation.
+  const [mapOpen, setMapOpen] = useState(true);
+  const routeView = viewFromPath(location.pathname);
+  const view: AppView = mapOpen ? "area" : routeView;
+  // Full doc pages (Methodology / Data / Report) are never behind the map.
+  useEffect(() => {
+    if (
+      routeView === "methodology" ||
+      routeView === "datasources" ||
+      routeView === "report"
+    ) {
+      setMapOpen(false);
+    }
+  }, [routeView]);
 
   const [selectedTazIds, setSelectedTazIds] = useState<Set<string>>(new Set());
   // True when the last selection action would have pushed the selection past
@@ -519,15 +538,30 @@ function Layout() {
     setBaselineVmtOverride(null);
     setBaselineVmtNote("");
     setJustAdded(null);
-    navigate("/area");
+    navigate("/strategies");
+    setMapOpen(true);
   }
 
   // Open the confirm-reset modal: the discoverable "Start over" affordance on
   // the results page routes through the same modal as the header logo (CMT-03/15).
   const requestReset = useCallback(() => setConfirmResetOpen(true), []);
 
+  // Open the map overlay. If we're on a full doc page, return to the calculator
+  // first so closing the map reveals strategy content, not the doc page.
+  const openMap = useCallback(() => {
+    if (
+      routeView === "methodology" ||
+      routeView === "datasources" ||
+      routeView === "report"
+    ) {
+      navigate("/strategies");
+    }
+    setMapOpen(true);
+  }, [routeView, navigate]);
+  const closeMap = useCallback(() => setMapOpen(false), []);
+
   function handleHomeNav() {
-    if (!isDirty && view === "area") return;
+    if (!isDirty && mapOpen) return;
     if (isDirty) {
       setConfirmResetOpen(true);
       return;
@@ -557,6 +591,7 @@ function Layout() {
     justAdded,
     setJustAdded,
     openDetail,
+    showMap: openMap,
     commitBasket,
     removeFromBasket,
     requestReset,
@@ -565,9 +600,11 @@ function Layout() {
   return (
     <div className="shop-app">
       <a className="skip-link" href="#main-content">Skip to main content</a>
-      <Header onHomeNav={handleHomeNav} view={view} />
+      <Header onHomeNav={handleHomeNav} view={view} onCalculator={openMap} />
       <BasketBar
         view={view}
+        openMap={openMap}
+        closeMap={closeMap}
         tazCount={selectedTazIds.size}
         basketCount={basket.length}
         totalPct={results.total_pct_vmt_reduction * 100}
@@ -619,25 +656,45 @@ function Layout() {
         data-view={view}
         tabIndex={-1}
       >
-        {/* Persistent map: always in DOM, hidden via the CSS data-view
-            attribute on the parent so pan/zoom and selection layer
-            survive nav. */}
-        <div className="map-host">
-          <div className="map">
-            <Suspense fallback={<MapLoading />}>
-              <MapCanvas
-                selectedTazIds={selectedTazIds}
-                onSelectionChange={handleSelectionChange}
-                onSelectionTruncated={handleSelectionTruncated}
-                onTazLayerReady={setTazLayer}
-              />
-            </Suspense>
-          </div>
-        </div>
-
-        {/* Route content goes through Outlet with shared state */}
+        {/* Strategy flow content — ALWAYS mounted. The map overlay below layers
+            on top of it, so toggling the map never unmounts the list/detail:
+            scroll position and working state survive. */}
         <div className="route-outlet">
           <Outlet context={ctx} />
+        </div>
+
+        {/* Map overlay: the area panel + the persistent map. Shown on top when
+            the map is open (data-view="area"). The map stays in the DOM when
+            hidden so pan/zoom and the selection layer survive. */}
+        <div className="map-overlay">
+          <AreaPanel
+            selectedCount={selectedTazIds.size}
+            baselineVmt={results.baseline_vmt}
+            derivedBaseline={tazInputs.reduce(
+              (acc, t) => acc + (Number.isFinite(t.daily_vmt) ? t.daily_vmt : 0),
+              0,
+            )}
+            override={baselineVmtOverride}
+            setOverride={setBaselineVmtOverride}
+            note={baselineVmtNote}
+            setNote={setBaselineVmtNote}
+            onSelectStrategies={() => {
+              setMapOpen(false);
+              navigate("/strategies");
+            }}
+          />
+          <div className="map-host">
+            <div className="map">
+              <Suspense fallback={<MapLoading />}>
+                <MapCanvas
+                  selectedTazIds={selectedTazIds}
+                  onSelectionChange={handleSelectionChange}
+                  onSelectionTruncated={handleSelectionTruncated}
+                  onTazLayerReady={setTazLayer}
+                />
+              </Suspense>
+            </div>
+          </div>
         </div>
       </main>
 
@@ -664,9 +721,12 @@ function Layout() {
 function Header({
   onHomeNav,
   view,
+  onCalculator,
 }: {
   onHomeNav: () => void;
   view: AppView;
+  /** Show the map overlay (the calculator's entry view). */
+  onCalculator: () => void;
 }) {
   const isCalculator =
     view === "area" || view === "shop" || view === "detail" || view === "cart";
@@ -688,13 +748,14 @@ function Header({
       </button>
       <span className="hdr-sep" />
       <nav className="hdr-nav" aria-label="Main">
-        <NavLink
-          to="/area"
+        <button
+          type="button"
           className={isCalculator ? "active" : ""}
           aria-current={isCalculator ? "page" : undefined}
+          onClick={onCalculator}
         >
           Calculator
-        </NavLink>
+        </button>
         <NavLink
           to="/methodology"
           className={({ isActive }) => (isActive ? "active" : "")}
@@ -729,6 +790,10 @@ function Header({
 // ─── Basket bar (workflow steps + totals) ────────────────────────────
 function BasketBar(props: {
   view: AppView;
+  /** Show the map overlay (Area step). */
+  openMap: () => void;
+  /** Hide the map overlay, revealing the strategy flow underneath. */
+  closeMap: () => void;
   tazCount: number;
   basketCount: number;
   totalPct: number;
@@ -830,7 +895,7 @@ function BasketBar(props: {
           className={`step ${step > 1 ? "done" : ""} ${step === 1 ? "active" : ""}`}
           aria-current={step === 1 ? "step" : undefined}
           onMouseEnter={() => setHoverIndex(0)}
-          onClick={() => navigate("/area")}
+          onClick={props.openMap}
         >
           <span className="n">1</span> Area selection
         </button>
@@ -843,7 +908,10 @@ function BasketBar(props: {
           className={`step ${step > 2 ? "done" : ""} ${step === 2 ? "active" : ""}`}
           aria-current={step === 2 ? "step" : undefined}
           onMouseEnter={() => setHoverIndex(1)}
-          onClick={() => navigate(lastStrategiesPath.current)}
+          onClick={() => {
+            props.closeMap();
+            navigate(lastStrategiesPath.current);
+          }}
         >
           <span className="n">2</span> Strategy selection
         </button>
@@ -859,7 +927,11 @@ function BasketBar(props: {
           aria-current={step === 3 ? "step" : undefined}
           disabled={!resultsReady}
           onMouseEnter={() => setHoverIndex(2)}
-          onClick={() => resultsReady && navigate("/cart")}
+          onClick={() => {
+            if (!resultsReady) return;
+            props.closeMap();
+            navigate("/cart");
+          }}
         >
           <span className="n">3</span> Results
           {props.basketCount > 0 && (
@@ -978,17 +1050,27 @@ function BasketBar(props: {
 
 // ─── Route components ────────────────────────────────────────────────
 
-function AreaRoute() {
-  const navigate = useNavigate();
-  const {
-    selectedTazIds,
-    tazInputs,
-    results,
-    baselineVmtOverride,
-    setBaselineVmtOverride,
-    baselineVmtNote,
-    setBaselineVmtNote,
-  } = useLayout();
+// The area step's left panel. Rendered inside the map overlay (NOT via the
+// router Outlet), so it takes its data as props instead of useLayout().
+function AreaPanel({
+  selectedCount,
+  baselineVmt,
+  derivedBaseline,
+  override,
+  setOverride,
+  note,
+  setNote,
+  onSelectStrategies,
+}: {
+  selectedCount: number;
+  baselineVmt: number;
+  derivedBaseline: number;
+  override: number | null;
+  setOverride: (v: number | null) => void;
+  note: string;
+  setNote: (v: string) => void;
+  onSelectStrategies: () => void;
+}) {
   return (
     <div className="area-panel">
       <div className="area-intro">
@@ -1019,25 +1101,22 @@ function AreaRoute() {
         </ol>
       </div>
 
-      {selectedTazIds.size > 0 && (
+      {selectedCount > 0 && (
         <BaselineVmtCard
-          baselineVmt={results.baseline_vmt}
-          derivedBaseline={tazInputs.reduce(
-            (acc, t) => acc + (Number.isFinite(t.daily_vmt) ? t.daily_vmt : 0),
-            0,
-          )}
-          override={baselineVmtOverride}
-          setOverride={setBaselineVmtOverride}
-          note={baselineVmtNote}
-          setNote={setBaselineVmtNote}
+          baselineVmt={baselineVmt}
+          derivedBaseline={derivedBaseline}
+          override={override}
+          setOverride={setOverride}
+          note={note}
+          setNote={setNote}
         />
       )}
 
       <div className="cta">
         <button
           className="btn-next"
-          disabled={selectedTazIds.size === 0}
-          onClick={() => navigate("/strategies")}
+          disabled={selectedCount === 0}
+          onClick={onSelectStrategies}
         >
           Select strategies →
         </button>
@@ -1221,7 +1300,8 @@ function BaselineVmtCard({
 
 function ShopRoute() {
   const navigate = useNavigate();
-  const { basket, selectedTazIds, justAdded, setJustAdded, openDetail } = useLayout();
+  const { basket, selectedTazIds, justAdded, setJustAdded, openDetail, showMap } =
+    useLayout();
   return (
     <ShopBody
       basket={basket}
@@ -1233,7 +1313,7 @@ function ShopRoute() {
         setJustAdded(null);
         navigate("/cart");
       }}
-      onPickArea={() => navigate("/area")}
+      onPickArea={showMap}
     />
   );
 }
@@ -1257,6 +1337,7 @@ function DetailRoute() {
     baselineVmtOverride,
     commitBasket,
     removeFromBasket,
+    showMap,
   } = useLayout();
 
   // Unknown strategy id in URL → bounce back to the shop. Validate against the
@@ -1283,6 +1364,7 @@ function DetailRoute() {
       tazInputs={tazInputs}
       baselineVmt={results.baseline_vmt}
       baselineVmtOverride={baselineVmtOverride}
+      onPickArea={showMap}
       onBack={() => navigate("/strategies")}
       onAdd={() => commitBasket(strategyId, workingValues)}
       onRemove={() => {
