@@ -6,6 +6,13 @@ uid: PK-04
 name: Unbundled Parking for Multifamily Housing
 category: parking
 status: planned  # HELD back: not app-wired (YAML method/inputs differ from the Python engine; see reconciliation note)
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [mode_shift]
+purpose_applicability: [commute, recreational, other]
+target_population: residential
+capcoa_subsector: parking
+capcoa_measure: T-16
+measure_cap: 15.7
 tags:
 - pricing
 - developer

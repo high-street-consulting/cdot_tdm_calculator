@@ -6,6 +6,12 @@ uid: PK-05
 name: Parking Cash-Out
 category: parking
 status: planned  # HELD back: not app-wired (YAML method/inputs differ from the Python engine; see reconciliation note)
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [mode_shift]
+purpose_applicability: [commute]
+target_population: commute
+capcoa_subsector: commute_trip_reduction
+capcoa_measure: T-13
 tags:
 - program
 - commute

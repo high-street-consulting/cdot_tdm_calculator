@@ -6,6 +6,13 @@ uid: LU-03
 name: Transit Oriented Development
 category: landuse
 status: implemented
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [mode_shift]
+purpose_applicability: [commute, recreational, other]
+target_population: all_trips
+capcoa_subsector: land_use
+capcoa_measure: T-3
+measure_cap: 31
 tags:
 - land-use
 - transit

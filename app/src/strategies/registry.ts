@@ -14,11 +14,19 @@
 
 import type { StrategyKey } from "./strategies";
 import type { ComputeSpec } from "./computeDsl";
-import type { CatalogApplicability, CatalogImage } from "./catalog";
+import type {
+  CatalogApplicability,
+  CatalogImage,
+  CapcoaSubsector,
+  Mechanism,
+  PurposePool,
+} from "./catalog";
 import {
   CATEGORIES_FROM_CATALOG,
   STRATEGIES_FROM_CATALOG,
 } from "./catalog";
+
+export type { CapcoaSubsector, Mechanism, PurposePool } from "./catalog";
 
 export type StrategyCategoryId =
   | "transit"
@@ -161,6 +169,23 @@ export interface StrategyMeta {
    * a hand-written (and hand-ported) calc fn.
    */
   compute?: ComputeSpec;
+  // ---- CAPCOA combination tags (see tdm_strategy_combination_spec.md) ----
+  /** Dominant VMT mechanism(s) the strategy acts on. */
+  mechanism?: Mechanism[];
+  /** Disjoint purpose pools the strategy runs in (combination engine outer loop). */
+  purposeApplicability?: PurposePool[];
+  /** Id of a select input whose value narrows purposeApplicability at runtime. */
+  purposeScopeInput?: string;
+  /** Finer-grained population; drives soft overlap warnings within a pool. */
+  targetPopulation?: string;
+  /** CAPCOA subsector used for category-level caps (distinct from display `category`). */
+  capcoaSubsector?: CapcoaSubsector;
+  /** CAPCOA 2021 measure id (traceability). */
+  capcoaMeasure?: string;
+  /** Individual-measure max VMT reduction (percent); null/undefined = tier caps govern. */
+  measureCap?: number | null;
+  /** True for induced-demand measures that bypass the reduction caps. */
+  excludedFromCaps?: boolean;
 }
 
 /** Categories (with CAPCOA caps), derived from the catalog's globals. */

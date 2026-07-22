@@ -3,12 +3,96 @@
 // the AggregatedResults shape.
 
 import { BEHAVIORAL_DEFAULTS, VMT_PURPOSE_SHARE } from "./constants";
-import { CATEGORIES, getStrategy, type StrategyCategoryId, type StrategyMeta } from "./registry";
+import {
+  getStrategy,
+  type CapcoaSubsector,
+  type PurposePool,
+  type StrategyCategoryId,
+  type StrategyMeta,
+} from "./registry";
+import {
+  AREA_TYPE_THRESHOLDS,
+  CTR_SUBGROUP_CAP,
+  PLACE_TYPE_CAPS,
+} from "./catalog";
 import { STRATEGY_REGISTRY, type StrategyKey } from "./strategies";
 import { runCompute } from "./computeDsl";
 import { AGGREGATE_REGISTRY, type ParkAndRideArgs } from "./parkAndRide";
-import type { StrategyResult, TazInputs } from "./types";
-import { buildResult, getAvo, imputedModeShare, imputedParking } from "./util";
+import type { StrategyResult, TazInputs, TripPurpose } from "./types";
+import { baseVmt, buildResult, getAvo, imputedModeShare, imputedParking } from "./util";
+import {
+  classifyPlaceType,
+  combinePool,
+  type Contributor,
+} from "./combineEngine";
+
+const PURPOSE_POOLS: PurposePool[] = ["commute", "recreational", "other"];
+
+/** Display category → CAPCOA subsector fallback (used only if a strategy is untagged). */
+const CATEGORY_TO_SUBSECTOR: Record<string, CapcoaSubsector> = {
+  landuse: "land_use",
+  bikeped: "neighborhood_design",
+  transit: "transit",
+  vanpool: "commute_trip_reduction",
+  support: "commute_trip_reduction",
+  parking: "parking",
+  induced: "induced",
+};
+
+/** Purpose pools a strategy runs in, honoring its optional runtime scope input. */
+function resolvedPools(
+  meta: StrategyMeta,
+  values: Record<string, number | string>,
+): PurposePool[] {
+  let pools: PurposePool[] =
+    meta.purposeApplicability && meta.purposeApplicability.length > 0
+      ? [...meta.purposeApplicability]
+      : meta.compute?.pool === "commute"
+        ? ["commute"]
+        : meta.compute?.pool === "recreational"
+          ? ["recreational"]
+          : meta.compute?.pool === "other"
+            ? ["other"]
+            : [...PURPOSE_POOLS];
+  if (meta.purposeScopeInput) {
+    const v = values[meta.purposeScopeInput];
+    if (v != null && String(v).toLowerCase() === "commute") {
+      pools = pools.filter((p) => p === "commute");
+    }
+  }
+  return pools;
+}
+
+function subsectorOf(meta: StrategyMeta): CapcoaSubsector {
+  return meta.capcoaSubsector ?? CATEGORY_TO_SUBSECTOR[meta.category] ?? "neighborhood_design";
+}
+
+/**
+ * The base pool for a strategy's standalone reduction, narrowed to "commute"
+ * when a scope-gating select input (purposeScopeInput) is set to "commute".
+ * Falls back to the input's catalog default when the caller hasn't set it.
+ */
+function scopeBasis(
+  meta: StrategyMeta,
+  values: Record<string, number | string>,
+  defaultPool: TripPurpose,
+): TripPurpose {
+  const input = meta.purposeScopeInput;
+  if (input) {
+    const raw = values[input] ?? meta.defaults[input];
+    if (raw != null && String(raw).toLowerCase() === "commute") return "commute";
+  }
+  return defaultPool;
+}
+
+function activityDensityOf(taz: TazInputs): number {
+  if (typeof taz.activity_density === "number" && Number.isFinite(taz.activity_density)) {
+    return taz.activity_density;
+  }
+  const pop = typeof taz.pop_density === "number" ? taz.pop_density : 0;
+  const emp = typeof taz.emp_density === "number" ? taz.emp_density : 0;
+  return pop + emp;
+}
 
 /**
  * Assemble the evaluation scope for a YAML `compute` strategy: every finite
@@ -133,29 +217,64 @@ export interface BasketEntry {
 export interface PerStrategyAggregate {
   id: StrategyKey;
   meta: StrategyMeta;
-  /** Aggregate VMT reduction (mi/day), signed: negative = increase. */
+  /**
+   * STANDALONE VMT reduction (mi/day, positive = saved), i.e. the strategy's
+   * own effect as if applied alone — the sum of its per-TAZ rows. This is the
+   * "gross" lever size shown per strategy; it does NOT include the multiplicative
+   * damping / caps from combining with other strategies (see
+   * `combined_daily_vmt_reduction` for the strategy's attributed share of the
+   * combined total).
+   */
   daily_vmt_reduction: number;
-  /** Aggregate base_vmt the strategy was applied to. */
+  /** Aggregate base_vmt the strategy was applied to (standalone). */
   base_vmt_total: number;
-  /** Aggregate pct = daily_vmt_reduction / base_vmt_total (signed). */
+  /** Standalone pct = daily_vmt_reduction / base_vmt_total (signed). */
   pct_vmt_reduction: number;
-  /** Set true after subsector cap was applied. */
+  /**
+   * The strategy's attributed share of the COMBINED total (mi/day, positive =
+   * saved), after multiplicative overlap + CAPCOA caps. Σ over strategies equals
+   * `total_daily_vmt_reduction`. Log-share attribution within each purpose pool.
+   */
+  combined_daily_vmt_reduction: number;
+  /** True when a measure / subsector / category / global cap reduced this strategy. */
   capped: boolean;
   /** Per-TAZ rows (debugging / export). */
   rows: StrategyResult[];
 }
 
+/** A soft overlap warning: two strategies share a mechanism + population in a pool. */
+export interface OverlapWarning {
+  a: StrategyKey;
+  b: StrategyKey;
+  mechanism: string;
+  target_population: string;
+  reason: string;
+}
+
 export interface AggregatedResults {
-  /** Combined daily VMT reduction across all strategies (mi/day). */
+  /**
+   * Combined net daily VMT reduction across all strategies (mi/day, positive =
+   * saved). Computed by the CAPCOA combination engine: per purpose pool,
+   * strategies combine multiplicatively within/across subsectors under the
+   * place-type nested caps; pools sum; induced-demand (VMT-increase) strategies
+   * are added as a net delta. This is ≤ the sum of standalone reductions.
+   */
   total_daily_vmt_reduction: number;
   /** total_daily_vmt_reduction / total selected baseline VMT (signed fraction). */
   total_pct_vmt_reduction: number;
+  /**
+   * Sum of the per-strategy STANDALONE reductions (mi/day). The gap between this
+   * and total_daily_vmt_reduction is the overlap + cap adjustment.
+   */
+  sum_standalone_daily_vmt_reduction: number;
   /** Selected TAZs' summed baseline VMT (mi/day). */
   baseline_vmt: number;
   /** Per-strategy rollup, in basket order. */
   per_strategy: PerStrategyAggregate[];
-  /** Categories where a CAPCOA subsector cap kicked in. */
+  /** Display categories where any strategy was reduced by a cap. */
   capped_categories: StrategyCategoryId[];
+  /** Soft overlap warnings (shared mechanism + population within a pool). */
+  overlap_warnings: OverlapWarning[];
   /** Total TAZs in the project area. */
   taz_count: number;
 }
@@ -231,13 +350,17 @@ export function computeStrategyRows(
     // runCompute rather than dslRow keeps a per-TAZ formula var from ever
     // shadowing an intended const override.
     const { rowOverrides, constOverrides } = partitionOverrides(spec.const, contextOverrides);
+    // A scope-gated strategy (purpose_scope_input, e.g. transit_pass_subsidy's
+    // vmt_scope) narrows its base pool when the user picks "commute", so the
+    // standalone preview matches the pool the combination engine will use.
+    const basis = scopeBasis(meta, values, spec.pool);
     return selectedTazs.map((taz) =>
       buildResult({
         taz,
         strategy: meta.displayName,
         inputs: inputsStr,
         pct: runCompute(spec, dslRow(taz, rowOverrides), params, constOverrides),
-        basis: spec.pool,
+        basis,
         contextOverrides: rowOverrides,
       }),
     );
@@ -323,21 +446,18 @@ export function computeResults(
   // applied and the plain derived sum otherwise.
   const baselineVmt = applyOverride ? derivedBaseline * scale : derivedBaseline;
 
+  // ---- STANDALONE per-strategy rollup (unchanged semantics) -------------
+  // Each strategy's own effect, summed over its per-TAZ rows. This drives the
+  // per-strategy display and is NOT damped by combination (see combineEngine).
   const perStrategy: PerStrategyAggregate[] = basket.map((entry) => {
     const meta = getStrategy(entry.id);
-    const rows = computeStrategyRows(
-      entry.id,
-      entry.values,
-      tazs,
-      entry.contextOverrides,
-    );
+    const rows = computeStrategyRows(entry.id, entry.values, tazs, entry.contextOverrides);
     let totalDelta = 0;
     let totalBase = 0;
     for (const row of rows) {
       totalDelta += row.daily_vmt_reduction;
       totalBase += row.base_vmt;
     }
-
     const pct = totalBase > 0 ? totalDelta / totalBase : 0;
     return {
       id: entry.id,
@@ -345,43 +465,139 @@ export function computeResults(
       daily_vmt_reduction: totalDelta,
       base_vmt_total: totalBase,
       pct_vmt_reduction: pct,
+      combined_daily_vmt_reduction: 0, // filled by the combination engine below
       capped: false,
       rows,
     };
   });
+  const byId = new Map(perStrategy.map((p) => [p.id as string, p]));
 
-  // Apply CAPCOA subsector caps. The cap is on % VMT reduction COMBINED for
-  // strategies in the category, against the TOTAL selected baseline VMT
-  // (mirroring the design's results panel + Python methodology guidance).
-  const cappedCategories: StrategyCategoryId[] = [];
-  for (const cat of CATEGORIES) {
-    if (cat.cap == null) continue;
-    const inCat = perStrategy.filter((p) => p.meta.category === cat.id);
-    if (inCat.length === 0) continue;
-    const combinedReductionPct =
-      baselineVmt > 0
-        ? inCat.reduce((acc, p) => acc + p.daily_vmt_reduction, 0) / baselineVmt
-        : 0;
-    const capFrac = cat.cap / 100; // CAPCOA cap is %
-    if (combinedReductionPct > capFrac) {
-      const scale = capFrac / combinedReductionPct;
-      for (const p of inCat) {
-        p.daily_vmt_reduction *= scale;
-        p.pct_vmt_reduction =
-          p.base_vmt_total > 0 ? p.daily_vmt_reduction / p.base_vmt_total : 0;
-        p.capped = true;
-      }
-      cappedCategories.push(cat.id);
+  // ---- CAPCOA combination engine (per purpose pool, per TAZ) -------------
+  // Pool-base overrides: a `vmt_share_<purpose>` context override redefines the
+  // SIZE of a purpose pool, so it applies project-wide (merged across entries),
+  // not per strategy. Other overrides already flowed into each strategy's pct
+  // via computeStrategyRows above.
+  const poolOverrides: Record<string, number> = {};
+  for (const entry of basket) {
+    for (const [k, v] of Object.entries(entry.contextOverrides ?? {})) {
+      if (k.startsWith("vmt_share_") && Number.isFinite(v)) poolOverrides[k] = v;
     }
   }
 
-  const totalDelta = perStrategy.reduce((a, p) => a + p.daily_vmt_reduction, 0);
+  // Total base VMT per pool across the selection (used to turn each strategy's
+  // standalone reduction into a pool-relative fraction).
+  const poolBase: Record<PurposePool, number> = { commute: 0, recreational: 0, other: 0 };
+  for (const taz of tazs) {
+    for (const P of PURPOSE_POOLS) poolBase[P] += baseVmt(taz, P, poolOverrides);
+  }
+
+  // Per-reducer: resolved pools, subsector, and pool-relative reduction fraction.
+  interface Reducer {
+    id: string;
+    meta: StrategyMeta;
+    pools: PurposePool[];
+    subsector: CapcoaSubsector;
+    r: number; // reduction fraction of each of its pools' base (>0 = reduction)
+    measureCapped: boolean;
+  }
+  const reducers: Reducer[] = [];
+  let inducedDelta = 0; // net mi/day from induced-demand (bypass), signed (+saved)
+  for (const entry of basket) {
+    const p = byId.get(entry.id as string)!;
+    if (p.meta.excludedFromCaps) {
+      inducedDelta += p.daily_vmt_reduction; // usually negative (a VMT increase)
+      p.combined_daily_vmt_reduction = p.daily_vmt_reduction;
+      continue;
+    }
+    const pools = resolvedPools(p.meta, entry.values);
+    const denom = pools.reduce((a, P) => a + poolBase[P], 0);
+    let r = denom > 0 ? p.daily_vmt_reduction / denom : 0; // fraction of its pools
+    let measureCapped = false;
+    const cap = p.meta.measureCap;
+    if (typeof cap === "number" && Number.isFinite(cap) && r > cap / 100) {
+      r = cap / 100;
+      measureCapped = true;
+    }
+    reducers.push({ id: entry.id as string, meta: p.meta, pools, subsector: subsectorOf(p.meta), r, measureCapped });
+  }
+
+  // Run the engine per TAZ per pool; accumulate savings + attribution + caps.
+  const attributed: Record<string, number> = {};
+  const cappedIds = new Set<string>();
+  let poolSavings = 0;
+  for (const taz of tazs) {
+    const placeType = classifyPlaceType(taz.area_type, activityDensityOf(taz), AREA_TYPE_THRESHOLDS);
+    for (const P of PURPOSE_POOLS) {
+      const basePt = baseVmt(taz, P, poolOverrides);
+      if (basePt <= 0) continue;
+      const contribs: Contributor[] = reducers
+        .filter((rd) => rd.pools.includes(P) && rd.r !== 0)
+        .map((rd) => ({ id: rd.id, subsector: rd.subsector, r: rd.r, measureCapped: rd.measureCapped }));
+      if (contribs.length === 0) continue;
+      const res = combinePool(contribs, placeType, PLACE_TYPE_CAPS, CTR_SUBGROUP_CAP);
+      poolSavings += basePt * res.R;
+      for (const [id, share] of Object.entries(res.attribution)) {
+        attributed[id] = (attributed[id] ?? 0) + basePt * share;
+      }
+      for (const id of res.cappedIds) cappedIds.add(id);
+    }
+  }
+
+  // Fill combined attribution + capped flags on the reducer strategies.
+  for (const rd of reducers) {
+    const p = byId.get(rd.id)!;
+    p.combined_daily_vmt_reduction = attributed[rd.id] ?? 0;
+    p.capped = cappedIds.has(rd.id);
+  }
+
+  const cappedCategories: StrategyCategoryId[] = Array.from(
+    new Set(perStrategy.filter((p) => p.capped).map((p) => p.meta.category)),
+  );
+
+  const totalDelta = poolSavings + inducedDelta;
+  const sumStandalone = perStrategy.reduce((a, p) => a + p.daily_vmt_reduction, 0);
   return {
     total_daily_vmt_reduction: totalDelta,
     total_pct_vmt_reduction: baselineVmt > 0 ? totalDelta / baselineVmt : 0,
+    sum_standalone_daily_vmt_reduction: sumStandalone,
     baseline_vmt: baselineVmt,
     per_strategy: perStrategy,
     capped_categories: cappedCategories,
+    overlap_warnings: detectOverlaps(reducers),
     taz_count: tazs.length,
   };
+}
+
+/**
+ * Soft overlap warnings (spec §4.2): two selected strategies that share a
+ * purpose pool AND the same dominant mechanism AND the same target_population
+ * pull from the same behavioral pool; their combined credit is bounded by the
+ * caps, but the overlap warrants analyst review. Non-blocking.
+ */
+function detectOverlaps(
+  reducers: { id: string; meta: StrategyMeta; pools: PurposePool[] }[],
+): OverlapWarning[] {
+  const out: OverlapWarning[] = [];
+  for (let i = 0; i < reducers.length; i++) {
+    for (let j = i + 1; j < reducers.length; j++) {
+      const a = reducers[i];
+      const b = reducers[j];
+      const sharePool = a.pools.some((p) => b.pools.includes(p));
+      if (!sharePool) continue;
+      const mechA = a.meta.mechanism?.[0];
+      const mechB = b.meta.mechanism?.[0];
+      const popA = a.meta.targetPopulation;
+      const popB = b.meta.targetPopulation;
+      if (mechA && mechA === mechB && popA && popA === popB) {
+        out.push({
+          a: a.id as StrategyKey,
+          b: b.id as StrategyKey,
+          mechanism: mechA,
+          target_population: popA,
+          reason: `${a.meta.displayName} and ${b.meta.displayName} both act on ${popA} trips via ${mechA.replace(/_/g, " ")}; their combined credit is bounded by the CAPCOA caps but overlaps — review.`,
+        });
+      }
+    }
+  }
+  return out;
 }

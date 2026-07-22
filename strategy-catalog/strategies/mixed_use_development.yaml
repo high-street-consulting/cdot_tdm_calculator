@@ -7,6 +7,11 @@ uid: LU-05
 name: Mixed-Use Development (Without Transit)
 category: landuse
 status: planned
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [trip_length]
+purpose_applicability: [commute, recreational, other]
+target_population: all_trips
+capcoa_subsector: land_use
 tags: []
 short_description: Co-locating residential, commercial, office, civic, and recreational land uses in a
   single location, where the development is not tied to a high-quality transit station.

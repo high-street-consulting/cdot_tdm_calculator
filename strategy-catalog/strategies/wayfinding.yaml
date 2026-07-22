@@ -6,6 +6,11 @@ uid: BP-04
 name: Wayfinding
 category: bikeped
 status: implemented
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [mode_shift]
+purpose_applicability: [commute, recreational, other]
+target_population: all_trips
+capcoa_subsector: neighborhood_design
 tags:
 - infrastructure
 - bike

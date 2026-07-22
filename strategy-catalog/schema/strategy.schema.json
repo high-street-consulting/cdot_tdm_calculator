@@ -32,6 +32,42 @@
       "enum": ["implemented", "planned", "not_recommended"],
       "description": "implemented = live in the app with a calc fn; planned = catalogued but not yet built; not_recommended = quantification not recommended (Handy et al. 2025 etc.)."
     },
+    "mechanism": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["trip_generation", "trip_length", "mode_shift"] },
+      "description": "CAPCOA combination: which multiplicative VMT factor(s) the strategy acts on (trip_generation reduces trips, trip_length reduces avg length, mode_shift reduces auto share). CDOT simplification: a single dominant mechanism per measure (two-mechanism CAPCOA measures collapsed to their dominant factor). Drives the cross-mechanism math in the combination engine (see tdm_strategy_combination_spec.md §2)."
+    },
+    "purpose_applicability": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["commute", "recreational", "other"] },
+      "description": "Which disjoint VMT purpose pools the strategy runs in (the outer loop of the combination engine). Supersedes compute.pool for pool selection; a strategy contributes its reduction only inside its eligible pools and is absent from the others."
+    },
+    "purpose_scope_input": {
+      "type": "string",
+      "description": "Optional: id of a select input whose value narrows purpose_applicability at runtime (e.g. transit_pass_subsidy's `vmt_scope` lets the user pick commute-only vs all VMT rather than duplicating the strategy). Engine wiring: Phase 2."
+    },
+    "target_population": {
+      "type": "string",
+      "enum": ["commute", "all_trips", "residential", "attraction_end"],
+      "description": "Finer-grained population the strategy acts on; drives soft overlap warnings within a pool (spec §4.2)."
+    },
+    "capcoa_subsector": {
+      "type": "string",
+      "enum": ["land_use", "neighborhood_design", "parking", "transit", "commute_trip_reduction", "induced"],
+      "description": "CAPCOA subsector used for category-level caps (distinct from the display `category`; e.g. carshare displays under `parking` but caps under `neighborhood_design`)."
+    },
+    "capcoa_measure": {
+      "type": "string",
+      "description": "CAPCOA 2021 measure ID for traceability (e.g. T-1, T-19-A, T-46). Empty/absent for derived or legacy (pre-2021) methods."
+    },
+    "measure_cap": {
+      "type": ["number", "null"],
+      "description": "Individual-measure maximum VMT reduction (PERCENT), enforced at Step 4 before category roll-up (e.g. T-1=30, T-3=31). Null/absent = governed by the place-type category/subcategory caps."
+    },
+    "excluded_from_caps": {
+      "type": "boolean",
+      "description": "True for induced-demand / VMT-increase measures (e.g. lane_mile_addition) that bypass the reduction engine and are added as a positive VMT delta after the cross-pool sum."
+    },
     "tags": {
       "type": "array",
       "items": { "type": "string" },

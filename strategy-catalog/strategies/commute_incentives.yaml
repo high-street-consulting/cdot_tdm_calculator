@@ -8,6 +8,12 @@ uid: SP-04
 name: Commuter Incentives
 category: support
 status: implemented
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [mode_shift]
+purpose_applicability: [commute]
+target_population: commute
+capcoa_subsector: commute_trip_reduction
+capcoa_measure: T-5
 tags:
 - program
 - commute

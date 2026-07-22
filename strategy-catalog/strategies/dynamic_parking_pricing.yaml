@@ -8,6 +8,12 @@ uid: PK-03
 name: Dynamic Parking Pricing
 category: parking
 status: implemented
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [mode_shift]
+purpose_applicability: [commute, recreational, other]
+target_population: attraction_end
+capcoa_subsector: parking
+capcoa_measure: T-24
 tags:
 - pricing
 - auto

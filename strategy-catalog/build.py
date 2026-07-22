@@ -207,6 +207,12 @@ def main():
         "categories": g.get("categories", []),
         "area_type_thresholds": g.get("area_type_thresholds", {}),
         "tag_catalog": g.get("tag_catalog", {}),
+        # CAPCOA 2021 combination caps + vocabularies (Phase 1; consumed by the
+        # Phase-2 combination engine). See tdm_strategy_combination_spec.md §3.
+        "place_type_caps": g.get("place_type_caps", {}),
+        "ctr_subgroup_cap": g.get("ctr_subgroup_cap"),
+        "capcoa_subsectors": g.get("capcoa_subsectors", []),
+        "mechanisms": g.get("mechanisms", []),
         "strategies": strategies,
     }
     with open(OUT_PATH, "w") as f:

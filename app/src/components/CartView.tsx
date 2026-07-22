@@ -130,12 +130,47 @@ export function CartView({
           <div className="cap-note">
             <span className="ic">!</span>
             <div>
-              <b>Subsector cap applied</b> to{" "}
+              <b>CAPCOA cap applied</b> to{" "}
               {results.capped_categories
                 .map((id) => CATEGORIES.find((c) => c.id === id)?.name ?? id)
                 .join(", ")}
-              . Per CAPCOA methodology, combined reductions within a category are capped
-              to prevent double-counting.
+              . Combined reductions are capped by the place-type maximums (CAPCOA
+              2021) to prevent double-counting.
+            </div>
+          </div>
+        )}
+
+        {results.overlap_warnings.length > 0 && (
+          <div className="cap-note">
+            <span className="ic">!</span>
+            <div>
+              <b>Overlapping strategies</b> — some selected strategies act on the same
+              trips through the same mechanism; their combined credit is bounded by the
+              CAPCOA caps, but review for double-counting:
+              <ul style={{ margin: "6px 0 0", paddingLeft: 18 }}>
+                {results.overlap_warnings.map((w) => (
+                  <li key={`${w.a}-${w.b}`} style={{ fontSize: 12 }}>
+                    {getStrategy(w.a).displayName} + {getStrategy(w.b).displayName}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        {results.sum_standalone_daily_vmt_reduction - results.total_daily_vmt_reduction >
+          0.005 * Math.abs(results.sum_standalone_daily_vmt_reduction) && (
+          <div className="cap-note" style={{ background: "#F5F7FA", borderColor: "#D6DEE8" }}>
+            <span className="ic" style={{ background: "#5B6B7F" }}>i</span>
+            <div>
+              Per-strategy figures below are each strategy's <b>standalone</b> effect. The
+              headline total is lower because strategies acting on the same VMT combine
+              multiplicatively (CAPCOA), avoiding double-counting — an overlap adjustment of{" "}
+              {Math.round(
+                results.sum_standalone_daily_vmt_reduction -
+                  results.total_daily_vmt_reduction,
+              ).toLocaleString()}{" "}
+              mi/day.
             </div>
           </div>
         )}
@@ -214,7 +249,9 @@ export function CartView({
           {CATEGORIES.map((cat) => {
             const list = results.per_strategy.filter((p) => p.meta.category === cat.id);
             if (list.length === 0) return null;
-            const sumDelta = list.reduce((a, p) => a + p.daily_vmt_reduction, 0);
+            // Use the COMBINED attributed contribution so category subtotals
+            // reconcile with the damped headline total (Σ = total).
+            const sumDelta = list.reduce((a, p) => a + p.combined_daily_vmt_reduction, 0);
             const sumPct = results.baseline_vmt > 0 ? sumDelta / results.baseline_vmt : 0;
             const capped = list.some((p) => p.capped);
             return (

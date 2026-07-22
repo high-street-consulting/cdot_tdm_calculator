@@ -6,6 +6,12 @@ uid: ID-01
 name: Lane Miles Added (Negative Impact on VMT)
 category: induced
 status: implemented
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [trip_generation]
+purpose_applicability: [commute, recreational, other]
+target_population: all_trips
+capcoa_subsector: induced
+excluded_from_caps: true
 tags:
 - infrastructure
 - auto

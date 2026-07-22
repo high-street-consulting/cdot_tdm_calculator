@@ -6,6 +6,11 @@ uid: TR-03
 name: Mobility hub
 category: transit
 status: planned
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [mode_shift]
+purpose_applicability: [commute, recreational, other]
+target_population: all_trips
+capcoa_subsector: transit
 tags: []
 short_description: A central location where multiple travel modes (transit, bikeshare, micromobility,
   ride-hailing, etc.) connect seamlessly.
