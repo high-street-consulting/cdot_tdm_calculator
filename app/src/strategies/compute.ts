@@ -68,6 +68,35 @@ function subsectorOf(meta: StrategyMeta): CapcoaSubsector {
 }
 
 /**
+ * Public: the purpose pools a strategy acts on given its current input values
+ * (honoring a `purpose_scope_input` selector). Used by the UI to label which
+ * VMT a strategy's percentage applies to.
+ */
+export function strategyPools(
+  meta: StrategyMeta,
+  values: Record<string, number | string> = {},
+): PurposePool[] {
+  return resolvedPools(meta, values);
+}
+
+/** Human label for a strategy's purpose pools, e.g. "all trips", "commute trips". */
+export function purposePoolsLabel(pools: PurposePool[]): string {
+  const set = new Set(pools);
+  if (set.size >= 3) return "all trips";
+  const names: Record<PurposePool, string> = {
+    commute: "commute",
+    recreational: "recreational",
+    other: "other",
+  };
+  const parts = (["commute", "recreational", "other"] as PurposePool[])
+    .filter((p) => set.has(p))
+    .map((p) => names[p]);
+  if (parts.length === 0) return "—";
+  if (parts.length === 1) return `${parts[0]} trips`;
+  return `${parts.join(" + ")} trips`;
+}
+
+/**
  * The base pool for a strategy's standalone reduction, narrowed to "commute"
  * when a scope-gating select input (purposeScopeInput) is set to "commute".
  * Falls back to the input's catalog default when the caller hasn't set it.
@@ -248,6 +277,8 @@ export interface OverlapWarning {
   b: StrategyKey;
   mechanism: string;
   target_population: string;
+  /** The purpose pools both strategies act on (the overlapping trip types). */
+  pools: PurposePool[];
   reason: string;
 }
 
@@ -582,8 +613,8 @@ function detectOverlaps(
     for (let j = i + 1; j < reducers.length; j++) {
       const a = reducers[i];
       const b = reducers[j];
-      const sharePool = a.pools.some((p) => b.pools.includes(p));
-      if (!sharePool) continue;
+      const sharedPools = a.pools.filter((p) => b.pools.includes(p));
+      if (sharedPools.length === 0) continue;
       const mechA = a.meta.mechanism?.[0];
       const mechB = b.meta.mechanism?.[0];
       const popA = a.meta.targetPopulation;
@@ -594,7 +625,8 @@ function detectOverlaps(
           b: b.id as StrategyKey,
           mechanism: mechA,
           target_population: popA,
-          reason: `${a.meta.displayName} and ${b.meta.displayName} both act on ${popA} trips via ${mechA.replace(/_/g, " ")}; their combined credit is bounded by the CAPCOA caps but overlaps — review.`,
+          pools: sharedPools,
+          reason: `${a.meta.displayName} and ${b.meta.displayName} both act on ${popA} trips via ${mechA.replace(/_/g, " ")}; their combined credit is bounded by the caps but overlaps — review.`,
         });
       }
     }

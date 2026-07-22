@@ -86,5 +86,6 @@ describe("soft overlap warnings (shared mechanism + population + pool)", () => {
     expect(w).toBeTruthy();
     expect(w!.mechanism).toBe("mode_shift");
     expect(w!.target_population).toBe("commute");
+    expect(w!.pools).toContain("commute");
   });
 });

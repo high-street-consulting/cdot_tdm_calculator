@@ -2,7 +2,12 @@
 // breakdown, subsector-cap note, co-benefits, export buttons.
 
 import { CATEGORIES, getStrategy } from "../strategies/registry";
-import type { AggregatedResults, BasketEntry } from "../strategies/compute";
+import {
+  purposePoolsLabel,
+  strategyPools,
+  type AggregatedResults,
+  type BasketEntry,
+} from "../strategies/compute";
 import { isDefaultValue } from "../strategies/defaults";
 import type { StrategyKey } from "../strategies/strategies";
 import type { TazInputs } from "../strategies/types";
@@ -84,6 +89,10 @@ export function CartView({
             <div className="sub">
               vs. baseline · {basket.length} strateg{basket.length === 1 ? "y" : "ies"} · {tazCount} TAZ{tazCount === 1 ? "" : "s"}
             </div>
+            <p className="hero-note">
+              Combined reduction across all VMT, adjusted for overlapping impacts.{" "}
+              <a href="#/methodology">How it's calculated →</a>
+            </p>
             <div className="abs-row">
               <div className="c">
                 <div className="lab">Daily VMT {netReduces ? "reduced" : "added"}</div>
@@ -126,55 +135,6 @@ export function CartView({
           </div>
         )}
 
-        {results.capped_categories.length > 0 && (
-          <div className="cap-note">
-            <span className="ic">!</span>
-            <div>
-              <b>CAPCOA cap applied</b> to{" "}
-              {results.capped_categories
-                .map((id) => CATEGORIES.find((c) => c.id === id)?.name ?? id)
-                .join(", ")}
-              . Combined reductions are capped by the place-type maximums (CAPCOA
-              2021) to prevent double-counting.
-            </div>
-          </div>
-        )}
-
-        {results.overlap_warnings.length > 0 && (
-          <div className="cap-note">
-            <span className="ic">!</span>
-            <div>
-              <b>Overlapping strategies</b> — some selected strategies act on the same
-              trips through the same mechanism; their combined credit is bounded by the
-              CAPCOA caps, but review for double-counting:
-              <ul style={{ margin: "6px 0 0", paddingLeft: 18 }}>
-                {results.overlap_warnings.map((w) => (
-                  <li key={`${w.a}-${w.b}`} style={{ fontSize: 12 }}>
-                    {getStrategy(w.a).displayName} + {getStrategy(w.b).displayName}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
-
-        {results.sum_standalone_daily_vmt_reduction - results.total_daily_vmt_reduction >
-          0.005 * Math.abs(results.sum_standalone_daily_vmt_reduction) && (
-          <div className="cap-note" style={{ background: "#F5F7FA", borderColor: "#D6DEE8" }}>
-            <span className="ic" style={{ background: "#5B6B7F" }}>i</span>
-            <div>
-              Per-strategy figures below are each strategy's <b>standalone</b> effect. The
-              headline total is lower because strategies acting on the same VMT combine
-              multiplicatively (CAPCOA), avoiding double-counting — an overlap adjustment of{" "}
-              {Math.round(
-                results.sum_standalone_daily_vmt_reduction -
-                  results.total_daily_vmt_reduction,
-              ).toLocaleString()}{" "}
-              mi/day.
-            </div>
-          </div>
-        )}
-
         <div className="cart-section-head">
           <h2>Selected strategies</h2>
           <span className="meta">Click edit to revise inputs for any strategy.</span>
@@ -198,19 +158,37 @@ export function CartView({
                 {cat.name} ({list.length})
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {list.map((p) => (
+                {list.map((p) => {
+                  const entry = basket.find((b) => b.id === p.id);
+                  const basisLabel = purposePoolsLabel(
+                    strategyPools(p.meta, entry?.values ?? {}),
+                  );
+                  return (
                   <div key={p.id} className="cart-line">
                     <div className="stripe" style={{ background: cat.cssColorVar }} />
                     <div className="content">
                       <div className="ln-head">
                         <span className="nm">{p.meta.displayName}</span>
                         {p.capped && (
-                          <span style={{
-                            fontSize: 10, color: "var(--cdot-orange-press)",
-                            background: "#FFF1E8", padding: "2px 6px",
-                            borderRadius: 2, fontWeight: 600,
-                          }}>
+                          <span
+                            className="capped-tag"
+                            style={{
+                              fontSize: 10, color: "var(--cdot-orange-press)",
+                              background: "#FFF1E8", padding: "2px 6px",
+                              borderRadius: 2, fontWeight: 600,
+                              display: "inline-flex", alignItems: "center", gap: 4,
+                            }}
+                          >
                             CAPPED
+                            <a
+                              className="info-i capped-info"
+                              href="#/methodology"
+                              data-tip="This strategy's combined reduction was limited by a maximum. See the Methodology page for how the cap is set."
+                              aria-label="Why is this capped? Opens the Methodology page."
+                              style={{ width: 14, height: 14, fontSize: 10 }}
+                            >
+                              i
+                            </a>
                           </span>
                         )}
                       </div>
@@ -225,17 +203,37 @@ export function CartView({
                         {(Math.abs(p.pct_vmt_reduction) * 100).toFixed(2)}
                         <span className="u">% VMT</span>
                       </div>
+                      <div className="contrib-basis" style={{ fontSize: 11, color: "#6B6B6B", marginTop: 2 }}>
+                        from {basisLabel}
+                      </div>
                       <div className="ln-actions">
                         <button onClick={() => onEdit(p.id)}>Edit</button>
                         <button className="rm" onClick={() => onRemove(p.id)}>Remove</button>
                       </div>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );
         })}
+
+        {results.overlap_warnings.length > 0 && (
+          <div className="overlap-note">
+            <h3>Potential overlaps</h3>
+            <div className="sub">Review to avoid potential double counting.</div>
+            <ul>
+              {results.overlap_warnings.map((w) => (
+                <li key={`${w.a}-${w.b}`}>
+                  <b>{getStrategy(w.a).displayName}</b> and{" "}
+                  <b>{getStrategy(w.b).displayName}</b> both act on{" "}
+                  {purposePoolsLabel(w.pools)} via {w.mechanism.replace(/_/g, " ")}.
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       <aside className="cart-side">
