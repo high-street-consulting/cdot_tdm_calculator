@@ -413,7 +413,7 @@ export function DetailView({
             !applicability.ok ||
             meta.guidance) && (
             <div className="dsection applicability-section">
-              <h3>Applicability</h3>
+              <h2>Applicability</h2>
               <div className="section-sub">
                 Where this strategy fits.
               </div>
@@ -460,7 +460,7 @@ export function DetailView({
           {/* WHAT YOU'LL NEED */}
           {prerequisiteInputs.length > 0 && (
             <div className="dsection whatyouneed-section">
-              <h3>What you&rsquo;ll need</h3>
+              <h2>What you&rsquo;ll need</h2>
               <div className="section-sub">
                 Gather {prerequisiteInputs.length === 1 ? "this input" : "these inputs"} before you
                 configure. Finding {prerequisiteInputs.length === 1 ? "it" : "them"} is usually the
@@ -509,7 +509,7 @@ export function DetailView({
 
           {/* CONFIGURE */}
           <div className={`dsection configure-section${noArea ? " is-disabled" : ""}`}>
-            <h3>Configure</h3>
+            <h2>Configure</h2>
             {noArea && (
               <div className="configure-hint" role="status">
                 <span className="ic" aria-hidden="true">i</span>
@@ -592,7 +592,7 @@ export function DetailView({
           {/* METHODOLOGY */}
           <details className="dsection methodology-accordion">
             <summary>
-              <h3>Methodology</h3>
+              <h2>Methodology</h2>
               <span className="acc-toggle" aria-hidden="true">
                 <span className="acc-toggle-label"></span>
                 <span className="acc-chevron">⌄</span>
@@ -605,13 +605,15 @@ export function DetailView({
                   <b>Subsector cap:</b>{" "}
                   {cat?.cap ? `${cat.cap}% combined for ${cat.name}` : "n/a"}
                   {cat?.cap != null && (
-                    <i
+                    <button
+                      type="button"
                       className="info-i"
                       data-tip={capExplanation}
-                      aria-hidden="true"
+                      title={capExplanation}
+                      aria-label={`What is a subsector cap? ${capExplanation}`}
                     >
                       i
-                    </i>
+                    </button>
                   )}
                 </div>
               </div>
@@ -1078,11 +1080,13 @@ function InputControl({
     <div className="prov-note">
       <label htmlFor={noteId}>
         Source / justification (optional){" "}
-        <i
+        <span
           className="info-i"
+          tabIndex={0}
+          role="img"
           data-tip="Describe the source of your assumptions or steps used to choose this value. Included in the exported PDF report. Provides helpful context for grant application evaluations."
-          aria-hidden="true"
-        >i</i>
+          aria-label="Describe the source of your assumptions or steps used to choose this value. Included in the exported PDF report. Provides helpful context for grant application evaluations."
+        >i</span>
       </label>
       <textarea
         id={noteId}
@@ -1173,7 +1177,19 @@ function InputControl({
       <div className="row">
         <span className="label-wrap">
           <label htmlFor={inputId}>
-            {input.label} <i className="info-i" data-tip={input.source ?? ""} aria-hidden="true">i</i>
+            {input.label}
+            {input.source ? (
+              <>
+                {" "}
+                <span
+                  className="info-i"
+                  tabIndex={0}
+                  role="img"
+                  data-tip={input.source}
+                  aria-label={`Source: ${input.source}`}
+                >i</span>
+              </>
+            ) : null}
           </label>
           {provenance}
         </span>

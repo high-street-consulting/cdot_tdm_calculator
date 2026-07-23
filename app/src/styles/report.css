@@ -225,7 +225,8 @@
   color: #4a4a4a;
   border-bottom: 1.5px solid #bfbfbf;
 }
-.report-table tfoot th {
+.report-table tfoot th,
+.report-table tfoot td {
   font-weight: 700;
   border-top: 1.5px solid #bfbfbf;
   border-bottom: none;
@@ -302,7 +303,7 @@
   margin-left: 4px;
 }
 .report-input-mod { color: var(--cdot-dark-blue, #001970); }
-.report-input-def { color: #9e9e9e; }
+.report-input-def { color: #6b6b6b; }
 /* Optional source/justification captured for a modified input (CMT-01). Shown
    as a small left-aligned line under the value for PD 1601 defensibility. */
 .report-input-note {

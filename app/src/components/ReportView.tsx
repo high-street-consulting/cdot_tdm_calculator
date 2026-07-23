@@ -370,11 +370,11 @@ export function ReportView({
           <table className="report-table report-contrib-table">
             <thead>
               <tr>
-                <th>Strategy</th>
-                <th>Category</th>
-                <th className="num">% VMT</th>
-                <th className="num">Daily mi</th>
-                <th className="num">Annual mi/yr</th>
+                <th scope="col">Strategy</th>
+                <th scope="col">Category</th>
+                <th scope="col" className="num">% VMT</th>
+                <th scope="col" className="num">Daily mi</th>
+                <th scope="col" className="num">Annual mi/yr</th>
               </tr>
             </thead>
             <tbody>
@@ -412,19 +412,19 @@ export function ReportView({
             </tbody>
             <tfoot>
               <tr>
-                <th colSpan={2}>Combined (after caps)</th>
-                <th className="num">
+                <th scope="row" colSpan={2}>Combined (after caps)</th>
+                <td className="num">
                   {totalPct >= 0 ? "−" : "+"}
                   {Math.abs(totalPct).toFixed(2)}%
-                </th>
-                <th className="num">
+                </td>
+                <td className="num">
                   {totalPct >= 0 ? "−" : "+"}
                   {Math.round(Math.abs(dailyReduced)).toLocaleString()}
-                </th>
-                <th className="num">
+                </td>
+                <td className="num">
                   {totalPct >= 0 ? "−" : "+"}
                   {Math.round(Math.abs(annualReduced)).toLocaleString()}
-                </th>
+                </td>
               </tr>
             </tfoot>
           </table>
@@ -464,11 +464,11 @@ export function ReportView({
             <table className="report-table">
               <thead>
                 <tr>
-                  <th>TAZ</th>
-                  <th>Area type</th>
-                  <th className="num">Daily VMT</th>
-                  <th className="num">Population</th>
-                  <th className="num">Employment</th>
+                  <th scope="col">TAZ</th>
+                  <th scope="col">Area type</th>
+                  <th scope="col" className="num">Daily VMT</th>
+                  <th scope="col" className="num">Population</th>
+                  <th scope="col" className="num">Employment</th>
                 </tr>
               </thead>
               <tbody>
@@ -499,13 +499,13 @@ export function ReportView({
               </tbody>
               <tfoot>
                 <tr>
-                  <th>Total ({tazCount})</th>
-                  <th />
-                  <th className="num">
+                  <th scope="row">Total ({tazCount})</th>
+                  <td />
+                  <td className="num">
                     {Math.round(results.baseline_vmt).toLocaleString()}
-                  </th>
-                  <th />
-                  <th />
+                  </td>
+                  <td />
+                  <td />
                 </tr>
               </tfoot>
             </table>

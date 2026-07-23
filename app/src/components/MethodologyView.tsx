@@ -104,13 +104,13 @@ export function MethodologyView() {
         <table className="doc-table">
           <thead>
             <tr>
-              <th>Area type</th>
-              <th>Activity density</th>
-              <th>Transit</th>
-              <th>Auto</th>
-              <th>Bike</th>
-              <th>Walk</th>
-              <th>Other</th>
+              <th scope="col">Area type</th>
+              <th scope="col">Activity density</th>
+              <th scope="col">Transit</th>
+              <th scope="col">Auto</th>
+              <th scope="col">Bike</th>
+              <th scope="col">Walk</th>
+              <th scope="col">Other</th>
             </tr>
           </thead>
           <tbody>
@@ -201,9 +201,9 @@ export function MethodologyView() {
         <table className="doc-table">
           <thead>
             <tr>
-              <th>Key</th>
-              <th>Value</th>
-              <th>Citation</th>
+              <th scope="col">Key</th>
+              <th scope="col">Value</th>
+              <th scope="col">Citation</th>
             </tr>
           </thead>
           <tbody>
@@ -226,9 +226,9 @@ export function MethodologyView() {
         <table className="doc-table">
           <thead>
             <tr>
-              <th>Key</th>
-              <th>Value</th>
-              <th>Use</th>
+              <th scope="col">Key</th>
+              <th scope="col">Value</th>
+              <th scope="col">Use</th>
             </tr>
           </thead>
           <tbody>
@@ -246,9 +246,9 @@ export function MethodologyView() {
         <table className="doc-table">
           <thead>
             <tr>
-              <th>Type</th>
-              <th>Auto-trip substitution</th>
-              <th>Source</th>
+              <th scope="col">Type</th>
+              <th scope="col">Auto-trip substitution</th>
+              <th scope="col">Source</th>
             </tr>
           </thead>
           <tbody>
@@ -272,7 +272,7 @@ export function MethodologyView() {
         </p>
         <table className="doc-table">
           <thead>
-            <tr><th>Parameter</th><th>Value</th><th>Citation</th></tr>
+            <tr><th scope="col">Parameter</th><th scope="col">Value</th><th scope="col">Citation</th></tr>
           </thead>
           <tbody>
             <tr><td>avo (average vehicle occupancy)</td><td>{BEHAVIORAL_DEFAULTS.avo}</td><td>NHTS 2017 national average</td></tr>
@@ -297,7 +297,7 @@ export function MethodologyView() {
           commute-only or recreational-only VMT.
         </p>
         <table className="doc-table">
-          <thead><tr><th>Purpose</th><th>Share of daily VMT</th></tr></thead>
+          <thead><tr><th scope="col">Purpose</th><th scope="col">Share of daily VMT</th></tr></thead>
           <tbody>
             <tr><td>Commute</td><td>{(VMT_PURPOSE_SHARE.commute * 100).toFixed(0)}%</td></tr>
             <tr><td>Recreational</td><td>{(VMT_PURPOSE_SHARE.recreational * 100).toFixed(0)}%</td></tr>

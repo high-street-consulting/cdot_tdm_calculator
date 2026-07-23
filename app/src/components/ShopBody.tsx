@@ -120,8 +120,8 @@ export function ShopBody({
   return (
     <div className="shop-body">
       <aside className="shop-aside">
-        <div className="aside-title">Filter strategies</div>
-        <h4>Categories</h4>
+        <h2 className="aside-title">Filter strategies</h2>
+        <h3>Categories</h3>
         <div className="cat-nav">
           <button className={!catFilter ? "on" : ""} onClick={() => setCatFilter(null)}>
             <span
@@ -166,7 +166,7 @@ export function ShopBody({
           })}
         </div>
 
-        <h4>Tags</h4>
+        <h3>Tags</h3>
         <div className="tag-facets">
           {Object.entries(CATALOG.tag_catalog).map(([facet, tags]) => {
             const used = tags

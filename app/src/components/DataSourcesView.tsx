@@ -39,23 +39,23 @@ export function DataSourcesView() {
         <table className="doc-table">
           <tbody>
             <tr>
-              <th>Hosted on</th>
+              <th scope="row">Hosted on</th>
               <td><a href={PORTAL_URL} target="_blank" rel="noreferrer">{PORTAL_URL}</a></td>
             </tr>
             <tr>
-              <th>Vector tile layer</th>
+              <th scope="row">Vector tile layer</th>
               <td><code>{VTL_ITEM_ID}</code></td>
             </tr>
             <tr>
-              <th>Feature service</th>
+              <th scope="row">Feature service</th>
               <td><a href={TAZ_ITEM_ID} target="_blank" rel="noreferrer">{TAZ_ITEM_ID}</a></td>
             </tr>
             <tr>
-              <th>Records</th>
+              <th scope="row">Records</th>
               <td>8,045 TAZ polygons covering all of Colorado</td>
             </tr>
             <tr>
-              <th>Columns</th>
+              <th scope="row">Columns</th>
               <td>
                 112 fields including population, employment, daily VMT,
                 avg trip length, area type, per-facility lane miles,
@@ -65,7 +65,7 @@ export function DataSourcesView() {
               </td>
             </tr>
             <tr>
-              <th>Produced by</th>
+              <th scope="row">Produced by</th>
               <td>
                 <code>scripts/publish_enriched_taz.py</code> (runs{" "}
                 <code>prepare_taz()</code> → GeoJSON → AGOL hosted feature

@@ -76,10 +76,17 @@ export function CartView({
         <div className="cart-hero">
           <div>
             <h1 className="ov">Your strategy package</h1>
-            <div className="big" aria-label={`${totalPct >= 0 ? "Reduction" : "Increase"} of ${Math.abs(totalPct).toFixed(2)} percent VMT`}>
-              {totalPct >= 0 ? "−" : "+"}
-              {Math.abs(totalPct).toFixed(2)}
-              <span className="pct">% VMT</span>
+            {/* aria-label is prohibited on a plain <div>; expose the value to AT
+                via an sr-only phrase and hide the decorative glyph rendering. */}
+            <div className="big">
+              <span className="sr-only">
+                {`${totalPct >= 0 ? "Reduction" : "Increase"} of ${Math.abs(totalPct).toFixed(2)} percent VMT versus baseline`}
+              </span>
+              <span aria-hidden="true">
+                {totalPct >= 0 ? "−" : "+"}
+                {Math.abs(totalPct).toFixed(2)}
+                <span className="pct">% VMT</span>
+              </span>
             </div>
             <div className="sub">
               vs. baseline · {basket.length} strateg{basket.length === 1 ? "y" : "ies"} · {tazCount} TAZ{tazCount === 1 ? "" : "s"}
@@ -162,9 +169,9 @@ export function CartView({
                 </span>
                 {cat.name} ({list.length})
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <ul className="cart-line-list">
                 {list.map((p) => (
-                  <div key={p.id} className="cart-line">
+                  <li key={p.id} className="cart-line">
                     <div className="stripe" style={{ background: cat.cssColorVar }} />
                     <div className="content">
                       <div className="ln-head">
@@ -195,9 +202,9 @@ export function CartView({
                         <button className="rm" onClick={() => onRemove(p.id)}>Remove</button>
                       </div>
                     </div>
-                  </div>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           );
         })}
@@ -205,43 +212,48 @@ export function CartView({
 
       <aside className="cart-side">
         <div className="card cart-breakdown">
-          <h4>Reduction by category</h4>
-          <div className="cat-row cat-row-head" aria-hidden="true">
-            <span />
-            <span />
-            <span className="col-h">VMT</span>
-          </div>
-          {CATEGORIES.map((cat) => {
-            const list = results.per_strategy.filter((p) => p.meta.category === cat.id);
-            if (list.length === 0) return null;
-            const sumDelta = list.reduce((a, p) => a + p.daily_vmt_reduction, 0);
-            const sumPct = results.baseline_vmt > 0 ? sumDelta / results.baseline_vmt : 0;
-            const capped = list.some((p) => p.capped);
-            return (
-              <div key={cat.id} className={`cat-row ${capped ? "capped" : ""}`}>
-                <span
-                  className="cat-row-ic"
-                  style={{
-                    background: `color-mix(in srgb, ${cat.cssColorVar} 14%, #fff)`,
-                    color: cat.cssColorVar,
-                  }}
-                  aria-hidden="true"
-                >
-                  <CategoryIcon cat={cat.id} size={12} />
-                </span>
-                <span className="nm">
-                  {cat.name} <span className="count">({list.length})</span>
-                </span>
-                <span className="v">
-                  {sumPct >= 0 ? "−" : "+"}{(Math.abs(sumPct) * 100).toFixed(2)}%
-                </span>
-              </div>
-            );
-          })}
+          <h3 id="cart-breakdown-h">Reduction by category</h3>
+          <table className="cat-table" aria-labelledby="cart-breakdown-h">
+            <thead>
+              <tr>
+                <th scope="col"><span className="sr-only">Category icon</span></th>
+                <th scope="col"><span className="sr-only">Category</span></th>
+                <th scope="col" className="col-h">VMT</th>
+              </tr>
+            </thead>
+            <tbody>
+              {CATEGORIES.map((cat) => {
+                const list = results.per_strategy.filter((p) => p.meta.category === cat.id);
+                if (list.length === 0) return null;
+                const sumDelta = list.reduce((a, p) => a + p.daily_vmt_reduction, 0);
+                const sumPct = results.baseline_vmt > 0 ? sumDelta / results.baseline_vmt : 0;
+                const capped = list.some((p) => p.capped);
+                return (
+                  <tr key={cat.id} className={capped ? "capped" : ""}>
+                    <td
+                      className="cat-row-ic"
+                      style={{
+                        background: `color-mix(in srgb, ${cat.cssColorVar} 14%, #fff)`,
+                        color: cat.cssColorVar,
+                      }}
+                    >
+                      <CategoryIcon cat={cat.id} size={12} />
+                    </td>
+                    <th scope="row" className="nm">
+                      {cat.name} <span className="count">({list.length})</span>
+                    </th>
+                    <td className="v">
+                      {sumPct >= 0 ? "−" : "+"}{(Math.abs(sumPct) * 100).toFixed(2)}%
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
 
         <div className="card cart-cobenefits">
-          <h4>Co-benefits</h4>
+          <h3>Co-benefits</h3>
           <div className="co-row">
             <span className="nm">GHG avoided</span>
             <span className="v">{Math.round(ghgTonnes).toLocaleString()} metric tons/yr</span>
@@ -253,7 +265,7 @@ export function CartView({
         </div>
 
         <div className="card cart-actions">
-          <h4>Export</h4>
+          <h3>Export</h3>
           <button
             className="btn-primary"
             onClick={onExportPdf}

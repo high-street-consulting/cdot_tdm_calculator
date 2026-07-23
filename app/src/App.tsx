@@ -214,6 +214,23 @@ function Layout() {
     }
   }, [routeView]);
 
+  // Per-view document title (2.4.2): a single-page app must update the title as
+  // the view changes so each screen is distinguishable in history, tabs, and to
+  // screen-reader users on navigation. Uses the effective `view` (so an open map
+  // overlay reads as "Area selection").
+  useEffect(() => {
+    const VIEW_TITLES: Record<AppView, string> = {
+      area: "Area selection",
+      shop: "Select strategies",
+      detail: "Strategy details",
+      cart: "Results",
+      report: "Report",
+      methodology: "Methodology",
+      datasources: "Data sources",
+    };
+    document.title = `${VIEW_TITLES[view]} · CDOT TDM Calculator`;
+  }, [view]);
+
   const [selectedTazIds, setSelectedTazIds] = useState<Set<string>>(new Set());
   // True when the last selection action would have pushed the selection past
   // the effective cap (maxSelectedTazs), so we capped it and dropped the
@@ -606,6 +623,23 @@ function Layout() {
     <div className="shop-app">
       <a className="skip-link" href="#main-content">Skip to main content</a>
       <Header onHomeNav={handleHomeNav} view={view} onCalculator={openMap} />
+      {/* Status message (4.1.3): the results totals recompute as the user
+          selects zones, adds strategies, and edits inputs. The visible metrics
+          strip is not a live region, so announce a concise summary politely for
+          screen-reader users when the results change. */}
+      <div className="sr-only" role="status" aria-live="polite">
+        {basket.length > 0
+          ? `Package ${
+              results.total_pct_vmt_reduction >= 0 ? "reduces" : "increases"
+            } VMT by ${Math.abs(results.total_pct_vmt_reduction * 100).toFixed(
+              2,
+            )} percent, about ${Math.abs(
+              (results.total_daily_vmt_reduction * 365) / 1e6,
+            ).toFixed(2)} million miles per year, across ${
+              selectedTazIds.size
+            } zone${selectedTazIds.size === 1 ? "" : "s"}.`
+          : ""}
+      </div>
       <BasketBar
         view={view}
         openMap={openMap}
@@ -885,7 +919,9 @@ function BasketBar(props: {
   }, [props.tazCount]);
 
   return (
-    <div className="basket-bar">
+    // role="region" + label puts the workflow steps and project metrics inside a
+    // landmark, so the totals strip is no longer orphaned outside all landmarks.
+    <div className="basket-bar" role="region" aria-label="Project steps and totals">
       <nav
         className="crumb"
         aria-label="Workflow steps"
@@ -1077,7 +1113,9 @@ function AreaPanel({
   onSelectStrategies: () => void;
 }) {
   return (
-    <div className="area-panel">
+    // tabIndex={0} makes this vertically-scrollable panel reachable by keyboard
+    // (2.1.1) even in the initial state where its only control is disabled.
+    <div className="area-panel" tabIndex={0}>
       <div className="area-intro">
         <h1>Start with your project area</h1>
         <p className="lede">

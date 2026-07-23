@@ -10,6 +10,13 @@
 //   • "Draw polygon" button   : click vertices on the map and double-click
 //                              to close; every TAZ intersecting the polygon
 //                              is added to the selection
+//   • "Select zones in view"  : adds every TAZ intersecting the CURRENT map
+//                              extent to the selection. This is the primary
+//                              mouse-free spatial path: a keyboard user frames
+//                              their project area with the search box (type a
+//                              place, address, or TAZ id — it pans/zooms the map)
+//                              and then activates this button. No map click and
+//                              no knowledge of numeric TAZ ids required.
 //   • "Clear" button       : empties the selection
 //   • Address search       : Esri World Geocoder Search widget pans/zooms
 //                              the map to the typed location
@@ -22,7 +29,7 @@
 // Highlighting is via FeatureEffect: selected TAZs render normally, the rest
 // are dimmed.
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { MapLoading } from "./MapLoading";
 import EsriMap from "@arcgis/core/Map";
@@ -95,6 +102,11 @@ export function MapCanvas({
 
   const [drawing, setDrawing] = useState(false);
   const [mapLoading, setMapLoading] = useState(true);
+  // "Select zones in view" pending flag + a status message announced to screen
+  // readers (this action has no map-click equivalent, so it needs its own
+  // confirmation that N zones were added).
+  const [selectingInView, setSelectingInView] = useState(false);
+  const [viewSelectStatus, setViewSelectStatus] = useState("");
   const drawingRef = useRef(false);
   drawingRef.current = drawing;
 
@@ -529,6 +541,34 @@ export function MapCanvas({
     };
   }, [drawing]);
 
+  // "Select zones in view": add every TAZ intersecting the current map extent.
+  // Reuses the same spatial-query path as "Draw area" (geometry caching, cap +
+  // truncation handling), just fed the view's own extent instead of a drawn
+  // polygon. This is the keyboard/no-mouse spatial selection path.
+  const handleSelectInView = useCallback(async () => {
+    const view = viewRef.current;
+    const tazLayer = tazLayerRef.current;
+    if (!view || !tazLayer || !tazLayer.loaded || !view.extent) return;
+    setSelectingInView(true);
+    setViewSelectStatus("Selecting zones in the current map view…");
+    try {
+      const count = await queryAndSelect(
+        tazLayer,
+        view.extent,
+        onSelRef.current,
+        geomCacheRef.current,
+        onTruncRef.current,
+      );
+      setViewSelectStatus(
+        count > 0
+          ? `Added ${count} zone${count === 1 ? "" : "s"} from the current map view to your selection.`
+          : "No zones found in the current map view. Pan or zoom the map to your project area, then try again.",
+      );
+    } finally {
+      setSelectingInView(false);
+    }
+  }, []);
+
   return (
     <div style={{ position: "relative", width: "100%", height: "100%", minHeight: 320 }}>
       <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
@@ -553,6 +593,15 @@ export function MapCanvas({
         <button
           type="button"
           className="map-tool"
+          onClick={handleSelectInView}
+          disabled={mapLoading || selectingInView}
+          title="Add every traffic analysis zone currently visible in the map to your selection. No mouse or TAZ ID needed: use the search box to frame your project area, then activate this."
+        >
+          {selectingInView ? "Selecting…" : "Select zones in view"}
+        </button>
+        <button
+          type="button"
+          className="map-tool"
           onClick={() => {
             console.info("MapCanvas: Clear button clicked");
             onSelRef.current([], "replace");
@@ -563,8 +612,13 @@ export function MapCanvas({
           Clear selection
         </button>
         <div className="map-tool-hint">
-          Click a TAZ to select · Shift-click to add or remove
+          Click a TAZ · Shift-click to add or remove · or Select zones in view
         </div>
+      </div>
+      {/* Confirmation for the "Select zones in view" action (which has no map-click
+          equivalent), announced politely to screen-reader users. */}
+      <div className="sr-only" role="status" aria-live="polite">
+        {viewSelectStatus}
       </div>
     </div>
   );
@@ -639,8 +693,8 @@ async function queryAndSelect(
   onSelectionChange: (ids: string[], mode: SelectionMode) => void,
   geomCache: Map<string, Geometry>,
   onSelectionTruncated?: () => void,
-) {
-  if (!tazLayer) return;
+): Promise<number> {
+  if (!tazLayer) return 0;
   const q = tazLayer.createQuery();
   q.geometry = geometry;
   q.spatialRelationship = "intersects";
@@ -664,7 +718,9 @@ async function queryAndSelect(
       ids.push(fid);
     }
     if (ids.length > 0) onSelectionChange(ids, "add");
+    return ids.length;
   } catch (e) {
     console.warn("MapCanvas: rectangle query failed", e);
+    return 0;
   }
 }
