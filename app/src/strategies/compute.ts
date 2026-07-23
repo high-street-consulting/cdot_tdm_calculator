@@ -23,6 +23,7 @@ import { baseVmt, buildResult, getAvo, imputedModeShare, imputedParking } from "
 import {
   classifyPlaceType,
   combinePool,
+  type BindingCap,
   type Contributor,
 } from "./combineEngine";
 
@@ -267,6 +268,12 @@ export interface PerStrategyAggregate {
   combined_daily_vmt_reduction: number;
   /** True when a measure / subsector / category / global cap reduced this strategy. */
   capped: boolean;
+  /**
+   * When capped, the tightest cap that bound this strategy: its tier
+   * ('measure' | 'land_use' | 'category' | 'ctr' | 'global') and the ceiling in
+   * PERCENT VMT (e.g. 30). Undefined when not capped.
+   */
+  cap?: BindingCap;
   /** Per-TAZ rows (debugging / export). */
   rows: StrategyResult[];
 }
@@ -555,6 +562,8 @@ export function computeResults(
   // Run the engine per TAZ per pool; accumulate savings + attribution + caps.
   const attributed: Record<string, number> = {};
   const cappedIds = new Set<string>();
+  // Per strategy, the tightest binding cap seen across pools/TAZs (lowest %).
+  const cappedByStrategy: Record<string, BindingCap> = {};
   let poolSavings = 0;
   for (const taz of tazs) {
     const placeType = classifyPlaceType(taz.area_type, activityDensityOf(taz), AREA_TYPE_THRESHOLDS);
@@ -571,6 +580,10 @@ export function computeResults(
         attributed[id] = (attributed[id] ?? 0) + basePt * share;
       }
       for (const id of res.cappedIds) cappedIds.add(id);
+      for (const [id, cap] of Object.entries(res.cappedBy)) {
+        const cur = cappedByStrategy[id];
+        if (!cur || cap.capPct < cur.capPct) cappedByStrategy[id] = cap;
+      }
     }
   }
 
@@ -579,6 +592,7 @@ export function computeResults(
     const p = byId.get(rd.id)!;
     p.combined_daily_vmt_reduction = attributed[rd.id] ?? 0;
     p.capped = cappedIds.has(rd.id);
+    if (cappedByStrategy[rd.id]) p.cap = cappedByStrategy[rd.id];
   }
 
   const cappedCategories: StrategyCategoryId[] = Array.from(

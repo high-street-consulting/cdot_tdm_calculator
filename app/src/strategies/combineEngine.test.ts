@@ -51,6 +51,7 @@ describe("combinePool caps", () => {
     expect(res.R).toBeCloseTo(0.1, 12);
     expect(res.boundCaps.has("land_use")).toBe(true);
     expect(res.cappedIds.has("t1")).toBe(true);
+    expect(res.cappedBy.t1).toEqual({ tier: "land_use", capPct: 10 });
   });
 
   it("clamps the CTR subgroup cap (45%)", () => {
@@ -99,6 +100,7 @@ describe("combinePool caps", () => {
     );
     expect(res.cappedIds.has("m")).toBe(true);
     expect(res.boundCaps.has("measure")).toBe(true);
+    expect(res.cappedBy.m).toEqual({ tier: "measure", capPct: 30 });
   });
 });
 

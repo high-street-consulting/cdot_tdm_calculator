@@ -16,6 +16,20 @@ import { annualVmtToGhgTonnes, ANNUAL_VMT_PER_CAR } from "../strategies/ghg";
 import { getStrategyContext, OVERRIDE_FORMATTERS } from "../strategies/context";
 import { CategoryIcon } from "./CategoryIcon";
 
+/** Human label for each cap tier, used in the CAPPED info tooltip. */
+const CAP_TIER_LABEL: Record<string, string> = {
+  measure: "measure maximum",
+  land_use: "land-use maximum",
+  category: "category maximum",
+  ctr: "commute-trip-reduction maximum",
+  global: "overall maximum",
+};
+
+/** Format a cap percent: integers bare, otherwise one decimal (e.g. 15.7). */
+function fmtCapPct(x: number): string {
+  return x % 1 === 0 ? String(x) : x.toFixed(1);
+}
+
 interface CartViewProps {
   basket: BasketEntry[];
   results: AggregatedResults;
@@ -163,6 +177,10 @@ export function CartView({
                   const basisLabel = purposePoolsLabel(
                     strategyPools(p.meta, entry?.values ?? {}),
                   );
+                  const capPct = p.cap != null ? fmtCapPct(p.cap.capPct) : null;
+                  const capTip = p.cap
+                    ? `Limited by the ${CAP_TIER_LABEL[p.cap.tier] ?? "maximum"} (${capPct}%). See the Methodology page for how caps are set.`
+                    : "This strategy's combined reduction was limited by a maximum. See the Methodology page for how the cap is set.";
                   return (
                   <div key={p.id} className="cart-line">
                     <div className="stripe" style={{ background: cat.cssColorVar }} />
@@ -179,12 +197,12 @@ export function CartView({
                               display: "inline-flex", alignItems: "center", gap: 4,
                             }}
                           >
-                            CAPPED
+                            {capPct != null ? `CAPPED · max ${capPct}%` : "CAPPED"}
                             <a
                               className="info-i capped-info"
                               href="#/methodology"
-                              data-tip="This strategy's combined reduction was limited by a maximum. See the Methodology page for how the cap is set."
-                              aria-label="Why is this capped? Opens the Methodology page."
+                              data-tip={capTip}
+                              aria-label={`Why is this capped? ${capTip}`}
                               style={{ width: 14, height: 14, fontSize: 10 }}
                             >
                               i

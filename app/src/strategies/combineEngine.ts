@@ -29,6 +29,14 @@ export interface Contributor {
   measureCapped: boolean;
 }
 
+/** The cap tier that limited a strategy, and the tier's percent value. */
+export type CapTier = "measure" | "land_use" | "category" | "ctr" | "global";
+export interface BindingCap {
+  tier: CapTier;
+  /** The tier's ceiling in PERCENT VMT (e.g. 30 for the urban land-use cap). */
+  capPct: number;
+}
+
 export interface PoolCombineResult {
   /** Combined pool reduction fraction after all nested + global caps. */
   R: number;
@@ -38,6 +46,8 @@ export interface PoolCombineResult {
   cappedIds: Set<string>;
   /** Which cap tiers bound: 'measure' | 'land_use' | 'category' | 'ctr' | 'global'. */
   boundCaps: Set<string>;
+  /** id → the tightest cap tier + % that bound it (only for capped ids). */
+  cappedBy: Record<string, BindingCap>;
 }
 
 const BUILT_ENV: CapcoaSubsector[] = [
@@ -72,10 +82,23 @@ export function combinePool(
 ): PoolCombineResult {
   const boundCaps = new Set<string>();
   const cappedIds = new Set<string>();
-  for (const c of contribs) if (c.measureCapped) { cappedIds.add(c.id); boundCaps.add("measure"); }
+  const cappedBy: Record<string, BindingCap> = {};
+  // Record a binding cap for the given ids, keeping the TIGHTEST (lowest %).
+  const mark = (ids: string[], tier: CapTier, capPct: number) => {
+    boundCaps.add(tier);
+    for (const id of ids) {
+      cappedIds.add(id);
+      const cur = cappedBy[id];
+      if (!cur || capPct < cur.capPct) cappedBy[id] = { tier, capPct };
+    }
+  };
+
+  // Per-measure caps (r already clamped to the cap in computeResults, so r×100
+  // is the measure ceiling in percent).
+  for (const c of contribs) if (c.measureCapped) mark([c.id], "measure", c.r * 100);
 
   if (contribs.length === 0) {
-    return { R: 0, attribution: {}, cappedIds, boundCaps };
+    return { R: 0, attribution: {}, cappedIds, boundCaps, cappedBy };
   }
 
   const landCap = (caps.land_use[placeType] ?? 100) / 100;
@@ -89,8 +112,7 @@ export function combinePool(
   const rLandRaw = combineFractions(bySub("land_use").map((c) => c.r));
   const rLand = Math.min(rLandRaw, landCap);
   if (rLandRaw > landCap + 1e-12) {
-    boundCaps.add("land_use");
-    for (const c of bySub("land_use")) cappedIds.add(c.id);
+    mark(bySub("land_use").map((c) => c.id), "land_use", landCap * 100);
   }
   const rNeigh = combineFractions(bySub("neighborhood_design").map((c) => c.r));
   const rPark = combineFractions(bySub("parking").map((c) => c.r));
@@ -100,24 +122,25 @@ export function combinePool(
   const rBuiltRaw = combineFractions([rLand, rNeigh, rPark, rTransit]);
   const rBuilt = Math.min(rBuiltRaw, catCap);
   if (rBuiltRaw > catCap + 1e-12) {
-    boundCaps.add("category");
-    for (const c of contribs) if (BUILT_ENV.includes(c.subsector)) cappedIds.add(c.id);
+    mark(
+      contribs.filter((c) => BUILT_ENV.includes(c.subsector)).map((c) => c.id),
+      "category",
+      catCap * 100,
+    );
   }
 
   // CTR subgroup combined, then CTR cap.
   const rCtrRaw = combineFractions(bySub("commute_trip_reduction").map((c) => c.r));
   const rCtr = Math.min(rCtrRaw, ctrCapFrac);
   if (rCtrRaw > ctrCapFrac + 1e-12) {
-    boundCaps.add("ctr");
-    for (const c of bySub("commute_trip_reduction")) cappedIds.add(c.id);
+    mark(bySub("commute_trip_reduction").map((c) => c.id), "ctr", ctrCap);
   }
 
   // Global cap across all subsectors (Step 7).
   const rPoolRaw = combineFractions([rBuilt, rCtr]);
   const R = Math.min(rPoolRaw, globalCap);
   if (rPoolRaw > globalCap + 1e-12) {
-    boundCaps.add("global");
-    for (const c of contribs) cappedIds.add(c.id);
+    mark(contribs.map((c) => c.id), "global", globalCap * 100);
   }
 
   // Attribution: distribute the (capped) pool reduction R across contributors
@@ -131,7 +154,7 @@ export function combinePool(
   if (wsum > 0) {
     for (const { id, w } of weights) attribution[id] = (attribution[id] ?? 0) + (R * w) / wsum;
   }
-  return { R, attribution, cappedIds, boundCaps };
+  return { R, attribution, cappedIds, boundCaps, cappedBy };
 }
 
 /**
