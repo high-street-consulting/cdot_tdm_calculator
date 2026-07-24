@@ -3,6 +3,8 @@
 //   scripts/prepare_taz.py            (aggregation + area-type classification)
 //   src/strategies/{constants,registry}.ts (the canonical TS values)
 
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
   BEHAVIORAL_DEFAULTS,
   ELASTICITIES,
@@ -17,6 +19,34 @@ import { CategoryIcon } from "./CategoryIcon";
 import { Markdown } from "./Markdown";
 
 export function MethodologyView() {
+  // Deep-link support: "#/methodology?s=combining" (e.g. from the results-page
+  // "Potential overlaps" box) scrolls to the "How strategies combine" section.
+  const location = useLocation();
+  useEffect(() => {
+    // Read the query straight off the hash (robust to how HashRouter surfaces it
+    // in location.search): "#/methodology?s=combining".
+    const q = location.hash.includes("?")
+      ? location.hash.slice(location.hash.indexOf("?") + 1)
+      : window.location.hash.includes("?")
+        ? window.location.hash.slice(window.location.hash.indexOf("?") + 1)
+        : "";
+    if (new URLSearchParams(q).get("s") !== "combining") return;
+    // Retry until it sticks: the scroll container (.doc-view) isn't sized/
+    // scrollable for the first several hundred ms after the route change (the
+    // always-mounted map delays the flex layout settling), so scrollIntoView is
+    // a no-op until then. Poll up to ~2.5s, stopping as soon as it lands.
+    let tries = 0;
+    let t = 0;
+    const attempt = () => {
+      const el = document.getElementById("combining-strategies");
+      if (el) el.scrollIntoView({ block: "start" });
+      const done = !!el && el.getBoundingClientRect().top < 160;
+      if (!done && ++tries < 20) t = window.setTimeout(attempt, 120);
+    };
+    t = window.setTimeout(attempt, 80);
+    return () => window.clearTimeout(t);
+  }, [location.key, location.hash]);
+
   return (
     <div className="doc-view">
       <div className="doc-hero">
@@ -74,6 +104,54 @@ export function MethodologyView() {
             Statewide blended rate ~0.412 kg CO₂e per VMT.
           </li>
         </ol>
+      </section>
+
+      <section className="doc-section" id="combining-strategies" style={{ scrollMarginTop: 72 }}>
+        <h2>How strategies combine</h2>
+        <p>
+          Strategies are rarely applied alone, and their effects don&rsquo;t always
+          add up. The calculator computes each strategy&rsquo;s standalone VMT
+          reduction, then combines the package using one of three rules — chosen by
+          the travel each strategy affects — so the total reflects what is actually
+          achievable rather than an inflated sum that credits the same avoided trips
+          twice.
+        </p>
+        <p>
+          <b>Additive.</b> Strategies acting on different, non-overlapping travel
+          are credited in full and summed. VMT is organized into purpose pools
+          (for example commute versus all daily travel); reductions in independent
+          pools — and increases from induced-demand measures such as added roadway
+          capacity — are added as absolute vehicle-miles. A strategy that shifts
+          commute trips and one that shortens shopping trips are not competing for
+          the same miles.
+        </p>
+        <p>
+          <b>Multiplicative.</b> When strategies target the same trips (the same
+          purpose pool and mechanism), they combine as{" "}
+          <code>1 − Π(1 − rᵢ)</code> rather than adding: once one strategy removes
+          some trips, the next can only act on those that remain, so stacked
+          reductions taper and can never exceed 100% of the affected travel. The
+          place-type and subsector caps described under <b>Combination caps</b>{" "}
+          below further bound the combined credit. The package total is therefore
+          always ≤ the additive sum; the difference appears on the results page as
+          the <b>overlap &amp; cap adjustment</b>.
+        </p>
+        <p>
+          <b>Mutually exclusive.</b> Two strategies that would clearly count the
+          same intervention are not stacked at all — the redundant credit is zeroed.
+          For example, transit-shelter improvements are mutually exclusive with Bus
+          Rapid Transit where BRT already covers all community routes, so the
+          benefit is counted once.
+        </p>
+        <p>
+          <b>Why it matters.</b> Without these rules, stacking strategies could
+          claim reductions larger than the travel that exists — undermining the
+          estimate for PD 1601 analyses and grant applications, where reviewers
+          expect conservative, methodologically grounded figures. Adding
+          independent effects, compounding overlapping ones under empirical caps,
+          and removing redundant credit keep the package estimate defensible and
+          traceable to a published method.
+        </p>
       </section>
 
       <section className="doc-section">

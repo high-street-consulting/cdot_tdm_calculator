@@ -268,6 +268,9 @@ export function CartView({
                 </li>
               ))}
             </ul>
+            <a className="overlap-methodology-link" href="#/methodology?s=combining">
+              How overlapping strategies are combined →
+            </a>
           </div>
         )}
       </div>
@@ -320,13 +323,12 @@ export function CartView({
                 <tr className="cat-adjustment-row">
                   <td className="cat-ic-cell" aria-hidden="true" />
                   <th scope="row" className="nm">
-                    Multiplicative combination{" "}
-                    <span className="count">(overlap &amp; caps)</span>{" "}
+                    Overlap &amp; cap adjustment{" "}
                     <a
                       className="info-i"
-                      href="#/methodology"
-                      data-tip="Strategies acting on the same trips are combined multiplicatively — 1 − Π(1 − rᵢ) — not added, and held to CAPCOA subsector/place-type caps. So the combined total is smaller than the sum of the individual reductions; this line is that difference. Click for the methodology."
-                      aria-label="How reductions are combined: strategies acting on the same trips are combined multiplicatively — 1 minus the product of (1 minus each reduction) — not added, and held to CAPCOA subsector and place-type caps, so the combined total is smaller than the sum of the individual reductions. This line is that difference. Opens the methodology page."
+                      href="#/methodology?s=combining"
+                      data-tip="Strategies acting on the same trips are combined so their reductions don't double-count, and are held to CAPCOA caps — so the package total is less than the sum of the individual category reductions. This line is that difference. Click for the methodology."
+                      aria-label="Overlap and cap adjustment: strategies acting on the same trips are combined so their reductions don't double-count, and are held to CAPCOA caps, so the package total is less than the sum of the individual category reductions. This line is that difference. Opens the methodology page."
                     >
                       i
                     </a>

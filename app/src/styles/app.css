@@ -634,6 +634,11 @@ button.info-i, a.info-i { padding: 4px; width: 24px; height: 24px; border: 0; }
 .overlap-note .sub { margin: 2px 0 6px; font-size: 12px; color: #6B6B6B; }
 .overlap-note ul { margin: 0; padding-left: 18px; }
 .overlap-note li { margin-bottom: 3px; }
+.overlap-note .overlap-methodology-link {
+  display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 600;
+  color: var(--cdot-dark-blue); text-decoration: underline; text-underline-offset: 2px;
+}
+.overlap-note .overlap-methodology-link:hover { color: var(--cdot-dark-blue-hover); }
 
 /* ───── Tweaks panel ───── */
 .tweaks { position: fixed; bottom: 20px; right: 20px; width: 288px; background: #fff; border: 1px solid #D4D4D4; border-radius: 2px; box-shadow: 0 8px 32px rgba(0,0,0,.18); z-index: 999; font-size: 14px; }
