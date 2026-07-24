@@ -826,6 +826,10 @@ function ContextRowItem({
   // rawValue is always the un-overridden data baseline (getStrategyContext
   // leaves it unchanged), so it drives the "Area baseline" hint + reset target.
   const key = row.overrideKey ?? "";
+  const meta = overrideEditMeta(key);
+  // USD ("$") context values (parking price, transit fare) display at cents
+  // precision; others keep finer precision (mode-share %, AVO, miles).
+  const displayDecimals = meta.unit.includes("$") ? 2 : 4;
   const baselineNative = row.rawValue ?? 0;
   // Seed the edit box from the CURRENT override when one is set, else the
   // baseline; converted to display units. Kept as a string so the field can be
@@ -836,7 +840,7 @@ function ContextRowItem({
       : baselineNative;
   const seedDisplay = key ? nativeToDisplay(key, seedNative) : seedNative;
   const [draft, setDraft] = useState<string>(() =>
-    formatDisplayNumber(seedDisplay),
+    formatDisplayNumber(seedDisplay, displayDecimals),
   );
 
   // A plain (non-overridable) row keeps the exact prior markup.
@@ -854,7 +858,6 @@ function ContextRowItem({
     );
   }
 
-  const meta = overrideEditMeta(key);
   const editId = `ctx-ov-${key}`;
   const noteId = `ctx-ov-note-${key}`;
   const missingNarrative = isOverridden && note.trim().length === 0;
@@ -869,7 +872,7 @@ function ContextRowItem({
 
   function handleReset() {
     onReset();
-    setDraft(formatDisplayNumber(nativeToDisplay(key, baselineNative)));
+    setDraft(formatDisplayNumber(nativeToDisplay(key, baselineNative), displayDecimals));
     setOpen(false);
   }
 
@@ -991,10 +994,12 @@ function ContextRowItem({
 
 /** Format a display-units number for the edit box seed: trim float noise but
     keep meaningful precision (mode-share percents, avo, parking dollars). */
-function formatDisplayNumber(n: number): string {
+function formatDisplayNumber(n: number, maxDecimals = 4): string {
   if (!Number.isFinite(n)) return "";
-  // Round to 4 decimals then drop trailing zeros so "12.3000001" → "12.3".
-  return String(Math.round(n * 1e4) / 1e4);
+  // Round to maxDecimals then drop trailing zeros so "12.3000001" → "12.3"
+  // (USD context values pass maxDecimals=2 for cents precision).
+  const f = Math.pow(10, maxDecimals);
+  return String(Math.round(n * f) / f);
 }
 
 /** Join a short list into an English phrase: "a", "a and b", "a, b, and c". */
