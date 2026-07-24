@@ -1125,14 +1125,23 @@
   font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
   color: #6B6B6B; font-weight: 700; text-align: right;
 }
-.cart-breakdown .cat-table .cat-row-ic {
+/* Icon cell stays a real table-cell (so the column aligns); the colored swatch
+   is an inner inline-flex badge, vertically centered in the row. */
+.cart-breakdown .cat-table td.cat-ic-cell { width: 30px; vertical-align: middle; text-align: center; }
+.cart-breakdown .cat-table .cat-ic-badge {
   width: 20px; height: 20px; border-radius: 4px;
-  display: inline-flex; align-items: center; justify-content: center;
+  display: inline-flex; align-items: center; justify-content: center; vertical-align: middle;
 }
 .cart-breakdown .cat-table th.nm { font-weight: 400; text-align: left; color: #141414; padding-left: 10px; }
 .cart-breakdown .cat-table .count { color: #6B6B6B; font-size: 12px; font-weight: 400; }
 .cart-breakdown .cat-table td.v { font-family: var(--calcite-font-family-code); font-weight: 600; color: var(--cdot-green); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
 .cart-breakdown .cat-table tr.capped td.v { color: var(--cdot-orange-press); }
+/* The multiplicative-combination adjustment row: a muted, ruled-off line
+   distinct from the category subtotals (it's an offset, not a category). */
+.cart-breakdown .cat-table tr.cat-adjustment-row th,
+.cart-breakdown .cat-table tr.cat-adjustment-row td { border-top: 1px dashed #E0E0E0; padding-top: 8px; }
+.cart-breakdown .cat-table tr.cat-adjustment-row th.nm { font-weight: 400; font-style: italic; color: #6B6B6B; }
+.cart-breakdown .cat-table tr.cat-adjustment-row td.v { color: var(--cdot-orange-press); }
 .cart-breakdown .capnote { font-size: 12px; color: var(--cdot-orange-press); margin-top: 6px; padding-left: 20px; }
 
 /* Co-benefits rows: simple two-column flex (label left, value right).
@@ -1426,6 +1435,10 @@
      band out to the card's padding edges. */
   margin: -24px -30px; padding: 24px 30px; border-radius: 2px;
 }
+/* When open, drop the summary's negative BOTTOM margin — it's only there to make
+   the (collapsed) hover band reach the card's bottom edge, and when expanded it
+   pulls the methodology content up under the header (a ~2px overlap). */
+.shop-detail .methodology-accordion[open] > summary { margin-bottom: 0; }
 .shop-detail .methodology-accordion > summary:hover { background: var(--cdot-dark-blue-05); }
 .shop-detail .methodology-accordion > summary::-webkit-details-marker { display: none; }
 .shop-detail .methodology-accordion > summary h2 { margin: 0; }

@@ -89,6 +89,17 @@ export function CartView({
   // rather than "reduced" (CMT-06/08).
   const netReduces = dailyReduced >= 0;
 
+  // Multiplicative combination adjustment: the gap between the additive sum of
+  // each strategy's standalone reduction and the (damped) combined total, i.e.
+  // the reduction "lost" to overlap + CAPCOA caps. Shown as its own line in the
+  // category breakdown so the standalone category subtotals reconcile with the
+  // combined headline. Negative delta (less reduction) → renders as "+".
+  const combinationAdjustmentDelta =
+    results.total_daily_vmt_reduction - results.sum_standalone_daily_vmt_reduction;
+  const combinationAdjustmentPct =
+    results.baseline_vmt > 0 ? combinationAdjustmentDelta / results.baseline_vmt : 0;
+  const hasCombinationAdjustment = Math.abs(combinationAdjustmentPct * 100) >= 0.005;
+
   return (
     <div className="cart-view">
       <div className="cart-main">
@@ -276,21 +287,25 @@ export function CartView({
               {CATEGORIES.map((cat) => {
                 const list = results.per_strategy.filter((p) => p.meta.category === cat.id);
                 if (list.length === 0) return null;
-                // Use the COMBINED attributed contribution so category subtotals
-                // reconcile with the damped headline total (Σ = total).
-                const sumDelta = list.reduce((a, p) => a + p.combined_daily_vmt_reduction, 0);
+                // Standalone per-category subtotal (matches each strategy's line
+                // above). The multiplicative overlap/cap effect is shown as its
+                // own "Multiplicative combination" row below, so the category
+                // rows + that adjustment reconcile to the combined headline.
+                const sumDelta = list.reduce((a, p) => a + p.daily_vmt_reduction, 0);
                 const sumPct = results.baseline_vmt > 0 ? sumDelta / results.baseline_vmt : 0;
                 const capped = list.some((p) => p.capped);
                 return (
                   <tr key={cat.id} className={capped ? "capped" : ""}>
-                    <td
-                      className="cat-row-ic"
-                      style={{
-                        background: `color-mix(in srgb, ${cat.cssColorVar} 14%, #fff)`,
-                        color: cat.cssColorVar,
-                      }}
-                    >
-                      <CategoryIcon cat={cat.id} size={12} />
+                    <td className="cat-ic-cell">
+                      <span
+                        className="cat-ic-badge"
+                        style={{
+                          background: `color-mix(in srgb, ${cat.cssColorVar} 14%, #fff)`,
+                          color: cat.cssColorVar,
+                        }}
+                      >
+                        <CategoryIcon cat={cat.id} size={12} />
+                      </span>
                     </td>
                     <th scope="row" className="nm">
                       {cat.name} <span className="count">({list.length})</span>
@@ -301,6 +316,19 @@ export function CartView({
                   </tr>
                 );
               })}
+              {hasCombinationAdjustment && (
+                <tr className="cat-adjustment-row">
+                  <td className="cat-ic-cell" aria-hidden="true" />
+                  <th scope="row" className="nm">
+                    Multiplicative combination{" "}
+                    <span className="count">(overlap &amp; caps)</span>
+                  </th>
+                  <td className="v">
+                    {combinationAdjustmentPct >= 0 ? "−" : "+"}
+                    {(Math.abs(combinationAdjustmentPct) * 100).toFixed(2)}%
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
