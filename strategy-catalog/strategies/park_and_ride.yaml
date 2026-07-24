@@ -6,6 +6,11 @@ uid: TR-04
 name: Park-and-Ride
 category: transit
 status: implemented
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [mode_shift]
+purpose_applicability: [commute]
+target_population: commute
+capcoa_subsector: transit
 tags:
 - infrastructure
 - transit

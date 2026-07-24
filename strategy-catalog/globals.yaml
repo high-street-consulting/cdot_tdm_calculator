@@ -66,6 +66,58 @@ categories:
     cap: null
     image: ""
 
+# ─────────────────────────────────────────────────────────────────────────
+# CAPCOA 2021 combination caps (see tdm_strategy_combination_spec.md §3).
+# Place-type-tiered maximum VMT reductions the combination engine reads at
+# Steps 4–7. Values are PERCENT VMT reduction, applied PER PURPOSE POOL.
+# rural inherits suburban (CAPCOA publishes no rural column).
+#
+# CDOT place_type → CAPCOA context crosswalk:
+#   urban_core → Urban           (CAPCOA max 75%)
+#   urban      → Compact Infill  (CAPCOA place-type max 35%; set to 40% here =
+#                                 CAPCOA combined-TDM global ceiling, per CDOT)
+#   suburban   → Suburban Center (CAPCOA max 20%)
+#   rural      → (inherits suburban)
+# NOTE: not yet consumed by the app engine — the current per-category caps in
+# `categories[].cap` remain authoritative until the Phase-2 engine rewrite.
+place_type_caps:
+  global:            # cap across all 5 CAPCOA subsectors, per purpose pool
+    urban_core: 75
+    urban: 40
+    suburban: 20
+    rural: 20
+  category:          # cap across the 4 built-environment subsectors
+    urban_core: 70
+    urban: 35
+    suburban: 15
+    rural: 15
+  land_use:          # tightest tier; land-use subsector alone
+    urban_core: 65
+    urban: 30
+    suburban: 10
+    rural: 10
+
+# Combined commute-trip-reduction subgroup cap (CAPCOA T-5…T-13), PERCENT.
+# Absorbs overlap among employer programs, transit subsidy, ridesharing,
+# telework, and parking cash-out. Applied within the commute pool.
+ctr_subgroup_cap: 45
+
+# CAPCOA subsectors — the cap-grouping unit (distinct from the display
+# `category` above; a strategy's `capcoa_subsector` may differ, e.g. carshare).
+capcoa_subsectors:
+  - land_use
+  - neighborhood_design
+  - parking
+  - transit
+  - commute_trip_reduction
+  - induced   # induced-demand (VMT increase); excluded from reduction caps
+
+# Mechanism vocabulary — which multiplicative VMT factor a strategy acts on.
+mechanisms:
+  - trip_generation   # reduces number of trips
+  - trip_length       # reduces average trip length
+  - mode_shift        # reduces auto mode share
+
 # Area-type classification thresholds (activity density = pop+emp per sq mi),
 # mirrored from prepare_taz.py. Used to evaluate per-strategy `applicability`.
 area_type_thresholds:

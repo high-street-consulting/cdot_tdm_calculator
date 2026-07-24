@@ -2,7 +2,12 @@
 // breakdown, subsector-cap note, co-benefits, export buttons.
 
 import { CATEGORIES, getStrategy } from "../strategies/registry";
-import type { AggregatedResults, BasketEntry } from "../strategies/compute";
+import {
+  purposePoolsLabel,
+  strategyPools,
+  type AggregatedResults,
+  type BasketEntry,
+} from "../strategies/compute";
 import { isDefaultValue } from "../strategies/defaults";
 import type { StrategyKey } from "../strategies/strategies";
 import type { TazInputs } from "../strategies/types";
@@ -10,6 +15,20 @@ import { downloadResultsCsv } from "../data/exportCsv";
 import { annualVmtToGhgTonnes, ANNUAL_VMT_PER_CAR } from "../strategies/ghg";
 import { getStrategyContext, OVERRIDE_FORMATTERS } from "../strategies/context";
 import { CategoryIcon } from "./CategoryIcon";
+
+/** Human label for each cap tier, used in the CAPPED info tooltip. */
+const CAP_TIER_LABEL: Record<string, string> = {
+  measure: "measure maximum",
+  land_use: "land-use maximum",
+  category: "category maximum",
+  ctr: "commute-trip-reduction maximum",
+  global: "overall maximum",
+};
+
+/** Format a cap percent: integers bare, otherwise one decimal (e.g. 15.7). */
+function fmtCapPct(x: number): string {
+  return x % 1 === 0 ? String(x) : x.toFixed(1);
+}
 
 interface CartViewProps {
   basket: BasketEntry[];
@@ -91,6 +110,10 @@ export function CartView({
             <div className="sub">
               vs. baseline · {basket.length} strateg{basket.length === 1 ? "y" : "ies"} · {tazCount} TAZ{tazCount === 1 ? "" : "s"}
             </div>
+            <p className="hero-note">
+              Combined reduction across all VMT, adjusted for overlapping impacts.{" "}
+              <a href="#/methodology">How it's calculated →</a>
+            </p>
             <div className="abs-row">
               <div className="c">
                 <div className="lab">Daily VMT {netReduces ? "reduced" : "added"}</div>
@@ -133,20 +156,6 @@ export function CartView({
           </div>
         )}
 
-        {results.capped_categories.length > 0 && (
-          <div className="cap-note">
-            <span className="ic">!</span>
-            <div>
-              <b>Subsector cap applied</b> to{" "}
-              {results.capped_categories
-                .map((id) => CATEGORIES.find((c) => c.id === id)?.name ?? id)
-                .join(", ")}
-              . Per CAPCOA methodology, combined reductions within a category are capped
-              to prevent double-counting.
-            </div>
-          </div>
-        )}
-
         <div className="cart-section-head">
           <h2>Selected strategies</h2>
           <span className="meta">Click edit to revise inputs for any strategy.</span>
@@ -170,19 +179,41 @@ export function CartView({
                 {cat.name} ({list.length})
               </div>
               <ul className="cart-line-list">
-                {list.map((p) => (
+                {list.map((p) => {
+                  const entry = basket.find((b) => b.id === p.id);
+                  const basisLabel = purposePoolsLabel(
+                    strategyPools(p.meta, entry?.values ?? {}),
+                  );
+                  const capPct = p.cap != null ? fmtCapPct(p.cap.capPct) : null;
+                  const capTip = p.cap
+                    ? `Limited by the ${CAP_TIER_LABEL[p.cap.tier] ?? "maximum"} (${capPct}%). See the Methodology page for how caps are set.`
+                    : "This strategy's combined reduction was limited by a maximum. See the Methodology page for how the cap is set.";
+                  return (
                   <li key={p.id} className="cart-line">
                     <div className="stripe" style={{ background: cat.cssColorVar }} />
                     <div className="content">
                       <div className="ln-head">
                         <span className="nm">{p.meta.displayName}</span>
                         {p.capped && (
-                          <span style={{
-                            fontSize: 10, color: "var(--cdot-orange-press)",
-                            background: "#FFF1E8", padding: "2px 6px",
-                            borderRadius: 2, fontWeight: 600,
-                          }}>
-                            CAPPED
+                          <span
+                            className="capped-tag"
+                            style={{
+                              fontSize: 10, color: "var(--cdot-orange-press)",
+                              background: "#FFF1E8", padding: "2px 6px",
+                              borderRadius: 2, fontWeight: 600,
+                              display: "inline-flex", alignItems: "center", gap: 4,
+                            }}
+                          >
+                            {capPct != null ? `CAPPED · max ${capPct}%` : "CAPPED"}
+                            <a
+                              className="info-i capped-info"
+                              href="#/methodology"
+                              data-tip={capTip}
+                              aria-label={`Why is this capped? ${capTip}`}
+                              style={{ width: 14, height: 14, fontSize: 10 }}
+                            >
+                              i
+                            </a>
                           </span>
                         )}
                       </div>
@@ -197,17 +228,37 @@ export function CartView({
                         {(Math.abs(p.pct_vmt_reduction) * 100).toFixed(2)}
                         <span className="u">% VMT</span>
                       </div>
+                      <div className="contrib-basis" style={{ fontSize: 11, color: "#6B6B6B", marginTop: 2 }}>
+                        from {basisLabel}
+                      </div>
                       <div className="ln-actions">
                         <button onClick={() => onEdit(p.id)}>Edit</button>
                         <button className="rm" onClick={() => onRemove(p.id)}>Remove</button>
                       </div>
                     </div>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             </div>
           );
         })}
+
+        {results.overlap_warnings.length > 0 && (
+          <div className="overlap-note">
+            <h3>Potential overlaps</h3>
+            <div className="sub">Review to avoid potential double counting.</div>
+            <ul>
+              {results.overlap_warnings.map((w) => (
+                <li key={`${w.a}-${w.b}`}>
+                  <b>{getStrategy(w.a).displayName}</b> and{" "}
+                  <b>{getStrategy(w.b).displayName}</b> both act on{" "}
+                  {purposePoolsLabel(w.pools)} via {w.mechanism.replace(/_/g, " ")}.
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
       <aside className="cart-side">
@@ -225,7 +276,9 @@ export function CartView({
               {CATEGORIES.map((cat) => {
                 const list = results.per_strategy.filter((p) => p.meta.category === cat.id);
                 if (list.length === 0) return null;
-                const sumDelta = list.reduce((a, p) => a + p.daily_vmt_reduction, 0);
+                // Use the COMBINED attributed contribution so category subtotals
+                // reconcile with the damped headline total (Σ = total).
+                const sumDelta = list.reduce((a, p) => a + p.combined_daily_vmt_reduction, 0);
                 const sumPct = results.baseline_vmt > 0 ? sumDelta / results.baseline_vmt : 0;
                 const capped = list.some((p) => p.capped);
                 return (

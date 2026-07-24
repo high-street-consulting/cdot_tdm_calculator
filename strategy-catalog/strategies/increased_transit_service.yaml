@@ -9,6 +9,12 @@ uid: TR-06
 name: Increased Transit Service
 category: transit
 status: implemented
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [mode_shift]
+purpose_applicability: [commute, recreational, other]
+target_population: all_trips
+capcoa_subsector: transit
+capcoa_measure: T-25
 tags:
 - service
 - transit

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-14T23:21:13.925718+00:00",
+  "generated_at": "2026-07-22T18:44:59.851092+00:00",
   "categories": [
     {
       "id": "transit",
@@ -123,6 +123,40 @@
       "site"
     ]
   },
+  "place_type_caps": {
+    "global": {
+      "urban_core": 75,
+      "urban": 40,
+      "suburban": 20,
+      "rural": 20
+    },
+    "category": {
+      "urban_core": 70,
+      "urban": 35,
+      "suburban": 15,
+      "rural": 15
+    },
+    "land_use": {
+      "urban_core": 65,
+      "urban": 30,
+      "suburban": 10,
+      "rural": 10
+    }
+  },
+  "ctr_subgroup_cap": 45,
+  "capcoa_subsectors": [
+    "land_use",
+    "neighborhood_design",
+    "parking",
+    "transit",
+    "commute_trip_reduction",
+    "induced"
+  ],
+  "mechanisms": [
+    "trip_generation",
+    "trip_length",
+    "mode_shift"
+  ],
   "strategies": [
     {
       "id": "car_share_access",
@@ -130,6 +164,17 @@
       "name": "Carshare",
       "category": "parking",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "neighborhood_design",
+      "capcoa_measure": "T-21",
       "tags": [
         "program",
         "auto",
@@ -197,6 +242,15 @@
       "name": "Commuter Incentives",
       "category": "support",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute"
+      ],
+      "target_population": "commute",
+      "capcoa_subsector": "commute_trip_reduction",
+      "capcoa_measure": "T-5",
       "tags": [
         "program",
         "commute",
@@ -261,6 +315,15 @@
       "name": "Commute Trip Reduction Marketing",
       "category": "support",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute"
+      ],
+      "target_population": "commute",
+      "capcoa_subsector": "commute_trip_reduction",
+      "capcoa_measure": "T-7",
       "tags": [
         "program",
         "commute",
@@ -325,6 +388,17 @@
       "name": "Dynamic Parking Pricing",
       "category": "parking",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "attraction_end",
+      "capcoa_subsector": "parking",
+      "capcoa_measure": "T-24",
       "tags": [
         "pricing",
         "auto",
@@ -409,6 +483,15 @@
       "name": "Employee Commuting Benefits",
       "category": "support",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute"
+      ],
+      "target_population": "commute",
+      "capcoa_subsector": "commute_trip_reduction",
+      "capcoa_measure": "T-9",
       "tags": [
         "pricing",
         "transit",
@@ -490,6 +573,17 @@
       "name": "Increased Employment Density",
       "category": "landuse",
       "status": "implemented",
+      "mechanism": [
+        "trip_length"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "attraction_end",
+      "capcoa_subsector": "land_use",
+      "capcoa_measure": "T-2",
       "tags": [
         "land-use",
         "all-trips",
@@ -549,6 +643,15 @@
       "name": "Workplace Bicycle Amenities",
       "category": "bikeped",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute"
+      ],
+      "target_population": "commute",
+      "capcoa_subsector": "commute_trip_reduction",
+      "capcoa_measure": "T-10",
       "tags": [
         "infrastructure",
         "bike",
@@ -611,6 +714,17 @@
       "name": "Increased Transit Service",
       "category": "transit",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "transit",
+      "capcoa_measure": "T-25",
       "tags": [
         "service",
         "transit",
@@ -696,6 +810,17 @@
       "name": "Lane Miles Added (Negative Impact on VMT)",
       "category": "induced",
       "status": "implemented",
+      "mechanism": [
+        "trip_generation"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "induced",
+      "excluded_from_caps": true,
       "tags": [
         "infrastructure",
         "auto",
@@ -776,6 +901,16 @@
       "name": "Mixed-Use Development (Without Transit)",
       "category": "landuse",
       "status": "planned",
+      "mechanism": [
+        "trip_length"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "land_use",
       "tags": [],
       "short_description": "Co-locating residential, commercial, office, civic, and recreational land uses in a single location, where the development is not tied to a high-quality transit station.",
       "extended_description": "Mixed-use development permits residential, commercial, office, civic, and/or recreational\nland uses in a single location. By locating housing, jobs, services, and daily needs closer\ntogether, mixed-use development can reduce reliance on long single-occupancy vehicle trips.\n\nThe effect of mixed-use development will vary based on the specific land uses proposed,\ndensity, street connectivity, parking conditions, and access to transit and active\ntransportation. Its VMT reduction potential may be lower where uses are technically mixed\nbut still separated by large blocks, wide roads, excessive parking, or limited pedestrian\nand bicycle connections.\n",
@@ -795,6 +930,16 @@
       "name": "Mobility hub",
       "category": "transit",
       "status": "planned",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "transit",
       "tags": [],
       "short_description": "A central location where multiple travel modes (transit, bikeshare, micromobility, ride-hailing, etc.) connect seamlessly.",
       "extended_description": "Mobility hubs connect multiple travel options in a convenient location, such as transit,\nbikeshare, micromobility, rideshare, carshare, or shuttle services. Mobility hubs can help\nusers transfer between modes, complete first/last-mile connections, and reach destinations\nthat may be difficult to access by one mode alone.\n\nThe effect of a mobility hub will vary based on the number, quality, and usefulness of the\nservices connected through the hub. Mobility hubs are most effective when they link\nreliable transportation options, serve key origins and destinations, and make transfers\nbetween modes simple, visible, and convenient.\n",
@@ -814,6 +959,14 @@
       "name": "Park-and-Ride",
       "category": "transit",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute"
+      ],
+      "target_population": "commute",
+      "capcoa_subsector": "transit",
       "tags": [
         "infrastructure",
         "transit",
@@ -933,6 +1086,15 @@
       "name": "Parking Cash-Out",
       "category": "parking",
       "status": "planned",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute"
+      ],
+      "target_population": "commute",
+      "capcoa_subsector": "commute_trip_reduction",
+      "capcoa_measure": "T-13",
       "tags": [
         "program",
         "commute",
@@ -1013,6 +1175,17 @@
       "name": "Parking Fees and Curb Management",
       "category": "parking",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "attraction_end",
+      "capcoa_subsector": "parking",
+      "capcoa_measure": "T-24",
       "tags": [
         "pricing",
         "auto",
@@ -1097,6 +1270,17 @@
       "name": "Pedestrian Network Improvements",
       "category": "bikeped",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "neighborhood_design",
+      "capcoa_measure": "T-18",
       "tags": [
         "infrastructure",
         "walk",
@@ -1178,6 +1362,18 @@
       "name": "Increased Residential Density",
       "category": "landuse",
       "status": "implemented",
+      "mechanism": [
+        "trip_length"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "residential",
+      "capcoa_subsector": "land_use",
+      "capcoa_measure": "T-1",
+      "measure_cap": 30,
       "tags": [
         "land-use",
         "all-trips",
@@ -1237,6 +1433,17 @@
       "name": "Protected or Buffered Bike Lanes",
       "category": "bikeped",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "neighborhood_design",
+      "capcoa_measure": "T-19-A",
       "tags": [
         "infrastructure",
         "bike",
@@ -1317,6 +1524,17 @@
       "name": "Shared Micromobility",
       "category": "bikeped",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "neighborhood_design",
+      "capcoa_measure": "T-22",
       "tags": [
         "service",
         "micromobility",
@@ -1409,6 +1627,17 @@
       "name": "Striped Bike Lanes, Neighborhood Bikeways and Sharrows",
       "category": "bikeped",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "neighborhood_design",
+      "capcoa_measure": "T-20",
       "tags": [
         "infrastructure",
         "bike",
@@ -1475,6 +1704,15 @@
       "name": "Telework and Flexible Work Schedules",
       "category": "support",
       "status": "implemented",
+      "mechanism": [
+        "trip_generation"
+      ],
+      "purpose_applicability": [
+        "commute"
+      ],
+      "target_population": "commute",
+      "capcoa_subsector": "commute_trip_reduction",
+      "capcoa_measure": "T-6",
       "tags": [
         "policy",
         "commute",
@@ -1539,6 +1777,15 @@
       "name": "TMO Coverage Expansion",
       "category": "support",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute"
+      ],
+      "target_population": "commute",
+      "capcoa_subsector": "commute_trip_reduction",
+      "capcoa_measure": "T-5",
       "tags": [
         "program",
         "commute",
@@ -1614,6 +1861,16 @@
       "name": "Traffic Calming",
       "category": "bikeped",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "neighborhood_design",
       "tags": [
         "infrastructure",
         "bike",
@@ -1741,6 +1998,18 @@
       "name": "Transit Oriented Development",
       "category": "landuse",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "land_use",
+      "capcoa_measure": "T-3",
+      "measure_cap": 31,
       "tags": [
         "land-use",
         "transit",
@@ -1823,6 +2092,18 @@
       "name": "Transit Pass Subsidies",
       "category": "transit",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "transit",
+      "capcoa_measure": "T-29",
+      "purpose_scope_input": "vmt_scope",
       "tags": [
         "pricing",
         "transit",
@@ -1876,9 +2157,28 @@
           "source_note": "your project scope / eligible-population estimate",
           "tooltip": "Share of area transit users covered by the subsidy.",
           "instructions": "Estimate the share of area transit riders eligible for the subsidized passes.\nA program targeting students or low-income riders covers a subset; a universal\nprogram approaches 100%.\n"
+        },
+        {
+          "key": "vmt_scope",
+          "label": "VMT scope",
+          "control": "select",
+          "default": "all",
+          "options": [
+            {
+              "value": "all",
+              "label": "All trips"
+            },
+            {
+              "value": "commute",
+              "label": "Commute trips only"
+            }
+          ],
+          "tooltip": "Apply the reduction to all VMT, or only to commute VMT.",
+          "summary": "Whether the subsidy's reduction applies to all VMT or only commute VMT.",
+          "instructions": "Choose whether this fare subsidy reduces all vehicle travel or only commute\ntravel. Pick \"Commute trips only\" for an employer- or commute-focused pass\nprogram; pick \"All trips\" for a general, population-wide fare reduction.\nThis selects which trip-purpose pool the reduction applies to in the\ncombination engine; it does not change the per-rider effect.\n"
         }
       ],
-      "notes": "Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy (scope=all).",
+      "notes": "Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy. vmt_scope gates purpose_applicability (purpose_scope_input).",
       "compute": {
         "pool": "all",
         "const": {
@@ -1888,7 +2188,8 @@
       },
       "_defaults": {
         "pct_fare_reduction": 0.5,
-        "pct_eligible": 0.4
+        "pct_eligible": 0.4,
+        "vmt_scope": "all"
       }
     },
     {
@@ -1897,6 +2198,17 @@
       "name": "Transit Service Frequency Increase",
       "category": "transit",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "transit",
+      "capcoa_measure": "T-26",
       "tags": [
         "service",
         "transit",
@@ -1970,6 +2282,17 @@
       "name": "Transit Shelters",
       "category": "transit",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "transit",
+      "capcoa_measure": "T-46",
       "tags": [
         "infrastructure",
         "transit",
@@ -2061,6 +2384,18 @@
       "name": "Unbundled Parking for Multifamily Housing",
       "category": "parking",
       "status": "planned",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "residential",
+      "capcoa_subsector": "parking",
+      "capcoa_measure": "T-16",
+      "measure_cap": 15.7,
       "tags": [
         "pricing",
         "developer",
@@ -2131,6 +2466,15 @@
       "name": "Vanpool",
       "category": "vanpool",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute"
+      ],
+      "target_population": "commute",
+      "capcoa_subsector": "commute_trip_reduction",
+      "capcoa_measure": "T-11",
       "tags": [
         "program",
         "vanpool",
@@ -2199,6 +2543,16 @@
       "name": "Wayfinding",
       "category": "bikeped",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute",
+        "recreational",
+        "other"
+      ],
+      "target_population": "all_trips",
+      "capcoa_subsector": "neighborhood_design",
       "tags": [
         "infrastructure",
         "bike",
@@ -2305,6 +2659,15 @@
       "name": "Workplace Parking Pricing",
       "category": "parking",
       "status": "implemented",
+      "mechanism": [
+        "mode_shift"
+      ],
+      "purpose_applicability": [
+        "commute"
+      ],
+      "target_population": "commute",
+      "capcoa_subsector": "parking",
+      "capcoa_measure": "T-12",
       "tags": [
         "pricing",
         "auto",

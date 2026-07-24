@@ -12,6 +12,7 @@ import {
   VMT_PURPOSE_SHARE,
 } from "../strategies/constants";
 import { CATEGORIES, STRATEGIES, type StrategyMeta } from "../strategies/registry";
+import { CTR_SUBGROUP_CAP, PLACE_TYPE_CAPS } from "../strategies/catalog";
 import { CategoryIcon } from "./CategoryIcon";
 import { Markdown } from "./Markdown";
 
@@ -53,20 +54,88 @@ export function MethodologyView() {
           <li>
             <b>Aggregate.</b> Daily-VMT reductions sum across the selected
             TAZs. Per-strategy aggregate <code>pct_vmt_reduction</code> ={" "}
-            <code>sum(daily_vmt_reduction) / sum(base_vmt)</code>.
+            <code>sum(daily_vmt_reduction) / sum(base_vmt)</code> — the
+            strategy's standalone effect.
           </li>
           <li>
-            <b>Apply subsector caps.</b> Per CAPCOA, the combined VMT
-            reduction within a category is capped (e.g. 15% for transit
-            strategies combined). When the sum exceeds the cap, each
-            in-category strategy is scaled down by{" "}
-            <code>cap ÷ combined_pct</code>.
+            <b>Combine and cap.</b> Within each purpose pool (commute,
+            recreational, other), the selected strategies combine
+            multiplicatively — <code>1 − Π(1 − rᵢ)</code> — so reductions
+            acting on the same travel don't double-count. The combined
+            reduction is then bounded by nested maximums that vary by place
+            type (individual measure → land-use subcategory → built-environment
+            category → global), plus a separate combined
+            commute-trip-reduction cap. Pools are summed, and induced-demand
+            (VMT-increase) measures are added outside the caps. See{" "}
+            <b>Combination caps</b> below.
           </li>
           <li>
             <b>Convert to GHG.</b> Annual VMT × MOVES emission factor.
             Statewide blended rate ~0.412 kg CO₂e per VMT.
           </li>
         </ol>
+      </section>
+
+      <section className="doc-section">
+        <h2>Combination caps</h2>
+        <p>
+          When multiple strategies are selected, their combined VMT reduction
+          within each purpose pool is bounded by nested maximums that vary by
+          place type. These ceilings, and the multiplicative combination method,
+          are drawn from the{" "}
+          <a
+            href="https://www.caleemod.com/handbook/full_handbook.html"
+            target="_blank"
+            rel="noreferrer"
+          >
+            CAPCOA Handbook (2021)
+          </a>{" "}
+          transportation measures; they prevent double-counting when strategies
+          act on the same travel. A strategy flagged <b>capped</b> on the results
+          page had its contribution limited by one of these maximums.
+        </p>
+        <table className="doc-table">
+          <thead>
+            <tr>
+              <th>Cap tier</th>
+              <th>urban_core</th>
+              <th>urban</th>
+              <th>suburban</th>
+              <th>rural</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Global maximum (all measures)</td>
+              <td>{PLACE_TYPE_CAPS.global.urban_core}%</td>
+              <td>{PLACE_TYPE_CAPS.global.urban}%</td>
+              <td>{PLACE_TYPE_CAPS.global.suburban}%</td>
+              <td>{PLACE_TYPE_CAPS.global.rural}%</td>
+            </tr>
+            <tr>
+              <td>Category maximum (land use, neighborhood, parking, transit)</td>
+              <td>{PLACE_TYPE_CAPS.category.urban_core}%</td>
+              <td>{PLACE_TYPE_CAPS.category.urban}%</td>
+              <td>{PLACE_TYPE_CAPS.category.suburban}%</td>
+              <td>{PLACE_TYPE_CAPS.category.rural}%</td>
+            </tr>
+            <tr>
+              <td>Land-use subcategory</td>
+              <td>{PLACE_TYPE_CAPS.land_use.urban_core}%</td>
+              <td>{PLACE_TYPE_CAPS.land_use.urban}%</td>
+              <td>{PLACE_TYPE_CAPS.land_use.suburban}%</td>
+              <td>{PLACE_TYPE_CAPS.land_use.rural}%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p className="doc-sub">
+          A combined commute-trip-reduction cap of {CTR_SUBGROUP_CAP}% also
+          applies across employer / commute programs. Individual measures may
+          carry their own maximums (e.g. increased residential density 30%,
+          transit-oriented development 31%), applied before the pool roll-up.
+          CDOT place types map to CAPCOA contexts (urban_core → Urban, urban →
+          Compact Infill, suburban → Suburban Center; rural inherits suburban).
+        </p>
       </section>
 
       <section className="doc-section">
@@ -182,11 +251,6 @@ export function MethodologyView() {
                   <CategoryIcon cat={cat.id} size={18} />
                 </span>
                 <h3>{cat.name}</h3>
-                {cat.cap != null && (
-                  <span className="doc-cat-cap">
-                    Subsector cap: {cat.cap}% combined
-                  </span>
-                )}
               </div>
               {list.map((s) => (
                 <StrategyDoc key={s.id} s={s} />
@@ -335,6 +399,11 @@ function StrategyDoc({ s }: { s: StrategyMeta }) {
       <div className="doc-strat-head">
         <h4>{s.uid ? `${s.uid} · ${s.displayName}` : s.displayName}</h4>
         <span className="doc-strat-method">{s.method}</span>
+        {typeof s.measureCap === "number" && (
+          <span className="doc-cat-cap">
+            Max reduction: {s.measureCap}% (CAPCOA, see Combination caps)
+          </span>
+        )}
       </div>
       <div className="doc-strat-formula">{s.formula}</div>
       {s.methodologyDetail ? (

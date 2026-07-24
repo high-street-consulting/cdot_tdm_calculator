@@ -604,6 +604,36 @@ button.info-i, a.info-i { padding: 4px; width: 24px; height: 24px; border: 0; }
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22);
   pointer-events: none;
 }
+/* Capped-strategy info icon (results page): recolor to match the CAPPED tag
+   (orange) instead of the default blue, icon + hover + tooltip bubble. */
+.info-i.capped-info { background: #FFF1E8; color: var(--cdot-orange-press); }
+.info-i.capped-info:hover { background: var(--cdot-orange); color: #fff; }
+.info-i.capped-info[data-tip]:not([data-tip=""]):hover::after,
+.info-i.capped-info[data-tip]:not([data-tip=""]):focus-visible::after {
+  background: var(--cdot-orange-press);
+}
+
+/* Headline fine print (results page): what the combined % represents. Sits on
+   the dark-blue hero, so it uses light text + a white link for contrast. */
+.cart-hero .hero-note {
+  margin: 6px 0 0; max-width: 720px;
+  font-size: 12px; font-style: italic; color: rgba(255, 255, 255, 0.82); line-height: 1.4;
+}
+.cart-hero .hero-note a { color: #fff; font-style: normal; font-weight: 600; text-decoration: underline; white-space: nowrap; }
+.cart-hero .hero-note a:hover { color: var(--cdot-orange-10, #FFE6D5); }
+
+/* Potential-overlaps banner (results page): neutral, understated — kept out of
+   the way below the strategy list. */
+.overlap-note {
+  margin: 28px 0 32px; padding: 10px 12px;
+  background: var(--cdot-dark-blue-05, #F2F4F9);
+  border-left: 3px solid #9AA7B5;
+  border-radius: 2px; font-size: 13px; color: #333; line-height: 1.45;
+}
+.overlap-note h3 { margin: 0; font-size: 13px; font-weight: 700; color: var(--cdot-dark-blue); }
+.overlap-note .sub { margin: 2px 0 6px; font-size: 12px; color: #6B6B6B; }
+.overlap-note ul { margin: 0; padding-left: 18px; }
+.overlap-note li { margin-bottom: 3px; }
 
 /* ───── Tweaks panel ───── */
 .tweaks { position: fixed; bottom: 20px; right: 20px; width: 288px; background: #fff; border: 1px solid #D4D4D4; border-radius: 2px; box-shadow: 0 8px 32px rgba(0,0,0,.18); z-index: 999; font-size: 14px; }

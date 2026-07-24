@@ -179,9 +179,12 @@ export function buildResultsCsv(
       "Strategy id",
       "Strategy",
       "Category",
-      "% VMT reduction",
-      "Daily VMT reduction (mi/day)",
-      "Annual VMT reduction (mi/yr)",
+      "Standalone % VMT reduction",
+      "Standalone daily VMT (mi/day)",
+      "Standalone annual VMT (mi/yr)",
+      // Attributed share of the COMBINED package total (Σ = package total),
+      // after CAPCOA multiplicative overlap + caps.
+      "Combined daily VMT (mi/day)",
       "Capped",
       // Each input is tagged (user-set) when the value was changed from the
       // system default for this project area, or (default) when left as seeded
@@ -238,6 +241,7 @@ export function buildResultsCsv(
         (p.pct_vmt_reduction * 100).toFixed(4),
         Math.round(p.daily_vmt_reduction),
         Math.round(annual),
+        Math.round(p.combined_daily_vmt_reduction),
         p.capped ? "Y" : "N",
         inputsStr,
         p.meta.method,

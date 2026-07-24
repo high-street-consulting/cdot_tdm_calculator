@@ -8,6 +8,13 @@ uid: TR-02
 name: Transit Pass Subsidies
 category: transit
 status: implemented
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [mode_shift]
+purpose_applicability: [commute, recreational, other]
+target_population: all_trips
+capcoa_subsector: transit
+capcoa_measure: T-29
+purpose_scope_input: vmt_scope
 tags:
 - pricing
 - transit
@@ -88,7 +95,24 @@ inputs:
     Estimate the share of area transit riders eligible for the subsidized passes.
     A program targeting students or low-income riders covers a subset; a universal
     program approaches 100%.
-notes: 'Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy (scope=all).'
+- key: vmt_scope
+  label: VMT scope
+  control: select
+  default: all
+  options:
+  - value: all
+    label: All trips
+  - value: commute
+    label: Commute trips only
+  tooltip: Apply the reduction to all VMT, or only to commute VMT.
+  summary: Whether the subsidy's reduction applies to all VMT or only commute VMT.
+  instructions: |
+    Choose whether this fare subsidy reduces all vehicle travel or only commute
+    travel. Pick "Commute trips only" for an employer- or commute-focused pass
+    program; pick "All trips" for a general, population-wide fare reduction.
+    This selects which trip-purpose pool the reduction applies to in the
+    combination engine; it does not change the per-rider effect.
+notes: 'Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy. vmt_scope gates purpose_applicability (purpose_scope_input).'
 # Closed-form (transit fare subsidy, scope=all). Reads imputed transit/auto mode share + avo.
 compute:
   pool: all

@@ -84,7 +84,36 @@ export interface CatalogStrategy {
   auto_filled_summary?: string[];
   /** Closed-form math (optional); see computeDsl. Absent for code-backed strategies. */
   compute?: ComputeSpec;
+  // ---- CAPCOA combination tags (Phase 1; consumed by the combination engine) ----
+  mechanism?: Mechanism[];
+  purpose_applicability?: PurposePool[];
+  purpose_scope_input?: string;
+  target_population?: string;
+  capcoa_subsector?: CapcoaSubsector;
+  capcoa_measure?: string;
+  measure_cap?: number | null;
+  excluded_from_caps?: boolean;
   _defaults: Record<string, number | string>;
+}
+
+/** CAPCOA VMT mechanisms — which multiplicative factor a strategy acts on. */
+export type Mechanism = "trip_generation" | "trip_length" | "mode_shift";
+/** Disjoint VMT purpose pools (the combination engine's outer loop). */
+export type PurposePool = "commute" | "recreational" | "other";
+/** CAPCOA subsector — the cap-grouping unit (distinct from display category). */
+export type CapcoaSubsector =
+  | "land_use"
+  | "neighborhood_design"
+  | "parking"
+  | "transit"
+  | "commute_trip_reduction"
+  | "induced";
+
+/** Place-type-tiered CAPCOA cap tables (percent VMT), keyed by place type. */
+export interface PlaceTypeCaps {
+  global: Record<string, number>;
+  category: Record<string, number>;
+  land_use: Record<string, number>;
 }
 
 export interface CatalogCategory {
@@ -100,6 +129,11 @@ export interface Catalog {
   categories: CatalogCategory[];
   area_type_thresholds: Record<string, number>;
   tag_catalog: Record<string, string[]>;
+  // CAPCOA 2021 combination caps + vocabularies (see globals.yaml).
+  place_type_caps?: PlaceTypeCaps;
+  ctr_subgroup_cap?: number;
+  capcoa_subsectors?: CapcoaSubsector[];
+  mechanisms?: Mechanism[];
   strategies: CatalogStrategy[];
 }
 
@@ -192,6 +226,15 @@ export function toMeta(s: CatalogStrategy): StrategyMeta {
     guidance: s.guidance || undefined,
     autoFilledSummary: s.auto_filled_summary ?? undefined,
     compute: s.compute,
+    // CAPCOA combination tags (snake_case → camelCase):
+    mechanism: s.mechanism ?? undefined,
+    purposeApplicability: s.purpose_applicability ?? undefined,
+    purposeScopeInput: s.purpose_scope_input || undefined,
+    targetPopulation: s.target_population || undefined,
+    capcoaSubsector: s.capcoa_subsector ?? undefined,
+    capcoaMeasure: s.capcoa_measure || undefined,
+    measureCap: s.measure_cap ?? undefined,
+    excludedFromCaps: s.excluded_from_caps ?? undefined,
   };
 }
 
@@ -215,3 +258,20 @@ export const CATEGORIES_FROM_CATALOG: StrategyCategory[] =
 export const STRATEGIES_FROM_CATALOG: StrategyMeta[] = CATALOG.strategies
   .filter((s) => s.status === "implemented")
   .map(toMeta);
+
+// ---- CAPCOA 2021 combination caps (globals) -----------------------------
+// Fallbacks match tdm_strategy_combination_spec.md §3.1 in case an older
+// catalog.json (pre-Phase-1) is bundled.
+export const PLACE_TYPE_CAPS: PlaceTypeCaps = CATALOG.place_type_caps ?? {
+  global: { urban_core: 75, urban: 40, suburban: 20, rural: 20 },
+  category: { urban_core: 70, urban: 35, suburban: 15, rural: 15 },
+  land_use: { urban_core: 65, urban: 30, suburban: 10, rural: 10 },
+};
+export const CTR_SUBGROUP_CAP: number = CATALOG.ctr_subgroup_cap ?? 45;
+export const AREA_TYPE_THRESHOLDS: Record<string, number> =
+  CATALOG.area_type_thresholds ?? {
+    urban_core: 10000,
+    urban: 3500,
+    suburban: 1000,
+    rural: 0,
+  };

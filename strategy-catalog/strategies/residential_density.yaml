@@ -7,6 +7,13 @@ uid: LU-01
 name: Increased Residential Density
 category: landuse
 status: implemented
+# --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
+mechanism: [trip_length]
+purpose_applicability: [commute, recreational, other]
+target_population: residential
+capcoa_subsector: land_use
+capcoa_measure: T-1
+measure_cap: 30
 tags:
 - land-use
 - all-trips
