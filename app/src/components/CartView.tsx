@@ -321,7 +321,15 @@ export function CartView({
                   <td className="cat-ic-cell" aria-hidden="true" />
                   <th scope="row" className="nm">
                     Multiplicative combination{" "}
-                    <span className="count">(overlap &amp; caps)</span>
+                    <span className="count">(overlap &amp; caps)</span>{" "}
+                    <a
+                      className="info-i"
+                      href="#/methodology"
+                      data-tip="Strategies acting on the same trips are combined multiplicatively — 1 − Π(1 − rᵢ) — not added, and held to CAPCOA subsector/place-type caps. So the combined total is smaller than the sum of the individual reductions; this line is that difference. Click for the methodology."
+                      aria-label="How reductions are combined: strategies acting on the same trips are combined multiplicatively — 1 minus the product of (1 minus each reduction) — not added, and held to CAPCOA subsector and place-type caps, so the combined total is smaller than the sum of the individual reductions. This line is that difference. Opens the methodology page."
+                    >
+                      i
+                    </a>
                   </th>
                   <td className="v">
                     {combinationAdjustmentPct >= 0 ? "−" : "+"}

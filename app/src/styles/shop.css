@@ -1142,6 +1142,11 @@
 .cart-breakdown .cat-table tr.cat-adjustment-row td { border-top: 1px dashed #E0E0E0; padding-top: 8px; }
 .cart-breakdown .cat-table tr.cat-adjustment-row th.nm { font-weight: 400; font-style: italic; color: #6B6B6B; }
 .cart-breakdown .cat-table tr.cat-adjustment-row td.v { color: var(--cdot-orange-press); }
+.cart-breakdown .cat-adjustment-row .info-i { font-style: normal; vertical-align: middle; }
+/* Right-anchor the tooltip in the narrow results sidebar so it extends leftward
+   (into the page) instead of overflowing the viewport's right edge. */
+.cart-breakdown .cat-adjustment-row .info-i[data-tip]:hover::after,
+.cart-breakdown .cat-adjustment-row .info-i[data-tip]:focus-visible::after { left: auto; right: 0; }
 .cart-breakdown .capnote { font-size: 12px; color: var(--cdot-orange-press); margin-top: 6px; padding-left: 20px; }
 
 /* Co-benefits rows: simple two-column flex (label left, value right).
