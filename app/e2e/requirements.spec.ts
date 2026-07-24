@@ -4,7 +4,7 @@
 // page. These are cross-engine so browser-specific UI regressions surface.
 
 import { test, expect } from "@playwright/test";
-import { gotoArea, selectTazs, openStrategy, setInput, STEAMBOAT_TAZS, STRATEGY } from "./helpers";
+import { gotoArea, gotoStrategyList, selectTazs, openStrategy, setInput, STEAMBOAT_TAZS, STRATEGY } from "./helpers";
 
 test.describe("Requirements — UI / outputs / accessibility / docs", () => {
   test("UI-06: overriding a default shows a clear 'modified' affordance", async ({ page }) => {
@@ -50,7 +50,7 @@ test.describe("Requirements — UI / outputs / accessibility / docs", () => {
   });
 
   test("UI-03: strategies are organized by category (picker filter)", async ({ page }) => {
-    await page.goto("/#/strategies");
+    await gotoStrategyList(page); // closes the map overlay so the sidebar is clickable
     // Category chips in the sidebar act as filters.
     await expect(page.locator(".cat-nav button").first()).toBeVisible();
     const before = await page.locator(".product-card").count();

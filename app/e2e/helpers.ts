@@ -95,9 +95,23 @@ export async function selectTazs(page: Page, ids: string[]): Promise<void> {
 }
 
 // ── Strategy picker + detail ────────────────────────────────────────────────
+/**
+ * Go to the strategy list with the map CLOSED. The map is a full-bleed overlay
+ * (not a route): navigating by hash alone leaves it open, and its canvas
+ * intercepts pointer events over the picker. Clicking the "Strategy selection"
+ * workflow step closes the overlay and lands on the list, exactly as a user does.
+ */
+export async function gotoStrategyList(page: Page): Promise<void> {
+  // Load the app if this is the first navigation (some tests call openStrategy
+  // as their first action), then close the map overlay via the workflow step.
+  if (!page.url().startsWith("http")) await page.goto("/#/strategies");
+  await page.locator(".basket-bar .crumb .step").filter({ hasText: "Strategy selection" }).click();
+  await expect(page.getByRole("heading", { name: /Select TDM strategies/ })).toBeVisible();
+}
+
 /** Open a strategy's detail/config view from the picker by its display name. */
 export async function openStrategy(page: Page, displayName: string): Promise<void> {
-  await softGoto(page, "/#/strategies");
+  await gotoStrategyList(page);
   const card = page.getByRole("button", { name: new RegExp(escapeRe(displayName)) }).first();
   await card.click();
   await expect(page.getByRole("heading", { level: 1, name: displayName })).toBeVisible();
@@ -148,16 +162,24 @@ export async function fillJustification(page: Page, text: string): Promise<void>
 export async function addToPackage(page: Page): Promise<void> {
   await page.getByRole("button", { name: /Add to package|Update selection/ }).click();
   // Committing bounces back to the picker.
-  await expect(page).toHaveURL(/#\/strategies$/);
+  // The strategy list is served at both "/#/" (clean landing) and "/#/strategies".
+  await expect(page).toHaveURL(/#\/(strategies)?$/);
 }
 
 // ── Results ─────────────────────────────────────────────────────────────────
 export async function gotoResults(page: Page): Promise<void> {
-  await softGoto(page, "/#/cart");
+  // Use the "Results" workflow step (closes the map overlay), not a hash-only
+  // goto that would leave the overlay covering the cart. Enabled once the basket
+  // has a strategy (the tests reach here after adding one).
+  await page.locator(".basket-bar .crumb .step").filter({ hasText: "Results" }).click();
   await expect(page.getByRole("heading", { name: /Your strategy package/ })).toBeVisible();
 }
-/** Big headline % on the results page (reduction shows as a negative number). */
-export const resultsHeadlinePct = (page: Page) => readNum(page.locator(".cart-hero .big").first());
+/** Big headline % on the results page (reduction shows as a negative number).
+ *  Read the visible (aria-hidden) glyph span specifically — the .big element
+ *  also contains an sr-only "Reduction of 0.70 percent…" phrase whose unsigned
+ *  number would otherwise be parsed first. */
+export const resultsHeadlinePct = (page: Page) =>
+  readNum(page.locator('.cart-hero .big [aria-hidden="true"]').first());
 /** Per-strategy contribution rows on the results page. */
 export const perStrategyRows = (page: Page) => page.locator(".cart-line");
 export const ghgAvoidedText = (page: Page) =>
@@ -184,5 +206,6 @@ export async function addStrategy(
 export async function removeStrategy(page: Page, displayName: string): Promise<void> {
   await openStrategy(page, displayName);
   await page.getByRole("button", { name: /^Remove$/ }).click();
-  await expect(page).toHaveURL(/#\/strategies$/);
+  // The strategy list is served at both "/#/" (clean landing) and "/#/strategies".
+  await expect(page).toHaveURL(/#\/(strategies)?$/);
 }
