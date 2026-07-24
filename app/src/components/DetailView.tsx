@@ -255,13 +255,21 @@ export function DetailView({
   const { pctReduction, dailyReduction } = useMemo(() => {
     let totalDelta = 0;
     let totalBase = 0;
-    for (const row of computeStrategyRows(strategyId, values, scaledTazInputs)) {
+    // Pass contextOverrides so the live "At your settings" impact reflects the
+    // user's project-context edits (transit mode share, AVO, parking price, …),
+    // matching computeResults — otherwise the preview ignores those edits.
+    for (const row of computeStrategyRows(
+      strategyId,
+      values,
+      scaledTazInputs,
+      contextOverrides,
+    )) {
       totalDelta += row.daily_vmt_reduction;
       totalBase += row.base_vmt;
     }
     const pct = totalBase > 0 ? totalDelta / totalBase : 0;
     return { pctReduction: pct, dailyReduction: totalDelta };
-  }, [strategyId, scaledTazInputs, values]);
+  }, [strategyId, scaledTazInputs, values, contextOverrides]);
 
   const annualReduction = dailyReduction * 365;
   // Drive direction from the COMPUTED value, not the static isInduced flag, so a

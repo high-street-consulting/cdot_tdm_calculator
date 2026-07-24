@@ -253,8 +253,20 @@ export function computeStrategyRows(
   // expansion's transit/auto mode share + AVO) honors the override uniformly
   // across every TAZ, matching the DSL path's dslRow semantics. Fns that don't
   // read any overridable field simply ignore the extra arg.
+  //
+  // Seed the strategy's input defaults and drop empty/undefined values before
+  // calling the fn, so a cleared number input (which the DetailView stores as
+  // "") or an unset input falls back to its default instead of reaching a calc
+  // fn as "" / undefined and throwing (e.g. `args.new_lane_miles.toFixed`).
+  // Mirrors the DSL path's `{ ...defaults, ...numericParams(values) }` tolerance.
+  const args: Record<string, number | string> = { ...meta.defaults };
+  for (const [k, v] of Object.entries(values)) {
+    if (v === undefined || v === null) continue;
+    if (typeof v === "string" && v.trim() === "") continue;
+    args[k] = v;
+  }
   const fn = PER_TAZ_REGISTRY[id];
-  return selectedTazs.map((taz) => fn(taz, values, contextOverrides));
+  return selectedTazs.map((taz) => fn(taz, args, contextOverrides));
 }
 
 /**

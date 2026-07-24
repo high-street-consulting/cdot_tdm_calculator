@@ -193,8 +193,12 @@ export function laneMileAddition(taz: TazInputs, args: LaneMileAdditionArgs): St
   const elasticity = args.elasticity ?? ELASTICITIES[elKey];
   const col = `lane_mi_${fc}` as keyof TazInputs;
   const existing = (taz[col] as number | null | undefined) ?? 0;
+  // Coerce defensively: an empty/cleared number input can reach here as "" or
+  // undefined; treat a non-finite value as 0 rather than throwing on .toFixed.
+  const newLaneMiles = Number(args.new_lane_miles);
+  const newLaneMilesSafe = Number.isFinite(newLaneMiles) ? newLaneMiles : 0;
   const inputs =
-    `new_lane_mi=${args.new_lane_miles.toFixed(2)}, class=${fc}, ε=${elasticity}`;
+    `new_lane_mi=${newLaneMilesSafe.toFixed(2)}, class=${fc}, ε=${elasticity}`;
   if (!(existing > 0)) {
     // Python returns 0 with a flag; mirror that.
     return buildResult({
@@ -206,7 +210,7 @@ export function laneMileAddition(taz: TazInputs, args: LaneMileAdditionArgs): St
       assumptions: "no_existing_lane_miles_in_class",
     });
   }
-  const pct = (args.new_lane_miles / existing) * elasticity;
+  const pct = (newLaneMilesSafe / existing) * elasticity;
   return buildResult({
     taz,
     strategy: "Lane-Mile Addition",

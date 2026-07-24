@@ -52,7 +52,7 @@ import { computeResults, type AggregatedResults, type BasketEntry } from "./stra
 import { seedDefaults, isDefaultValue } from "./strategies/defaults";
 import type { TazInputs } from "./strategies/types";
 import { type StrategyKey } from "./strategies/strategies";
-import { getStrategy, isKnownStrategy } from "./strategies/registry";
+import { isKnownStrategy } from "./strategies/registry";
 import { getStrategyContext } from "./strategies/context";
 
 // Code-split the ArcGIS map: it's by far the heaviest dependency, so keep it
@@ -473,18 +473,17 @@ function Layout() {
         }
       }
 
-      // Per-strategy "Project context" overrides. Only DSL-computed strategies
-      // (meta.compute) actually feed overrides into the calc, so only persist
-      // them there (for a hand-written strategy the affordance isn't rendered
-      // and this draft stays empty anyway). Keep an override only when it
-      // differs from the row's data-derived baseline (rawValue), mirroring the
-      // "modified from default" filter for inputs; drop no-op overrides so an
-      // untouched value doesn't read as user-supplied. Keep a note only when it
-      // annotates a surviving override and has non-empty text.
+      // Per-strategy "Project context" overrides. Persist any override that
+      // differs from the row's data-derived baseline (rawValue), for BOTH
+      // DSL-computed and hand-written (registry) strategies — their calc paths
+      // both honor contextOverrides (see computeStrategyRows), and registry
+      // strategies such as Transit Service Frequency Increase DO render the
+      // override affordance. Drop no-op overrides so an untouched value doesn't
+      // read as user-supplied. Keep a note only when it annotates a surviving
+      // override and has non-empty text.
       const contextOverrides: Record<string, number> = {};
       const contextNotes: Record<string, string> = {};
-      const meta = getStrategy(id);
-      if (meta.compute) {
+      {
         // Baseline (rawValue) per overrideKey, from the un-overridden rows.
         const baselines: Record<string, number> = {};
         for (const row of getStrategyContext(id, tazInputs, vals)) {
@@ -951,7 +950,13 @@ function BasketBar(props: {
           onMouseEnter={() => setHoverIndex(1)}
           onClick={() => {
             props.closeMap();
-            navigate(lastStrategiesPath.current);
+            // From a strategy detail, step UP to the strategies list. From
+            // elsewhere (the map/area or results), return to where the user left
+            // off in the strategy flow (the list, or the detail they were
+            // configuring).
+            navigate(
+              props.view === "detail" ? "/strategies" : lastStrategiesPath.current,
+            );
           }}
         >
           <span className="n">2</span> Strategy selection
