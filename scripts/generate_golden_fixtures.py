@@ -248,6 +248,24 @@ def _taz_to_dict(row: pd.Series, columns: list[str]) -> dict:
 
 # Columns each strategy reads from the TAZ row. The fixture only emits these
 # (keeps the JSON small + makes it obvious which TAZ columns matter).
+# Per-strategy list of the TAZ columns its engine reads. The fixture exports the
+# UNION of these for every sample TAZ, and the TS port is fed exactly that; so a
+# column missing here is a column the port never sees, and the golden test then
+# silently compares two engines running on different inputs.
+#
+# That is what happened before 2026-07-27. `avo` and the `vmt_share_*` purpose
+# split were absent, so the port fell back to the statewide AVO (1.20) and the
+# constant purpose shares while Python used the observed CDOT extract values. The
+# fixture matched the port, the tests passed, and the two engines had quietly
+# diverged for every strategy reading either. The app was never affected: queryTaz
+# does fetch both from the enriched TAZ layer.
+#
+# Both are now exported for the strategies that read them:
+#   avo            -> any engine with a 1/AVO mode-shift factor
+#   vmt_share_*    -> any engine whose base VMT is a purpose pool (commute etc.)
+# Python's add_imputed_avo / _base_vmt and the TS getAvo / baseVmt use the same
+# precedence (observed per-TAZ value, else statewide constant), so exporting the
+# observed values is what makes the two agree.
 STRATEGY_TAZ_COLUMNS: dict[str, list[str]] = {
     "density_change":               ["taz_id", "daily_vmt", "area_type"],
     "separated_bike_lanes":         ["taz_id", "daily_vmt", "avg_trip_length",
@@ -255,21 +273,40 @@ STRATEGY_TAZ_COLUMNS: dict[str, list[str]] = {
     "bike_mode_share_booster":      ["taz_id", "daily_vmt", "avg_trip_length", "area_type",
                                       "acs_drove_alone_share", "acs_carpool_share",
                                       "acs_bike_share", "acs_walk_share", "acs_transit_share",
-                                      "acs_total_workers"],
+                                      "acs_total_workers",
+                                     "avo",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
     "transit_service_expansion":    ["taz_id", "daily_vmt", "area_type",
                                       "acs_drove_alone_share", "acs_carpool_share",
-                                      "acs_transit_share", "acs_total_workers"],
+                                      "acs_transit_share", "acs_total_workers",
+                                     "avo"],
     "shared_micromobility":         ["taz_id", "daily_vmt", "daily_trips", "avg_trip_length",
                                       "population", "employment"],
     "transit_oriented_development": ["taz_id", "daily_vmt", "area_type",
                                       "acs_drove_alone_share", "acs_carpool_share",
-                                      "acs_transit_share", "acs_total_workers"],
+                                      "acs_transit_share", "acs_total_workers",
+                                     "avo"],
     "vanpool":                      ["taz_id", "daily_vmt", "area_type",
                                       "acs_drove_alone_share", "acs_carpool_share",
-                                      "acs_transit_share", "acs_total_workers"],
-    "tmo_coverage":                 ["taz_id", "daily_vmt"],
-    "commute_program":              ["taz_id", "daily_vmt"],
-    "telework":                     ["taz_id", "daily_vmt"],
+                                      "acs_transit_share", "acs_total_workers",
+                                     "avo",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
+    "tmo_coverage":                 ["taz_id", "daily_vmt",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
+    "commute_program":              ["taz_id", "daily_vmt",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
+    "telework":                     ["taz_id", "daily_vmt",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
     "lane_mile_addition":           ["taz_id", "daily_vmt", "lane_mi_freeway",
                                       "lane_mi_expressway", "lane_mi_major_arterial",
                                       "lane_mi_minor_arterial", "lane_mi_collector",
@@ -277,28 +314,51 @@ STRATEGY_TAZ_COLUMNS: dict[str, list[str]] = {
     # Planner-facing split/new tiles. Columns mirror the engine they delegate to.
     "new_transit_service":          ["taz_id", "daily_vmt", "area_type",
                                      "acs_transit_share", "acs_drove_alone_share",
-                                     "acs_carpool_share"],
+                                     "acs_carpool_share",
+                                     "avo"],
     "transit_pass_subsidy":         ["taz_id", "daily_vmt", "area_type",
                                      "acs_transit_share", "acs_drove_alone_share",
-                                     "acs_carpool_share"],
+                                     "acs_carpool_share",
+                                     "avo",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
     "employee_commuting_benefits":  ["taz_id", "daily_vmt", "area_type",
                                      "acs_transit_share", "acs_drove_alone_share",
-                                     "acs_carpool_share"],
+                                     "acs_carpool_share",
+                                     "avo",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
     "sharrows_bike_lanes":          ["taz_id", "daily_vmt", "avg_trip_length", "area_type",
                                      "acs_bike_share", "acs_transit_share",
                                      "acs_drove_alone_share", "acs_carpool_share",
-                                     "acs_walk_share"],
+                                     "acs_walk_share",
+                                     "avo"],
     "end_of_trip_facilities":       ["taz_id", "daily_vmt", "avg_trip_length", "area_type",
                                      "acs_bike_share", "acs_transit_share",
                                      "acs_drove_alone_share", "acs_carpool_share",
-                                     "acs_walk_share"],
+                                     "acs_walk_share",
+                                     "avo",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
     "residential_density":          ["taz_id", "daily_vmt"],
     "employment_density":           ["taz_id", "daily_vmt"],
-    "workplace_parking_pricing":    ["taz_id", "daily_vmt", "area_type"],
+    "workplace_parking_pricing":    ["taz_id", "daily_vmt", "area_type",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
     "parking_fees_curb_management": ["taz_id", "daily_vmt", "area_type"],
     "dynamic_parking_pricing":      ["taz_id", "daily_vmt", "area_type"],
-    "commute_marketing":            ["taz_id", "daily_vmt"],
-    "commute_incentives":           ["taz_id", "daily_vmt"],
+    "commute_marketing":            ["taz_id", "daily_vmt",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
+    "commute_incentives":           ["taz_id", "daily_vmt",
+                                     "vmt_share_commute",
+                                     "vmt_share_recreational",
+                                     "vmt_share_other"],
 }
 
 
