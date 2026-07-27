@@ -192,7 +192,7 @@ Affected strategies today: `commute_incentives` and `tmo_coverage` are T-5 (supe
 
 This supersedes the earlier guidance in §3 that the 45% CTR cap alone should absorb this overlap. A cap only binds once the combined reduction is large; the double count exists at any magnitude, so the cap is the wrong instrument for an exclusion the Handbook states outright.
 
-**Open question.** Two of our strategies both carry T-5 (`commute_incentives` and `tmo_coverage`). CAPCOA defines a single T-5, so selecting both arguably double counts that measure against itself. The current rule does not catch it, because a superseding measure is never superseded by its own rule. Left as-is pending a decision on whether those two model genuinely distinct programs.
+**Resolved 2026-07-27: two strategies may both carry T-5.** `commute_incentives` and `tmo_coverage` are both tagged T-5, and CAPCOA defines a single T-5, so selecting both could be read as double counting the measure against itself. Per CDOT: they model **genuinely distinct programs** (an employer-run rewards programme versus a TMO/TMA extending coordinated services to more worksites), and crediting both is intended. No rule change: a superseding measure is never superseded by its own rule, so the current implementation already behaves this way. The 45% CTR subgroup cap remains the bound on their combined effect.
 
 ### 4.2 Soft overlap flags (WARN, do not block)
 

@@ -73,7 +73,13 @@ NOAA_BIKEABLE_TAZ_PATH    = EXTERNAL_CACHE_DIR / "noaa_bikeable_days_taz.csv"
 # published TDM zone file does NOT have: average vehicle occupancy (AVO),
 # model average trip length, mode-choice volumes, and VMT split by trip purpose.
 # Joined on the new-TAZ id (``TAZ`` column == ``TAZ_new_ID`` == ``taz_id``).
-EXTRA_TAZ_DATA_PATH = DATA_DIR / "TDM Custom Output" / "HighStreetData_ExtraTAZData.xlsx"
+#
+# Read from ``data/tdm`` alongside the other original CDOT source files (the zone
+# and network JSON, the transit OMX matrices). This previously pointed at a
+# separate ``data/TDM Custom Output`` folder holding a re-saved copy; the two were
+# verified numerically identical (8045 rows, every column, zero differing values),
+# so consolidating onto the original source location changes no result.
+EXTRA_TAZ_DATA_PATH = DATA_DIR / "tdm" / "HighStreetData_ExtraTAZData.xlsx"
 
 # How the six VMT-by-purpose columns in the CDOT extract collapse onto the
 # calculator's three purposes (commute / recreational / other). Mapping chosen
