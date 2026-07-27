@@ -84,6 +84,8 @@ inputs:
   resources:
   - label: CDOT Traffic Data Explorer
     url: https://dtdapps.codot.gov/otis/trafficdata
+  - label: 'CDOT Highways: Traffic Counts'
+    url: https://cdot.maps.arcgis.com/home/item.html?id=723375d00be646b0bf87313d4c474a25
   tooltip: Share of total study-area VMT that occurs on the bikeway corridor and nearby parallel streets where driving trips could reasonably shift to bicycling.
   instructions: |
     Because the calculator uses TAZ-based travel data, it cannot directly model travel
@@ -95,7 +97,11 @@ inputs:
     share of area VMT than a single facility.
 
     CDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)
-    provides annual average daily traffic (AADT) counts for state highways.
+    provides annual average daily traffic (AADT) counts for state highways, and the
+    same counts are published as a map layer,
+    [Highways: Traffic Counts](https://cdot.maps.arcgis.com/home/item.html?id=723375d00be646b0bf87313d4c474a25),
+    if you would rather read them off a map. Both cover state highways only, so
+    counts for city streets have to come from local sources.
 notes: 'Split from bike_mode_share_booster. Engine: strategy_bike_mode_share_booster (scope=area_vmt).'
 # Closed-form (bike mode-share booster, area_vmt scope fixed). Reads imputed bike/auto mode share.
 compute:

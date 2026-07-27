@@ -95,6 +95,9 @@ inputs:
   prerequisite: true
   summary: The functional classification of the road being widened or narrowed.
   source_note: the functional class of the road in your project scope
+  resources:
+  - label: 'CDOT Highways: Functional Class'
+    url: https://cdot.maps.arcgis.com/home/item.html?id=06fbbd720f6641c2b6faefcf453ba474
   tooltip: Sets how strongly new capacity brings out traffic. Existing lane miles for the area come from the loaded network.
   instructions: |
     Select the functional classification of the roadway where general-purpose lane
@@ -103,4 +106,12 @@ inputs:
     freeways and expressways, smaller on arterials, and lowest on collectors and local
     streets. To determine this value, match the selected class to the functional
     classification of the modified roadway corridor.
+
+    To look the classification up rather than judge it, CDOT publishes
+    [Highways: Functional Class](https://cdot.maps.arcgis.com/home/item.html?id=06fbbd720f6641c2b6faefcf453ba474),
+    whose categories map onto the options above: Interstate and Principal Arterial
+    (Freeways and Expressways) correspond to freeway and expressway, Principal
+    Arterial (Other) to major arterial, Minor Arterial to minor arterial, Major and
+    Minor Collector to collector, and Local to local. It covers state highways, so a
+    project on a city street will not appear in it.
 notes: ''

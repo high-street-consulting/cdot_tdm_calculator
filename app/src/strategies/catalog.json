@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T21:54:53.775962+00:00",
+  "generated_at": "2026-07-27T22:34:45.761056+00:00",
   "categories": [
     {
       "id": "transit",
@@ -904,8 +904,14 @@
           "prerequisite": true,
           "summary": "The functional classification of the road being widened or narrowed.",
           "source_note": "the functional class of the road in your project scope",
+          "resources": [
+            {
+              "label": "CDOT Highways: Functional Class",
+              "url": "https://cdot.maps.arcgis.com/home/item.html?id=06fbbd720f6641c2b6faefcf453ba474"
+            }
+          ],
           "tooltip": "Sets how strongly new capacity brings out traffic. Existing lane miles for the area come from the loaded network.",
-          "instructions": "Select the functional classification of the roadway where general-purpose lane\ncapacity is being removed or added. The facility class determines how strongly the\nVMT estimate responds to the capacity change: effects are generally greatest on\nfreeways and expressways, smaller on arterials, and lowest on collectors and local\nstreets. To determine this value, match the selected class to the functional\nclassification of the modified roadway corridor.\n"
+          "instructions": "Select the functional classification of the roadway where general-purpose lane\ncapacity is being removed or added. The facility class determines how strongly the\nVMT estimate responds to the capacity change: effects are generally greatest on\nfreeways and expressways, smaller on arterials, and lowest on collectors and local\nstreets. To determine this value, match the selected class to the functional\nclassification of the modified roadway corridor.\n\nTo look the classification up rather than judge it, CDOT publishes\n[Highways: Functional Class](https://cdot.maps.arcgis.com/home/item.html?id=06fbbd720f6641c2b6faefcf453ba474),\nwhose categories map onto the options above: Interstate and Principal Arterial\n(Freeways and Expressways) correspond to freeway and expressway, Principal\nArterial (Other) to major arterial, Minor Arterial to minor arterial, Major and\nMinor Collector to collector, and Local to local. It covers state highways, so a\nproject on a city street will not appear in it.\n"
         }
       ],
       "notes": "",
@@ -1503,10 +1509,14 @@
             {
               "label": "CDOT Traffic Data Explorer",
               "url": "https://dtdapps.codot.gov/otis/trafficdata"
+            },
+            {
+              "label": "CDOT Highways: Traffic Counts",
+              "url": "https://cdot.maps.arcgis.com/home/item.html?id=723375d00be646b0bf87313d4c474a25"
             }
           ],
           "tooltip": "Engineering judgment: share of the corridor's driving carried on the street the new bike lane runs on and nearby parallel roads.",
-          "instructions": "Estimate the share of total VMT in the selected study area that occurs on the\nbikeway corridor and nearby parallel streets where driving trips could reasonably\nshift to bicycling. Because the calculator uses TAZ-based travel data, it cannot\ndirectly model a specific bikeway on a single corridor. If VMT data is available\nfor the corridor, divide the VMT on the bikeway corridor and relevant parallel\nstreets by total VMT in the selected study area. Otherwise, use available traffic\ncounts and local knowledge to develop and document a reasonable estimate.\n\nCDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)\nprovides annual average daily traffic counts for state highways.\n"
+          "instructions": "Estimate the share of total VMT in the selected study area that occurs on the\nbikeway corridor and nearby parallel streets where driving trips could reasonably\nshift to bicycling. Because the calculator uses TAZ-based travel data, it cannot\ndirectly model a specific bikeway on a single corridor. If VMT data is available\nfor the corridor, divide the VMT on the bikeway corridor and relevant parallel\nstreets by total VMT in the selected study area. Otherwise, use available traffic\ncounts and local knowledge to develop and document a reasonable estimate.\n\nCDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)\nprovides annual average daily traffic counts for state highways, and the same\ncounts are published as a map layer,\n[Highways: Traffic Counts](https://cdot.maps.arcgis.com/home/item.html?id=723375d00be646b0bf87313d4c474a25),\nif you would rather read them off a map. Both cover state highways only, so\ncounts for city streets in the corridor have to come from local sources.\n"
         },
         {
           "key": "annual_use_days",
@@ -1722,10 +1732,14 @@
             {
               "label": "CDOT Traffic Data Explorer",
               "url": "https://dtdapps.codot.gov/otis/trafficdata"
+            },
+            {
+              "label": "CDOT Highways: Traffic Counts",
+              "url": "https://cdot.maps.arcgis.com/home/item.html?id=723375d00be646b0bf87313d4c474a25"
             }
           ],
           "tooltip": "Share of total study-area VMT that occurs on the bikeway corridor and nearby parallel streets where driving trips could reasonably shift to bicycling.",
-          "instructions": "Because the calculator uses TAZ-based travel data, it cannot directly model travel\non a single roadway. Estimate the combined VMT on the streets affected by the\nbikeway as a share of total VMT in the selected study area. If roadway-level VMT\nis available, divide VMT on those streets by total study-area VMT. Otherwise, use\ntraffic counts and local knowledge to develop a reasonable estimate and document\nthe source. A network covering several streets will generally affect a larger\nshare of area VMT than a single facility.\n\nCDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)\nprovides annual average daily traffic (AADT) counts for state highways.\n"
+          "instructions": "Because the calculator uses TAZ-based travel data, it cannot directly model travel\non a single roadway. Estimate the combined VMT on the streets affected by the\nbikeway as a share of total VMT in the selected study area. If roadway-level VMT\nis available, divide VMT on those streets by total study-area VMT. Otherwise, use\ntraffic counts and local knowledge to develop a reasonable estimate and document\nthe source. A network covering several streets will generally affect a larger\nshare of area VMT than a single facility.\n\nCDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)\nprovides annual average daily traffic (AADT) counts for state highways, and the\nsame counts are published as a map layer,\n[Highways: Traffic Counts](https://cdot.maps.arcgis.com/home/item.html?id=723375d00be646b0bf87313d4c474a25),\nif you would rather read them off a map. Both cover state highways only, so\ncounts for city streets have to come from local sources.\n"
         }
       ],
       "notes": "Split from bike_mode_share_booster. Engine: strategy_bike_mode_share_booster (scope=area_vmt).",
