@@ -16,9 +16,6 @@
 // picker never appears. See probeReferenceLayers below.
 
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-import { MAP_STYLE } from "../config/mapStyle";
-
-const STYLES = MAP_STYLE.referenceLayers ?? {};
 
 export interface ReferenceLayerDef {
   id: string;
@@ -27,61 +24,28 @@ export interface ReferenceLayerDef {
   /** One line on what it is good for; shown as the control's title. */
   hint: string;
   url: string;
-  geometry: "line" | "point";
 }
 
 export const REFERENCE_LAYERS: ReferenceLayerDef[] = [
   {
     id: "transit_lines_esri",
     label: "Transit Lines (Esri)",
-    hint: "World transit lines by modality, from Esri's Living Atlas. Broad coverage including operators absent from the CDOT compilation.",
+    hint: "World Transit Lines by Modality, from Esri's Living Atlas. Drawn in Esri's own mode colors: bus green, light rail indigo, rail and subway orange.",
     url: "https://services6.arcgis.com/4J5SL9a8ALg9oNpW/arcgis/rest/services/Transit_Lines_by_Modality_RC1/FeatureServer/0",
-    geometry: "line",
-  },
-  {
-    id: "transit_routes_cdot",
-    label: "Transit Routes (CDOT)",
-    hint: "CDOT's statewide transit routes, compiled from local agency GTFS. The layer the transit strategies already tell you to check when estimating a service-mile or frequency change.",
-    url: "https://services.arcgis.com/yzB9WM8W0BO3Ql7d/arcgis/rest/services/Statewide_Transit_Routes/FeatureServer/0",
-    geometry: "line",
-  },
-  {
-    id: "transit_stops_cdot",
-    label: "Transit Stops (CDOT)",
-    hint: "Statewide transit stops and stations. Useful for the share-of-stops inputs in Transit Shelters and Wayfinding.",
-    url: "https://services.arcgis.com/yzB9WM8W0BO3Ql7d/arcgis/rest/services/Statewide_Transit_Points/FeatureServer/0",
-    geometry: "point",
-  },
-  {
-    id: "traffic_counts_cdot",
-    label: "Traffic Counts (CDOT)",
-    hint: "Annual average daily traffic on state highways. Useful for the share-of-area-VMT inputs in the bike facility strategies.",
-    url: "https://dtdapps.codot.gov/server/rest/services/Webapps/open_data_sde/FeatureServer/13",
-    geometry: "line",
   },
 ];
 
-/** Build the (unloaded) layer for a definition, styled from mapStyle.json. */
+/**
+ * Build the (unloaded) layer for a definition.
+ *
+ * No `renderer` is set, deliberately: each layer draws with the symbology its own
+ * service publishes. For World Transit Lines that is a unique-value renderer on
+ * `esri_route_type_carto_desc` separating bus, light rail, rail/subway, ferry,
+ * aerial lift and the rest, which carries more information than any flat line we
+ * would substitute. A future layer that publishes no useful symbology of its own
+ * can take a `renderer` here (and a swatch in ReferenceLayers.tsx).
+ */
 function buildLayer(def: ReferenceLayerDef): FeatureLayer {
-  const s = STYLES[def.id] ?? {};
-  const symbol =
-    def.geometry === "point"
-      ? {
-          type: "simple-marker",
-          style: "circle",
-          color: s.markerColor ?? [90, 90, 90, 0.9],
-          size: s.markerSize ?? 4.5,
-          outline: {
-            color: s.markerOutlineColor ?? [255, 255, 255, 0.9],
-            width: s.markerOutlineWidth ?? 0.6,
-          },
-        }
-      : {
-          type: "simple-line",
-          color: s.lineColor ?? [90, 90, 90, 0.85],
-          width: s.lineWidth ?? 1.6,
-        };
-
   return new FeatureLayer({
     url: def.url,
     id: `ref-${def.id}`,
@@ -93,7 +57,6 @@ function buildLayer(def: ReferenceLayerDef): FeatureLayer {
     popupEnabled: false,
     legendEnabled: false,
     listMode: "hide",
-    renderer: { type: "simple", symbol } as never,
   });
 }
 

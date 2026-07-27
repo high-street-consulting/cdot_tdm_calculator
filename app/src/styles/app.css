@@ -292,16 +292,6 @@ html[data-brand="highstreet"] .hdr-nav a.active { color: var(--brand-secondary);
   font-size: 12.5px; color: #141414; line-height: 1.3; cursor: pointer;
 }
 .map-reflayers-item input { margin: 0; flex: 0 0 auto; cursor: pointer; }
-/* Swatches mirror config/mapStyle.json -> referenceLayers. Small visual cues, not
-   a legend; kept in sync with that file by hand. */
-.map-reflayers-swatch { flex: 0 0 auto; width: 14px; height: 3px; border-radius: 1px; }
-.map-reflayers-swatch.sw-transit_lines_esri  { background: rgb(122,78,168); }
-.map-reflayers-swatch.sw-transit_routes_cdot { background: rgb(36,93,57); }
-.map-reflayers-swatch.sw-traffic_counts_cdot { background: rgb(229,114,0); }
-.map-reflayers-swatch.sw-transit_stops_cdot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: rgb(36,93,57); box-shadow: 0 0 0 1px #fff;
-}
 
 /* ───── Footer (thin 30px bar) ───── */
 .app-footer {

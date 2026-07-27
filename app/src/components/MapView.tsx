@@ -256,18 +256,35 @@ export function MapCanvas({
       await tazLayer.load().catch((e) => console.warn("MapCanvas: TAZ layer load failed", e));
       setMapLoading(false);
 
-      // Reference layers: probe AFTER the map is usable so their metadata
-      // requests never delay first paint or TAZ selection. Each starts hidden, so
-      // adding them costs nothing until the user switches one on. Inserted at the
-      // bottom of the stack (above the basemap, below the transparent hit-test TAZ
-      // layer) so they can never sit over the selection highlight or swallow a
-      // click. Anything that fails to load is silently absent.
+      // Reference layers: probe AFTER the map is usable so their metadata requests
+      // never delay first paint or TAZ selection. Each starts hidden, so adding
+      // them costs nothing until the user switches one on. Anything that fails to
+      // load is silently absent.
+      //
+      // Drawing order matters: they go in at the BOTTOM of the operational stack,
+      // above the basemap but below the transparent hit-test TAZ layer, the VTL
+      // that paints the zone boundaries, and the selection/sketch overlays. So
+      // reference context can never obscure a zone boundary or a selection
+      // highlight, and can never swallow a click. Index 0 is the bottom of
+      // map.layers; asserted below so a future layer-order change trips a warning
+      // rather than silently drawing transit lines over the selection.
       void probeReferenceLayers().then((probed) => {
         if (!isMounted || probed.length === 0) return;
         map.addMany(
           probed.map((p) => p.layer),
           0,
         );
+        const tazIndex = map.layers.indexOf(tazLayer);
+        const lastRefIndex = Math.max(
+          ...probed.map((p) => map.layers.indexOf(p.layer)),
+        );
+        if (lastRefIndex >= tazIndex) {
+          console.warn(
+            "MapCanvas: reference layers are not below the TAZ layer; " +
+              "they may obscure zone boundaries or the selection.",
+            { lastRefIndex, tazIndex },
+          );
+        }
         setRefLayers(probed);
       });
       (window as unknown as Record<string, unknown>).__cdotView = view;

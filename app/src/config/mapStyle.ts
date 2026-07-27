@@ -31,10 +31,10 @@ export interface MapStyle {
     outlineStyle: string;
   };
   /**
-   * Symbology for the optional reference layers (data/referenceLayers.ts), keyed
-   * by layer id. Line layers read lineColor/lineWidth, point layers the marker*
-   * fields. Every field is optional, so a layer can be listed before it is styled
-   * and the code falls back to a neutral grey.
+   * Optional symbology for reference layers (data/referenceLayers.ts), keyed by
+   * layer id. Unset today: every reference layer draws in the symbology its own
+   * service publishes, which is the point of them. Present for a future layer whose
+   * service has no useful renderer of its own.
    */
   referenceLayers?: Record<
     string,

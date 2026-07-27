@@ -44,12 +44,13 @@ export function ReferenceLayers({
       </button>
       {open && (
         <div className="map-reflayers-panel" id={panelId}>
-          {/* The CDOT services set their own minimum scale, so they stay hidden at
-              statewide zoom. Saying so here avoids a "nothing happened" report. */}
           <p className="map-reflayers-note">
-            Context only. These never affect your selection or results, and some
-            appear once you zoom in.
+            Context only. These never affect your selection or results, and they
+            draw beneath the zone boundaries.
           </p>
+          {/* No colour swatch: each layer draws in its publisher's own symbology,
+              which for World Transit Lines is multi-colour by mode, so a single
+              swatch would misrepresent it. Hover text names the colours instead. */}
           {available.map(({ def }) => (
             <label key={def.id} className="map-reflayers-item" title={def.hint}>
               <input
@@ -57,7 +58,6 @@ export function ReferenceLayers({
                 checked={enabled.has(def.id)}
                 onChange={(e) => onToggle(def.id, e.target.checked)}
               />
-              <span className={`map-reflayers-swatch sw-${def.id}`} aria-hidden="true" />
               <span>{def.label}</span>
             </label>
           ))}
