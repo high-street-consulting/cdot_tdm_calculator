@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T23:12:30.591113+00:00",
+  "generated_at": "2026-07-27T23:50:35.006588+00:00",
   "categories": [
     {
       "id": "transit",
@@ -313,7 +313,7 @@
           "summary": "The share of area employees eligible for the reward/incentive program. For a single employer, this is its share of area commuters; for a regional program, use the eligible workforce share.",
           "source_note": "your project scope / employer or program participation estimate",
           "tooltip": "Share of area employees eligible for the incentives.",
-          "instructions": "Estimate the share of area employees eligible for the incentive program. For a\nsingle employer, this is its share of area commuters; for a regional program,\nestimate the eligible workforce share.\n"
+          "instructions": "This is two things multiplied together, and it helps to think of them separately:\n\n1. **Coverage.** The share of the employees **in the area you selected** who work\n   at sites offering the program. For a single employer, that employer's share of\n   area employees. For a regional program, the share of *this area's* employees it\n   covers, never a share of the whole region's workforce.\n2. **Eligibility.** Of those, the share who could actually take part. CAPCOA\n   expects this to be near 100%, trimmed only for people who genuinely cannot\n   participate: night-shift staff when transit and rideshare are not running,\n   employees required to drive as part of the job, and contract or temporary\n   workers excluded from the program.\n\nEnter the product. Note this is *eligibility*, not take-up: CAPCOA is explicit\nthat it \"does not refer to the percent of employees who actually participate in\nthe program\", because the per-commuter reduction below already accounts for that.\n"
         },
         {
           "key": "reduction_per_eligible",
@@ -386,7 +386,7 @@
           "summary": "The estimated share of area employees reached by the marketing campaign. For a single employer, this is its share of area commuters; for a regional campaign, use the workforce share.",
           "source_note": "your project scope / marketing campaign reach estimate",
           "tooltip": "Share of all project area employees at workplaces that are targeted by the marketing program.",
-          "instructions": "Estimate the percentage of project-area employees who work at workplaces targeted\nby the marketing or outreach program. For a program focused on one employer, use\nthat employer's share of all employees in the project area; for a regional\ncampaign, estimate the share of the workforce the program reaches.\n"
+          "instructions": "This is two things multiplied together, and it helps to think of them separately:\n\n1. **Coverage.** The share of the employees **in the area you selected** who work\n   at workplaces the campaign targets. For a single employer, that employer's\n   share of area employees. For a regional campaign, the share of *this area's*\n   employees the campaign reaches, never a share of the whole region's workforce.\n2. **Eligibility.** Of those, the share who could actually take part. CAPCOA\n   expects this to be near 100%, trimmed only for people who genuinely cannot\n   participate: night-shift staff when transit and rideshare are not running,\n   employees required to drive as part of the job, and contract or temporary\n   workers excluded from the program.\n\nEnter the product. Note this is *eligibility*, not take-up: CAPCOA is explicit\nthat it \"does not refer to the percent of employees who actually participate in\nthe program\", because the per-commuter reduction below already accounts for that.\n"
         },
         {
           "key": "reduction_per_eligible",
@@ -534,7 +534,7 @@
       ],
       "short_description": "Employer-provided transit passes (ECO passes), pre-tax commuter benefits, and other recurring support that makes non-drive-alone commuting more affordable.",
       "extended_description": "Employer-provided commute benefits make transit, vanpooling, and other non-drive-alone\ncommute options more affordable for eligible employees. Examples include a subsidized\ntransit pass, pre-tax commuter benefits, vanpool subsidies, and other recurring financial\nsupport for non-drive-alone commuting.\n\nThe effectiveness of this strategy depends on the value of the benefit, the share of\ncommuters eligible, and whether the supported travel options meet employees' needs.\nTransit benefits are generally most effective where service is frequent, reliable, and\neasy to access. Clear communication and complementary TDM measures can further increase\nparticipation.\n",
-      "guidance": "Use this strategy for employer-provided commute benefits. For a general\ntransit pass subsidy that is not tied to a worksite or development, use [Transit Pass\nSubsidies](#/strategies/transit_pass_subsidy).\nAvoid double-counting if [Workplace Parking\nPricing](#/strategies/workplace_parking_pricing)\ncash-outs or [Commuter Rewards and\nIncentives](#/strategies/commute_incentives)\nare modeled for the same commuters.\n",
+      "guidance": "Use this strategy for commute benefits provided to **employees** at a\nworksite. For a general fare reduction, or for passes given to the **residents** of a\ndevelopment, use [Transit Pass\nSubsidies](#/strategies/transit_pass_subsidy)\ninstead: resident passes affect all of a household's travel rather than commuting alone,\nwhich is how CAPCOA T-9 treats them.\nAvoid double-counting if [Workplace Parking\nPricing](#/strategies/workplace_parking_pricing)\ncash-outs or [Commuter Rewards and\nIncentives](#/strategies/commute_incentives)\nare modeled for the same commuters.\n",
       "images": [],
       "method": "Paulley (2006) fare elasticity (ε=−0.30), commute scope",
       "formula": "Δcommute_VMT% = (Δfare × eligible × ε × transit_MS × 1/AVO × p_drive) / auto_MS",
@@ -577,7 +577,7 @@
           "summary": "The share of area commuters offered the benefit. For a single employer this is its share of area commuters; for a development requirement, use the share at the affected sites.",
           "source_note": "your project scope / employer or development participation estimate",
           "tooltip": "Share of area commuters offered the benefit.",
-          "instructions": "Estimate the share of area commuters offered the benefit. For a development\nrequirement, estimate the share of commuters at the affected sites.\n"
+          "instructions": "This is two things multiplied together, and it helps to think of them separately:\n\n1. **Coverage.** The share of the commuters **in the area you selected** who work\n   at sites offering the benefit. For a single employer, that employer's share of\n   area commuters. For a development requirement, the share of area commuters\n   working at the affected sites. Never a share of the whole region's workforce.\n2. **Eligibility.** Of those, the share who actually have access to the benefit.\n   CAPCOA T-9 expects this to be near 100%, and calls out contract and temporary\n   workers who do not receive employee benefits as the usual exclusion.\n\nEnter the product. This is *access*, not take-up: the fare elasticity below\nalready accounts for how many of those offered the benefit change their commute.\n"
         }
       ],
       "notes": "Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy (scope=commute).",
@@ -1666,7 +1666,7 @@
           "summary": "The share of the area's population that is located within a quarter mile of micromobility parking areas, docks, etc. Enter 0% if there is no system currently.",
           "source_note": "your existing service map / station locations",
           "tooltip": "Estimate of households within walking distance (≈¼ mi) of an existing dock/station.",
-          "instructions": "Estimate the share of the area's population that already lives within a quarter\nmile of micromobility parking areas, docks, etc. If there is no system today,\nthis is 0%.\n"
+          "instructions": "Estimate the share of the area's population that already lives within a quarter\nmile of micromobility parking areas, docks, etc. If there is no system today,\nthis is 0%.\n\nCount **residents (households)**, not employees. The method works from resident\npopulation, so counting workplaces here would overstate the reduction.\n"
         },
         {
           "key": "pct_pop_access_after",
@@ -1900,7 +1900,7 @@
           "summary": "The share of the area's employees who already work at TMO-member worksites today (0% for a brand-new TMO/TMA).",
           "source_note": "current TMO/TMA membership rolls vs. area employment",
           "tooltip": "Share of area employees at TMO/TMA member workplaces.",
-          "instructions": "Estimate the share of the area's employees who already work at TMO/TMA member\nworksites today. For a brand-new TMO/TMA this is 0%; for an expansion, use the\ncurrent membership's share of area employment.\n"
+          "instructions": "Estimate the share of the employees **in the area you selected** who already work\nat TMO/TMA member worksites today. For a brand-new TMO/TMA this is 0%; for an\nexpansion, use the current membership's share of that area's employment.\n\nThe denominator is always this project area's employees, never a regional\nworkforce total, because the reduction applies to the commute VMT of the zones you\nselected.\n"
         },
         {
           "key": "share_after",
@@ -1916,7 +1916,7 @@
           "summary": "The target share of area employees who will work at TMO/TMA member worksites after the new or expanded organization is in place.",
           "source_note": "your TMO/TMA expansion plan / membership targets",
           "tooltip": "Target share after new TMO/TMA is established or an existing TMO/TMA expands.",
-          "instructions": "Estimate the share of area employees who will work at TMO/TMA member worksites\nafter the new or expanded organization is in place. The difference between\nthis and today's coverage is what drives the reduction.\n"
+          "instructions": "Estimate the share of the employees **in the area you selected** who will work at\nTMO/TMA member worksites after the new or expanded organization is in place. The\ndifference between this and today's coverage is what drives the reduction, so a\nregional expansion is entered as the share of *this area's* employees it brings\nunder coverage, not a regional total.\n"
         }
       ],
       "notes": "",
@@ -2162,7 +2162,7 @@
       ],
       "short_description": "Reduce the price of transit passes for residents or targeted users, raising ridership and shifting trips off the road.",
       "extended_description": "This measure reduces the out-of-pocket cost of riding by offering discounted or\nfree passes to residents, students, lower-income riders, or other eligible community\nmembers. When transit is less expensive and easily accessible, some trips may shift from\ndriving to transit.\n\nThe effect depends on who receives the subsidy and whether transit serves the trips\nthose users need to make. Implementing this measure in areas with high-quality transit is\nlikely to have a stronger effect than implementing the same measure in places where\nservice is infrequent or indirect.\n",
-      "guidance": "Use this strategy when a transit agency, public program, or other sponsor\nreduces fares for the broader riding public. For transit passes provided to employees or\noccupants of a development, such as an RTD EcoPass, use [Employer-Provided Commute\nBenefits](#/strategies/employee_commuting_benefits),\nwhich applies the effect specifically to commute trips.\n",
+      "guidance": "Use this strategy when a transit agency, public program, or other sponsor\nreduces fares for the broader riding public. Use it **also for passes given to the\nresidents of a development**, such as an RTD EcoPass provided to the occupants of a\ntransit-oriented development: those passes affect all of a household's travel, not just\ncommuting, which is the treatment this strategy applies.\n\nFor passes provided to **employees** at a worksite, use [Employer-Provided Commute\nBenefits](#/strategies/employee_commuting_benefits)\ninstead, which scopes the effect to commute trips.\n\nThe split follows CAPCOA T-9, which covers both populations in one measure and separates\nthem the same way: subsidies aimed at employees are limited to work-related trips, while\n\"if residents are targeted, the GHG reductions extend to all trips.\"\n",
       "images": [],
       "method": "Paulley (2006) short-run fare elasticity (ε=−0.30), all trips",
       "formula": "ΔVMT% = (Δfare × eligible × ε × transit_MS × 1/AVO) / auto_MS",
@@ -2378,8 +2378,14 @@
           "prerequisite": true,
           "summary": "The share of the area's transit stops or stations that will receive new shelters or amenity improvements. Use 100% for improvements at all transit stops within the study area, or less for improvements only at a subset of stops.",
           "source_note": "your project scope / stop-improvement plan",
+          "resources": [
+            {
+              "label": "CDOT Statewide Transit Points",
+              "url": "https://cdot.maps.arcgis.com/home/item.html?id=dd8e77e36c9d4d67a7a5845c55d79687"
+            }
+          ],
           "tooltip": "Share of area transit stops receiving shelters or station improvements.",
-          "instructions": "Estimate the share of the area's transit stops or stations that will receive new shelters\nor amenity improvements. Use 100% for a system-wide program; lower it for a targeted set\nof stops.\n"
+          "instructions": "Estimate the share of the area's transit stops or stations that will receive new shelters\nor amenity improvements. Use 100% for a system-wide program; lower it for a targeted set\nof stops.\n\nTo count the stops in your area rather than estimate them, CDOT publishes\n[Statewide Transit Points](https://cdot.maps.arcgis.com/home/item.html?id=dd8e77e36c9d4d67a7a5845c55d79687),\na statewide layer of transit stops and stations.\n"
         },
         {
           "key": "brt_stop_share",
@@ -2637,8 +2643,14 @@
           "prerequisite": true,
           "summary": "The share of the area's transit stops or stations that will receive wayfinding such as signage, maps, and real-time information.",
           "source_note": "your wayfinding plan and existing transit stop inventory",
+          "resources": [
+            {
+              "label": "CDOT Statewide Transit Points",
+              "url": "https://cdot.maps.arcgis.com/home/item.html?id=dd8e77e36c9d4d67a7a5845c55d79687"
+            }
+          ],
           "tooltip": "Level of implementation at transit stops and stations, meaning the share of area transit stops receiving wayfinding. Credited only where transit service exists.",
-          "instructions": "Estimate the share of the area's transit stops or stations that will receive wayfinding\n(signage, maps, real-time information). This covers wayfinding **at** the stop or station,\nwhich is what the transit channel credits, using the area's transit mode share. It is\ncredited only in places that already have transit service.\n"
+          "instructions": "Estimate the share of the area's transit stops or stations that will receive wayfinding\n(signage, maps, real-time information). This covers wayfinding **at** the stop or station,\nwhich is what the transit channel credits, using the area's transit mode share. It is\ncredited only in places that already have transit service.\n\nTo count the stops in your area rather than estimate them, CDOT publishes\n[Statewide Transit Points](https://cdot.maps.arcgis.com/home/item.html?id=dd8e77e36c9d4d67a7a5845c55d79687),\na statewide layer of transit stops and stations.\n"
         },
         {
           "key": "loi_active",

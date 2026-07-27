@@ -72,9 +72,21 @@ inputs:
   source_note: your project scope / employer or program participation estimate
   tooltip: Share of area employees eligible for the incentives.
   instructions: |
-    Estimate the share of area employees eligible for the incentive program. For a
-    single employer, this is its share of area commuters; for a regional program,
-    estimate the eligible workforce share.
+    This is two things multiplied together, and it helps to think of them separately:
+
+    1. **Coverage.** The share of the employees **in the area you selected** who work
+       at sites offering the program. For a single employer, that employer's share of
+       area employees. For a regional program, the share of *this area's* employees it
+       covers, never a share of the whole region's workforce.
+    2. **Eligibility.** Of those, the share who could actually take part. CAPCOA
+       expects this to be near 100%, trimmed only for people who genuinely cannot
+       participate: night-shift staff when transit and rideshare are not running,
+       employees required to drive as part of the job, and contract or temporary
+       workers excluded from the program.
+
+    Enter the product. Note this is *eligibility*, not take-up: CAPCOA is explicit
+    that it "does not refer to the percent of employees who actually participate in
+    the program", because the per-commuter reduction below already accounts for that.
 - key: reduction_per_eligible
   label: Reduction per eligible commuter
   control: slider

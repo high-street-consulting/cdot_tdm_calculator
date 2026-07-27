@@ -576,6 +576,10 @@
 .shop-detail .input-item .row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
 .shop-detail .input-item label { font-size: 15px; font-weight: 600; color: #141414; display: flex; align-items: center; gap: 6px; }
 .shop-detail .input-item .val-display { font-family: var(--calcite-font-family-code); font-size: 16px; font-weight: 600; color: var(--cdot-dark-blue); font-variant-numeric: tabular-nums; }
+/* Unit label on a number input ("miles", "spaces", "$ per day"). Was 11px inline
+   and reported twice as too small to read; sized to sit just under the label and
+   darkened for contrast. */
+.shop-detail .input-item .input-unit { font-size: 14px; font-weight: 500; color: #4A4A4A; white-space: nowrap; }
 .shop-detail .input-item input[type="range"] { width: 100%; accent-color: var(--cdot-dark-blue); margin: 10px 0 2px; }
 .shop-detail .input-item input[type="number"] { width: 100%; padding: 8px 10px; border: 1px solid #8C8C8C; border-radius: 2px; font-family: var(--calcite-font-family-code); font-size: 15px; background: #fff; }
 .shop-detail .input-item input[type="number"]:focus { outline: 2px solid var(--cdot-dark-blue); outline-offset: -1px; border-color: var(--cdot-dark-blue); }

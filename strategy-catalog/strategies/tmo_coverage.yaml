@@ -72,9 +72,13 @@ inputs:
   source_note: current TMO/TMA membership rolls vs. area employment
   tooltip: Share of area employees at TMO/TMA member workplaces.
   instructions: |
-    Estimate the share of the area's employees who already work at TMO/TMA member
-    worksites today. For a brand-new TMO/TMA this is 0%; for an expansion, use the
-    current membership's share of area employment.
+    Estimate the share of the employees **in the area you selected** who already work
+    at TMO/TMA member worksites today. For a brand-new TMO/TMA this is 0%; for an
+    expansion, use the current membership's share of that area's employment.
+
+    The denominator is always this project area's employees, never a regional
+    workforce total, because the reduction applies to the commute VMT of the zones you
+    selected.
 - key: share_after
   label: TMO/TMA Workforce coverage after
   control: slider
@@ -90,9 +94,11 @@ inputs:
   source_note: your TMO/TMA expansion plan / membership targets
   tooltip: Target share after new TMO/TMA is established or an existing TMO/TMA expands.
   instructions: |
-    Estimate the share of area employees who will work at TMO/TMA member worksites
-    after the new or expanded organization is in place. The difference between
-    this and today's coverage is what drives the reduction.
+    Estimate the share of the employees **in the area you selected** who will work at
+    TMO/TMA member worksites after the new or expanded organization is in place. The
+    difference between this and today's coverage is what drives the reduction, so a
+    regional expansion is entered as the share of *this area's* employees it brings
+    under coverage, not a regional total.
 notes: ''
 # Closed-form. strategy_tmo_coverage retained as oracle.
 compute:

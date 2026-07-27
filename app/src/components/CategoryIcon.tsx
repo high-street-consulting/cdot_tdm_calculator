@@ -17,7 +17,10 @@ const CAT_ICON: Partial<Record<StrategyCategoryId, string>> = {
   transit: "transit.svg",
   bikeped: "bike-ped.svg",
   landuse: "land-use.svg",
-  vanpool: "vanpool.svg",
+  // `vanpool` is the historical category id; the group is now "Shared Mobility"
+  // (commuter vanpool + carshare + shared micromobility), so it gets its own art
+  // rather than a van. vanpool.svg stays in public/icons/ for reference.
+  vanpool: "shared-mobility.svg",
   support: "supportive-programmatic.svg",
   induced: "induced-demand.svg",
   parking: "parking-management.svg",

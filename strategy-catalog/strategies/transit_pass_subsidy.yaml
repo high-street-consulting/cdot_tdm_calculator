@@ -37,10 +37,18 @@ extended_description: |
   service is infrequent or indirect.
 guidance: |
   Use this strategy when a transit agency, public program, or other sponsor
-  reduces fares for the broader riding public. For transit passes provided to employees or
-  occupants of a development, such as an RTD EcoPass, use [Employer-Provided Commute
-  Benefits](#/strategies/employee_commuting_benefits),
-  which applies the effect specifically to commute trips.
+  reduces fares for the broader riding public. Use it **also for passes given to the
+  residents of a development**, such as an RTD EcoPass provided to the occupants of a
+  transit-oriented development: those passes affect all of a household's travel, not just
+  commuting, which is the treatment this strategy applies.
+
+  For passes provided to **employees** at a worksite, use [Employer-Provided Commute
+  Benefits](#/strategies/employee_commuting_benefits)
+  instead, which scopes the effect to commute trips.
+
+  The split follows CAPCOA T-9, which covers both populations in one measure and separates
+  them the same way: subsidies aimed at employees are limited to work-related trips, while
+  "if residents are targeted, the GHG reductions extend to all trips."
 images: []
 method: Paulley (2006) short-run fare elasticity (ε=−0.30), all trips
 formula: ΔVMT% = (Δfare × eligible × ε × transit_MS × 1/AVO) / auto_MS

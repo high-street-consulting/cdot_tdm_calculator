@@ -64,10 +64,21 @@ inputs:
   source_note: your project scope / marketing campaign reach estimate
   tooltip: Share of all project area employees at workplaces that are targeted by the marketing program.
   instructions: |
-    Estimate the percentage of project-area employees who work at workplaces targeted
-    by the marketing or outreach program. For a program focused on one employer, use
-    that employer's share of all employees in the project area; for a regional
-    campaign, estimate the share of the workforce the program reaches.
+    This is two things multiplied together, and it helps to think of them separately:
+
+    1. **Coverage.** The share of the employees **in the area you selected** who work
+       at workplaces the campaign targets. For a single employer, that employer's
+       share of area employees. For a regional campaign, the share of *this area's*
+       employees the campaign reaches, never a share of the whole region's workforce.
+    2. **Eligibility.** Of those, the share who could actually take part. CAPCOA
+       expects this to be near 100%, trimmed only for people who genuinely cannot
+       participate: night-shift staff when transit and rideshare are not running,
+       employees required to drive as part of the job, and contract or temporary
+       workers excluded from the program.
+
+    Enter the product. Note this is *eligibility*, not take-up: CAPCOA is explicit
+    that it "does not refer to the percent of employees who actually participate in
+    the program", because the per-commuter reduction below already accounts for that.
 - key: reduction_per_eligible
   label: Reduction per reached commuter
   control: slider

@@ -34,9 +34,12 @@ extended_description: |
   easy to access. Clear communication and complementary TDM measures can further increase
   participation.
 guidance: |
-  Use this strategy for employer-provided commute benefits. For a general
-  transit pass subsidy that is not tied to a worksite or development, use [Transit Pass
-  Subsidies](#/strategies/transit_pass_subsidy).
+  Use this strategy for commute benefits provided to **employees** at a
+  worksite. For a general fare reduction, or for passes given to the **residents** of a
+  development, use [Transit Pass
+  Subsidies](#/strategies/transit_pass_subsidy)
+  instead: resident passes affect all of a household's travel rather than commuting alone,
+  which is how CAPCOA T-9 treats them.
   Avoid double-counting if [Workplace Parking
   Pricing](#/strategies/workplace_parking_pricing)
   cash-outs or [Commuter Rewards and
@@ -111,8 +114,18 @@ inputs:
   source_note: your project scope / employer or development participation estimate
   tooltip: Share of area commuters offered the benefit.
   instructions: |
-    Estimate the share of area commuters offered the benefit. For a development
-    requirement, estimate the share of commuters at the affected sites.
+    This is two things multiplied together, and it helps to think of them separately:
+
+    1. **Coverage.** The share of the commuters **in the area you selected** who work
+       at sites offering the benefit. For a single employer, that employer's share of
+       area commuters. For a development requirement, the share of area commuters
+       working at the affected sites. Never a share of the whole region's workforce.
+    2. **Eligibility.** Of those, the share who actually have access to the benefit.
+       CAPCOA T-9 expects this to be near 100%, and calls out contract and temporary
+       workers who do not receive employee benefits as the usual exclusion.
+
+    Enter the product. This is *access*, not take-up: the fare elasticity below
+    already accounts for how many of those offered the benefit change their commute.
 notes: 'Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy (scope=commute).'
 # Closed-form (transit fare subsidy, scope=commute, $-subsidy). Reads imputed mode share + avo.
 compute:

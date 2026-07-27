@@ -98,11 +98,18 @@ inputs:
     improvements. Use 100% for improvements at all transit stops within the study area, or less for
     improvements only at a subset of stops.
   source_note: your project scope / stop-improvement plan
+  resources:
+  - label: CDOT Statewide Transit Points
+    url: https://cdot.maps.arcgis.com/home/item.html?id=dd8e77e36c9d4d67a7a5845c55d79687
   tooltip: Share of area transit stops receiving shelters or station improvements.
   instructions: |
     Estimate the share of the area's transit stops or stations that will receive new shelters
     or amenity improvements. Use 100% for a system-wide program; lower it for a targeted set
     of stops.
+
+    To count the stops in your area rather than estimate them, CDOT publishes
+    [Statewide Transit Points](https://cdot.maps.arcgis.com/home/item.html?id=dd8e77e36c9d4d67a7a5845c55d79687),
+    a statewide layer of transit stops and stations.
 - key: brt_stop_share
   label: Share of stops already covered by BRT stations
   control: slider

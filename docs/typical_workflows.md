@@ -90,31 +90,32 @@ inputs deliberately, and see how the category's combined cap behaves.
 
 1. From **Area**, select the project neighborhood's TAZs (click + **Shift-click**, or
    **Draw area**), then click **Select strategies →**.
-2. On **Strategies**, in the **Filter strategies** sidebar click the **Bike / ped &
-   micromobility** category; the count shows how many live there and the grid narrows to
+2. On **Strategies**, in the **Filter strategies** sidebar click the **Bike and Ped Infrastructure and
+   Amenities** category; the count shows how many live there and the grid narrows to
    just those. Narrow further with the **Mode** tag facet → *bike* for only the cycling
    measures. Keep in mind this category carries an **8% combined subsector cap**.
 3. Open **Protected or Buffered Bike Lanes** (`BP-01`). Required inputs:
-   - **Share of area VMT on parallel roadways**: slider, **0–30 %** (default **5 %**),
-     the fraction of local driving carried by the street(s) your new lane runs alongside.
+   - **Share of study-area VMT affected by the bikeway**: slider, **0–70 %** (default **5 %**),
+     the share of study-area VMT on the bikeway corridor and nearby parallel streets.
    - **Annual ridable days**: number, **0–365** (pre-filled from NOAA climate normals
      for your area, e.g. **230**). Override only if you have a local figure; the
      **How do I find this?** disclosure explains the "high 32–95 °F, no precip" definition.
    Watch the **At your settings** preview, then **Add to package**.
 4. Open **Striped Bike Lanes, Neighborhood Bikeways and Sharrows** (`BP-02`). One input:
-   **Share of area VMT treated**, a slider, **0–100 %** (default **10 %**), for the share of
-   area driving on the streets receiving sharrows / painted lanes. **Add to package**.
-5. Open **Shared Micromobility** (`BP-03`). Three inputs:
-   - **Mode type**, a **select**: *Pedal bikeshare (19.6 % sub)*, *E-bike share
-     (35.0 % sub)*, or *Scooter share (38.5 % sub)*; the choice sets the auto-trip
-     substitution rate.
+   **Share of study-area VMT affected by the bikeway**, a slider, **0–100 %** (default
+   **10 %**), for the share of study-area VMT on the affected streets. **Add to package**.
+5. Open **Shared Micromobility** (`BP-03`). Note it now lives under **Shared Mobility**,
+   not this category, so clear the category filter or search for it. Five inputs:
+   - **Fleet mix: pedal bikes / e-bikes / scooters**: three sliders (default **100 % / 0 %
+     / 0 %**). The car-trip substitution rates (19.6 %, 35.0 %, 38.5 %) are blended by
+     share, so a mixed fleet is entered directly. Shares are normalized.
    - **% population with access today**: slider; set **0 %** if there's no system yet.
    - **% population with access after**: slider (e.g. **30 %**). The before→after gap is
      what drives the reduction. **Add to package**.
 6. Open **Workplace Bicycle Amenities** (`BP-07`). One input: **Share of commuters with
    access**, a slider, **0–100 %** (default **40 %**), for the share of area commuters at
    worksites that provide secure bike parking, showers, and lockers. **Add to package**.
-7. Click **View results**. Because all four sit in **Bike / ped & micromobility**, expect
+7. Click **View results**. Because the bike/ped measures share a subsector, expect
    the **8 % subsector cap** to bind: the **"Subsector cap applied"** note appears, the
    stacked lines carry the **CAPPED** flag, and the combined total is scaled down. The
    **Reduction by category** card isolates the bike/ped contribution.
@@ -149,14 +150,13 @@ editing features.
    routes** (the **map legend** appears bottom-corner) to sanity-check the corridor's
    context as you choose zones.
 3. Go to **Strategies** and deliberately stack several from one capped category (e.g.
-   add **Transit Service Frequency Increase**, **New Transit Service**, and **Shared
-   Micromobility**-adjacent transit options) to see capping behave. Use the **Tags**
+   add **Transit Service Frequency Increase**, **Transit Service Expansion**, and
+   **Transit Shelters**) to see capping behave. Use the **Tags**
    facets (**Lever**, **Mode**) to find related strategies, and **Clear all filters**
    to reset the sidebar.
 4. On **Results**, confirm the **"Subsector cap applied"** note appears and the stacked
    lines show the **CAPPED** flag, with the combined total scaled down accordingly.
-5. Model a tradeoff: add **Lane Miles Added (Negative Impact on VMT)** (the **Induced
-   demand** category). Its card and detail page are styled as a warning, the preview
+5. Model a tradeoff: add **Lane Miles Reduced or Lane Miles Added (Induced Demand)** (the **Roadway Capacity** category). Its card and detail page are styled as a warning, the preview
    shows a **+** (VMT increase), and on **Results** its contribution is added with a
    `+` sign, letting you net a capacity project against the TDM package.
 6. Iterate without leaving Results: click **Edit** on a strategy line to jump back to its
@@ -213,17 +213,17 @@ package**, Enter. Then Enter on **View results** → Results shows the three str
 (≈ **−23 % VMT** for 6789). Tab to **Export PDF report**, Enter → `#/report`.
 
 **WF2, bike package (keyboard script).** Area → search **6789** → **Select strategies →**.
-Enter on the **Bike / ped & micromobility** category (grid narrows to **4 of 20**). Add
+Enter on the **Bike and Ped Infrastructure and Amenities** category (grid narrows to **6 of 26**). Add
 **Protected or Buffered Bike Lanes** (slider + *Annual ridable days* number),
-**Striped Bike Lanes…**, **Shared Micromobility** (Mode-type **select** via ↓, two access
-sliders), **Workplace Bicycle Amenities**, each via search→Tab→Enter, configure,
+**Striped Bike Lanes…**, **Pedestrian Network Improvements** (two mileage numbers),
+**Workplace Bicycle Amenities**, each via search→Tab→Enter, configure,
 Shift+Tab→**Add**. **View results** (≈ **−0.8 % VMT**), Tab to **Download CSV**, Enter.
 
 **WF3, iterate / stress-test (keyboard script).** Tab to **Methodology**, Enter; Tab to
 **Data sources**, Enter; Tab to **Calculator**, Enter. Search **6789**. Enter on
-**Reference layers**, then Tab to each checkbox and press **Space** (AADT, Transit).
-**Select strategies →**; add **New Transit Service**, **Transit Service Frequency
-Increase**, **Transit Pass Subsidies**, **Lane Miles Added (Negative Impact on VMT)**.
+**Reference layers**, then Tab to the checkbox and press **Space** (Transit Lines).
+**Select strategies →**; add **Transit Service Expansion**, **Transit Service Frequency
+Increase**, **Transit Pass Subsidies**, **Lane Miles Reduced or Lane Miles Added (Induced Demand)**.
 **View results** (the induced-demand line shows a **+** sign). Tab to a line's **Edit**,
 Enter, adjust a slider, Shift+Tab to **Update selection**, Enter; **View results** again;
 Tab to **Remove** on a line, Enter. Tab to the home button, Enter, then Enter on **Keep
@@ -255,7 +255,7 @@ working** to preserve the package, ending on Results with the final set.
 | Added-to-package banner | ● | ● | |
 | Cart hero + category breakdown + co-benefits | ● | ● | ● |
 | Subsector cap / CAPPED flags | ● | ● | ● |
-| Induced-demand (Lane Miles Added) | | | ● |
+| Roadway Capacity (Lane Miles Reduced/Added) | | | ● |
 | Edit round-trip from cart | | | ● |
 | PDF report export | ● | | |
 | CSV download | | ● | |

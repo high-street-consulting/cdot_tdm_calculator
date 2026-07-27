@@ -144,6 +144,9 @@ inputs:
     Estimate the share of the area's population that already lives within a quarter
     mile of micromobility parking areas, docks, etc. If there is no system today,
     this is 0%.
+
+    Count **residents (households)**, not employees. The method works from resident
+    population, so counting workplaces here would overstate the reduction.
 - key: pct_pop_access_after
   label: '% population with access after'
   control: slider

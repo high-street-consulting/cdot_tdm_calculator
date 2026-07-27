@@ -94,12 +94,19 @@ inputs:
   summary: The share of the area's transit stops or stations that will receive wayfinding such as
     signage, maps, and real-time information.
   source_note: your wayfinding plan and existing transit stop inventory
+  resources:
+  - label: CDOT Statewide Transit Points
+    url: https://cdot.maps.arcgis.com/home/item.html?id=dd8e77e36c9d4d67a7a5845c55d79687
   tooltip: Level of implementation at transit stops and stations, meaning the share of area transit stops receiving wayfinding. Credited only where transit service exists.
   instructions: |
     Estimate the share of the area's transit stops or stations that will receive wayfinding
     (signage, maps, real-time information). This covers wayfinding **at** the stop or station,
     which is what the transit channel credits, using the area's transit mode share. It is
     credited only in places that already have transit service.
+
+    To count the stops in your area rather than estimate them, CDOT publishes
+    [Statewide Transit Points](https://cdot.maps.arcgis.com/home/item.html?id=dd8e77e36c9d4d67a7a5845c55d79687),
+    a statewide layer of transit stops and stations.
 - key: loi_active
   label: Share of bike/ped network with wayfinding
   control: slider

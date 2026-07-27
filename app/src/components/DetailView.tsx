@@ -1208,7 +1208,10 @@ function InputControl({
             <label htmlFor={inputId}>{input.label}</label>
             {provenance}
           </span>
-          <span style={{ fontSize: 11, color: "#6B6B6B" }}>{input.unit ?? ""}</span>
+          {/* Unit label ("miles", "spaces", "$ per day"). Class-based rather than
+              inline so the size is tunable in one place; enlarged from 11px on
+              review feedback that it was too small to read. */}
+          <span className="input-unit">{input.unit ?? ""}</span>
         </div>
         <input
           id={inputId}
