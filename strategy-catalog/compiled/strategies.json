@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T21:40:48.328183+00:00",
+  "generated_at": "2026-07-27T21:43:37.129726+00:00",
   "categories": [
     {
       "id": "transit",
@@ -2581,8 +2581,8 @@
           "prerequisite": true,
           "summary": "The share of the area's transit stops or stations that will receive wayfinding such as signage, maps, and real-time information.",
           "source_note": "your wayfinding plan and existing transit stop inventory",
-          "tooltip": "Level of implementation for the transit corridor, meaning the share of area transit stops receiving wayfinding. Credited only where transit service exists.",
-          "instructions": "Estimate the share of the area's transit stops or stations that will receive wayfinding\n(signage, maps, real-time information). This channel is credited only in places that\nalready have transit service.\n"
+          "tooltip": "Level of implementation at transit stops and stations, meaning the share of area transit stops receiving wayfinding. Credited only where transit service exists.",
+          "instructions": "Estimate the share of the area's transit stops or stations that will receive wayfinding\n(signage, maps, real-time information). This covers wayfinding **at** the stop or station,\nwhich is what the transit channel credits, using the area's transit mode share. It is\ncredited only in places that already have transit service.\n"
         },
         {
           "key": "loi_active",
