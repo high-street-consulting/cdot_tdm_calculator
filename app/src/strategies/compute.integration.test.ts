@@ -29,7 +29,7 @@ const TAZS: TazInputs[] = [
 ];
 
 const BASKET: BasketEntry[] = [
-  { id: "traffic_calming" as never, values: { streets_with_calming: 4, total_streets: 10, intersections_with_calming: 2, total_intersections: 8 } },
+  { id: "traffic_calming" as never, values: { pct_streets_with_calming: 0.4, pct_intersections_with_calming: 0.25 } },
   { id: "pedestrian_network_improvements" as never, values: { existing_sidewalk_mi: 9, sidewalk_mi_with_measure: 10 } },
   { id: "car_share_access" as never, values: { service_area_share: 1.0 } },
   { id: "wayfinding" as never, values: { loi_transit: 0.5, loi_active: 0.5 } },

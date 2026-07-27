@@ -1907,10 +1907,8 @@ def strategy_mobility_hub(
 
 def strategy_traffic_calming(
     taz_df: pd.DataFrame,
-    streets_with_calming: float | None = None,
-    total_streets: float | None = None,
-    intersections_with_calming: float | None = None,
-    total_intersections: float | None = None,
+    pct_streets_with_calming: float | None = None,
+    pct_intersections_with_calming: float | None = None,
 ) -> pd.DataFrame:
     """
     19. Traffic Calming (CAPCOA 2010 SDT-2 - LEGACY method).
@@ -1930,17 +1928,23 @@ def strategy_traffic_calming(
     range by the project's traffic-calming coverage - the mean of the share of
     streets and the share of intersections that receive calming improvements::
 
-        pct_streets       = streets_with_calming / total_streets
-        pct_intersections = intersections_with_calming / total_intersections
-        coverage          = mean(available of the two)          # 0..1
+        coverage          = mean(available of the two shares)   # 0..1
         A                 = clamp(MIN + coverage*(MAX-MIN), 0, MAX)
         pct_vmt_reduction = -A          # codebase sign convention: negative = reduction
 
-    If only one of the two coverage measures is supplied, that one is used
-    rather than averaging it against a zero (spec §1 implementation note). Inputs
-    are project-level counts (streets/intersections "in excess of jurisdiction
-    requirements"), so the reduction is applied uniformly to every TAZ in
-    ``taz_df`` (the project area).
+    Simplified 2026-07-27 (content review): the two coverage **shares** are taken
+    directly, replacing four raw counts (streets_with_calming / total_streets /
+    intersections_with_calming / total_intersections). Counting every street and
+    intersection in a large area was the most tedious input in the calculator and
+    bought no precision: SDT-2 resolves to a single 0.25%-1.00% band, so only the
+    ratio was ever used. This does NOT address the reviewer's deeper point - that
+    planners think in terms of the number of calming devices per corridor - which
+    the source literature cannot support.
+
+    A share of 0 means "this project does not calm any of these", so the other
+    share is used alone rather than averaged against a zero. Both zero means no
+    calming at all and returns 0, not the 0.25% floor. Inputs are project-level,
+    so the reduction is applied uniformly to every TAZ in ``taz_df``.
 
     Caps: measure max = 1.00% (applied here); then the Neighborhood Design
     subsector cap (10%) applies in combination downstream.
@@ -1953,17 +1957,24 @@ def strategy_traffic_calming(
     min_e = TRAFFIC_CALMING_SDT2["min_effect"]
     max_e = TRAFFIC_CALMING_SDT2["max_effect"]
 
+    # A share of 0 (or None) means "this project doesn't calm any of these", so it
+    # is left out of the mean rather than dragging the other share toward zero.
     coverages = []
-    if total_streets and total_streets > 0 and streets_with_calming is not None:
-        coverages.append(streets_with_calming / total_streets)
-    if total_intersections and total_intersections > 0 and intersections_with_calming is not None:
-        coverages.append(intersections_with_calming / total_intersections)
+    for share in (pct_streets_with_calming, pct_intersections_with_calming):
+        if share is not None and share > 0:
+            coverages.append(min(max(float(share), 0.0), 1.0))
+
     if not coverages:
-        raise ValueError(
-            "Traffic Calming (SDT-2) needs at least one coverage pair: "
-            "(streets_with_calming, total_streets) or "
-            "(intersections_with_calming, total_intersections)."
-        )
+        # Nothing calmed -> no credit (not the 0.25% floor). The app reaches this
+        # with both sliders at their 0% default.
+        pct = pd.Series(0.0, index=taz_df.index)
+        inputs = "coverage=0% (no streets or intersections calmed)"
+        assumptions = pd.Series(_join_assumptions(
+            "LEGACY_CAPCOA_2010_SDT-2_superseded_by_nonquantified_T-35",
+            "no_coverage_entered_zero_credit",
+        ), index=taz_df.index)
+        return _result(taz_df, "Traffic Calming", inputs, pct,
+                       _base_vmt(taz_df, "all"), assumptions)
 
     coverage = float(np.clip(np.mean(coverages), 0.0, 1.0))
     A = float(np.clip(min_e + coverage * (max_e - min_e), 0.0, max_e))
@@ -2387,8 +2398,8 @@ if __name__ == "__main__":
                                                 isolated_facility=True,
                                                 total_transit_trips_catchment=500)),
         ("mobility_hub",                  dict(catchment_share=0.30)),
-        ("traffic_calming",               dict(streets_with_calming=12, total_streets=80,
-                                                intersections_with_calming=6, total_intersections=40)),
+        ("traffic_calming",               dict(pct_streets_with_calming=0.15,
+                                                pct_intersections_with_calming=0.15)),
         # CAPCOA / derived spec strategies (tdm_strategy_methods.md)
         ("car_share_access",              dict(service_area_share=0.5)),
         ("transit_shelters",              dict(level_of_implementation=0.5)),

@@ -3,10 +3,8 @@
     "strategy": "traffic_calming",
     "row": {},
     "params": {
-      "streets_with_calming": 4,
-      "total_streets": 10,
-      "intersections_with_calming": 2,
-      "total_intersections": 8
+      "pct_streets_with_calming": 0.4,
+      "pct_intersections_with_calming": 0.25
     },
     "expected_pct": -0.0049375
   },
@@ -14,10 +12,8 @@
     "strategy": "traffic_calming",
     "row": {},
     "params": {
-      "streets_with_calming": 10,
-      "total_streets": 10,
-      "intersections_with_calming": 0,
-      "total_intersections": 0
+      "pct_streets_with_calming": 1.0,
+      "pct_intersections_with_calming": 0.0
     },
     "expected_pct": -0.01
   },
@@ -25,12 +21,19 @@
     "strategy": "traffic_calming",
     "row": {},
     "params": {
-      "streets_with_calming": 0,
-      "total_streets": 10,
-      "intersections_with_calming": 5,
-      "total_intersections": 10
+      "pct_streets_with_calming": 0.0,
+      "pct_intersections_with_calming": 0.5
     },
-    "expected_pct": -0.004375
+    "expected_pct": -0.00625
+  },
+  {
+    "strategy": "traffic_calming",
+    "row": {},
+    "params": {
+      "pct_streets_with_calming": 0.0,
+      "pct_intersections_with_calming": 0.0
+    },
+    "expected_pct": 0.0
   },
   {
     "strategy": "pedestrian_network_improvements",

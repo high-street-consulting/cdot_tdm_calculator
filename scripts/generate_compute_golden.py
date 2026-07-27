@@ -114,12 +114,15 @@ def case_generic(sid):
 
 
 CASES = [
+    # Both shares given -> averaged; one share only -> used alone; both 0 -> no credit.
     ("traffic_calming", case_traffic_calming,
-     dict(streets_with_calming=4, total_streets=10, intersections_with_calming=2, total_intersections=8)),
+     dict(pct_streets_with_calming=0.40, pct_intersections_with_calming=0.25)),
     ("traffic_calming", case_traffic_calming,
-     dict(streets_with_calming=10, total_streets=10, intersections_with_calming=0, total_intersections=0)),
+     dict(pct_streets_with_calming=1.00, pct_intersections_with_calming=0.0)),
     ("traffic_calming", case_traffic_calming,
-     dict(streets_with_calming=0, total_streets=10, intersections_with_calming=5, total_intersections=10)),
+     dict(pct_streets_with_calming=0.0, pct_intersections_with_calming=0.50)),
+    ("traffic_calming", case_traffic_calming,
+     dict(pct_streets_with_calming=0.0, pct_intersections_with_calming=0.0)),
     ("pedestrian_network_improvements", case_ped,
      dict(existing_sidewalk_mi=9.0, sidewalk_mi_with_measure=10.0)),
     ("pedestrian_network_improvements", case_ped,
