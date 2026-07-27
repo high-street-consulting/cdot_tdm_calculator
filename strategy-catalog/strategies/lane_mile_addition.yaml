@@ -1,9 +1,9 @@
-# ID-01 - Lane Miles Added (Negative Impact on VMT)
+# ID-01 - Lane Miles Reduced or Lane Miles Added (Induced Demand)
 # Seeded from app/src/strategies/registry.ts. This file is now the source of truth.
 
 id: lane_mile_addition
 uid: ID-01
-name: Lane Miles Added (Negative Impact on VMT)
+name: Lane Miles Reduced or Lane Miles Added (Induced Demand)
 category: induced
 status: implemented
 # --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
@@ -18,26 +18,27 @@ tags:
 - all-trips
 - mpo
 - corridor
-short_description: Change in roadway capacity. Added lanes increase VMT via induced demand; a road
-  diet (negative lane miles) reduces it. Magnitude depends on facility class.
+short_description: Reduce roadway capacity by removing general-purpose travel lanes, such as through a
+  road diet. Removing lane miles can reduce VMT, while adding lane miles can increase VMT through
+  induced demand; the magnitude depends on the roadway type and surrounding context.
 extended_description: |
-  Adding lane miles is an inverse measure that estimates potential VMT increases. Unlike
-  the other measures in this tool, adding lane miles is not seen as a TDM strategy. For
-  the purposes of this tool, this estimate measures the potential negative impacts
-  associated with added lane miles and induced demand.
+  This measure is primarily intended to estimate the potential VMT reduction associated with
+  removing through-lane capacity. To model a reduction, enter the removed lane miles as a
+  **negative** value: for example, enter `-2` for a project that removes two lane-miles of
+  general-purpose capacity.
 
-  The effect of induced demand will vary by roadway type and context, with major freeway
-  capacity typically producing stronger induced travel effects than small changes on
-  lower-volume streets.
+  The same relationship can also be used to estimate the effect of adding roadway capacity.
+  Adding lane miles is not a TDM strategy, but modeling the increase can help users understand
+  the potential negative VMT impacts of a project compared with the baseline.
 
-  This same relationship runs in reverse: removing through-lane capacity (a **road
-  diet**) reduces VMT. To model a road diet, enter a **negative** number of lane miles
-  (e.g. `-2` for a project that removes two lane-miles of general-purpose capacity).
+  Effects are typically greater on major freeways and other high-volume facilities than on
+  lower-volume streets or for smaller capacity changes.
 guidance: |
-  Use this strategy to estimate added driving from a roadway capacity
-  project, or VMT savings from a road diet (enter negative lane miles). Apply it to
-  general-purpose capacity changes; specialized improvements such as turn lanes, bus-only
-  lanes, or safety projects should be evaluated based on their specific purpose.
+  Use this strategy to estimate VMT reductions from removing general-purpose
+  lane capacity, such as through a road diet. It can also be used to estimate the added VMT
+  associated with new general-purpose lanes compared with the baseline. Other improvements
+  such as turn lanes, bus-only lanes, or safety projects should be evaluated based on their
+  specific purpose.
 images: []
 method: Duranton & Turner 2011 long-run induced-demand elasticities
 formula: ΔVMT% = (new_lane_miles / existing_lane_miles_in_class) × ε
@@ -61,15 +62,17 @@ inputs:
   step: 0.1
   default: 2.0
   prerequisite: true
-  summary: The net change in through-lane miles the project makes (positive for added lanes, negative for a road diet), excluding turn lanes and shoulders.
+  summary: The net change in through-lane miles the project makes (negative for a road diet, positive
+    for added lanes), excluding turn lanes and shoulders.
   source_note: your project scope / roadway design
   tooltip: 'Signed net change in through-lane miles, excluding turn lanes and shoulders. Positive = lanes added; negative = a road diet (lanes removed).'
   instructions: |
-    Enter the net change in through-lane miles the project makes: lane-miles, not
-    centerline miles (a 2-mile project adding one lane each way is 4 lane-miles).
-    Use a **positive** value for added capacity and a **negative** value to model a
-    **road diet** that removes through-lane capacity (e.g. `-4` for a 2-mile project
-    that removes one lane each way). Exclude turn lanes, auxiliary lanes, and shoulders.
+    Enter the net change (+ or −) in general purpose through-lane miles the project
+    makes: lane-miles, not centerline miles (a 2-mile project adding one lane each way
+    is 4 lane-miles). Use a **negative** value to model a **road diet** that removes
+    through-lane capacity (e.g. `-4` for a 2-mile project that removes one lane each
+    way). Use a **positive** value for added roadway capacity. Exclude turn lanes,
+    auxiliary lanes, and shoulders.
   min: -20
   unit: lane-mi
 - key: facility_class
@@ -90,12 +93,14 @@ inputs:
     label: Local (ε = +0.4)
   default: major_arterial
   prerequisite: true
-  summary: The functional classification of the road being widened or narrowed; freeways induce the most new travel, local streets the least.
+  summary: The functional classification of the road being widened or narrowed.
   source_note: the functional class of the road in your project scope
   tooltip: Sets how strongly new capacity brings out traffic. Existing lane miles for the area come from the loaded network.
   instructions: |
-    Pick the class of the road being widened. It sets how strongly the new capacity
-    brings out traffic: freeways and expressways induce the most new travel,
-    arterials less, and collectors and local streets the least. Match it to the
-    functional classification of the road you're expanding.
+    Select the functional classification of the roadway where general-purpose lane
+    capacity is being removed or added. The facility class determines how strongly the
+    VMT estimate responds to the capacity change: effects are generally greatest on
+    freeways and expressways, smaller on arterials, and lowest on collectors and local
+    streets. To determine this value, match the selected class to the functional
+    classification of the modified roadway corridor.
 notes: ''

@@ -20,21 +20,23 @@ short_description: Street design measures (e.g., speed humps, curb extensions) t
   and improve safety.
 extended_description: |
   Traffic calming helps to reduce vehicle speeds and improve the safety and comfort of people
-  walking, biking, rolling, and accessing transit. While traffic calming alone will likely
-  have little impact on VMT reductions, it makes trips completed by active transportation
-  safer. Traffic calming can include speed humps, curb extensions, chicanes, lane narrowing,
-  median islands, mini roundabouts, and other changes to the streetscape that slow vehicle
-  traffic and improve perceived and actual safety for users walking, biking, or rolling.
+  walking, biking, rolling, and accessing transit. Traffic calming makes biking and walking
+  trips safer and more comfortable, which can potentially shift some trips from driving to
+  multimodal travel. Traffic calming can include speed humps, curb extensions, chicanes, lane
+  narrowing, median islands, mini roundabouts, and other changes to the streetscape that slow
+  vehicle traffic and improve perceived and actual safety for users walking, biking, or
+  rolling.
 
   The effect of traffic calming will vary based on roadway context, surrounding land use, and
   the strength of the active transportation network. Traffic calming is most effective when
-  paired with sidewalks, crossings, bike facilities, and transit access, especially in
-  locations where high vehicle speeds or wide crossing distances discourage individuals from
+  paired with high quality multimodal infrastructure like high-quality sidewalk networks and
+  intersection crossings, high-comfort bike facilities, and transit access, especially in
+  locations where high vehicle speeds or unsafe intersections discourage individuals from
   choosing alternative transportation modes.
 guidance: |
-  Use this strategy for street design measures that slow vehicle speeds and
-  improve comfort for people walking, biking, rolling, or accessing transit. Traffic calming
-  should generally be applied on local streets, station access routes, school routes, or
+  Use this strategy for implementation of roadway design measures that slow
+  vehicle speeds and improve comfort for people walking, biking, rolling, or accessing
+  transit. Traffic calming should generally be applied on local streets, school routes, or
   other low- to medium-volume corridors where speed and safety are barriers to non-driving
   trips.
 images: []
@@ -82,13 +84,13 @@ inputs:
   unit: streets
   prerequisite: true
   summary: The number of streets or street segments in the project area that will receive
-    traffic-calming features beyond what your jurisdiction already requires.
+    traffic-calming features.
   source_note: your project design drawings / plan set
-  tooltip: Number of streets receiving traffic-calming features beyond jurisdiction requirements.
+  tooltip: Number of streets receiving traffic-calming features.
   instructions: |
     Count the streets (or street segments) in the project area that will receive
     traffic-calming features (speed humps, curb extensions, chicanes, lane narrowing,
-    etc.) beyond what your jurisdiction already requires.
+    etc.).
 - key: total_streets
   label: Total streets in project area
   control: number
@@ -97,8 +99,8 @@ inputs:
   default: 0
   unit: streets
   prerequisite: true
-  summary: The total number of streets or street segments in the project area, used to work out
-    the share that receive calming.
+  summary: The total number of streets or street segments in the project area. This will help
+    determine the percentage of streets in the project area receiving traffic calming improvements.
   source_note: your project area map or GIS street layer
   tooltip: Total number of streets in the project area, used to compute coverage.
   instructions: |

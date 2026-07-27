@@ -21,17 +21,18 @@ tags:
 short_description: Charge employees for parking at work (or remove free parking) to discourage driving alone
   for the commute.
 extended_description: |
-  Workplace parking pricing makes the cost of employee parking visible instead of treating
-  it as free or as a hidden benefit. Pricing can help preserve parking for employees who
-  need or value it most, while encouraging others to consider lower-cost commute options
-  such as transit, carpooling, vanpooling, bicycling, walking, or telework. This measure
-  may also include a 'parking cash-out', where employees who do not use an
-  employer-provided parking space receive a credit for other commuting options.
+  Workplace parking pricing charges employees for parking at work or removes an existing
+  free-parking benefit. Making employees responsible for some or all of the parking cost can
+  encourage them to consider lower-cost commute options such as transit, carpooling,
+  vanpooling, bicycling, walking, or telework.
 
-  The effect depends on the parking price, nearby parking supply, and whether employees
-  have practical alternatives. Pricing is most effective at worksites with parking
-  pressure, useful travel options, and clear communication about how employees can shift
-  to lower-cost choices.
+  This strategy may also include parking cash-out, in which employees who give up an
+  employer-provided parking space receive a payment or other commute benefit instead.
+
+  The effect depends on the parking price, the availability of free or lower-cost parking
+  nearby, and whether employees have practical alternatives to driving alone. Pricing is
+  generally most effective at worksites with limited parking, strong travel options, and
+  clear information about available commute choices.
 guidance: |
   This strategy applies to commute trips and should generally be used for
   employees who currently receive free, subsidized, or underpriced workplace parking. For

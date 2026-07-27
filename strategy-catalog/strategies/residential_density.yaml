@@ -23,17 +23,25 @@ tags:
 short_description: Increase housing units per acre to support shorter trips and more walking, biking, and
   transit use.
 extended_description: |
-  Increasing residential density adds dense residential development in places where
-  residents can reach jobs, services, transit, and everyday destinations with shorter
-  trips. The VMT reduction benefit is strongest when the development is convenient to key
-  destinations via walking, biking, and transit options. Dense housing alone, without
-  nearby destinations or multimodal infrastructure, will not provide significant VMT
-  reduction benefits.
+  Increasing residential density can shorten trips and make walking, biking, and transit
+  more practical when homes are located near jobs, services, transit, and everyday
+  destinations. The measure estimates a reduction in VMT per resident, or VMT avoided
+  compared with accommodating the same housing at a lower density. Adding homes and
+  residents can still increase total VMT in the project area. This approach should therefore
+  not be interpreted as showing that a new development will reduce overall VMT. Density
+  provides the strongest benefit when paired with nearby destinations and safe, convenient
+  multimodal connections.
 guidance: |
-  Use this strategy for housing-focused rezoning or denser residential
-  development. To model a mix of homes and jobs, or a broader change in land use mix,
-  combine it with [Increased Employment
+  Use this strategy to compare housing-focused rezoning or denser residential
+  development with a lower-density alternative serving the same amount of housing. This
+  strategy does not estimate overall VMT impacts of the residential development itself. For
+  mixed-use development or broader changes in the balance of homes and jobs, combine it with
+  [Increased Employment
   Density](#/strategies/employment_density).
+# Results framing: the credit is VMT avoided against a lower-density alternative, not a
+# reduction versus today's travel (2026-07-21 content review).
+impact_direction: avoided
+impact_qualifier: relative to lower-density development
 images: []
 method: Stevens (2016) residential VMT-density elasticity (ε=−0.22)
 formula: ΔVMT% = Δres_density × ε_res
@@ -66,16 +74,18 @@ inputs:
   suffix: '%'
   default: 0.2
   prerequisite: true
-  summary: The percent change in housing units per acre the project adds, compared with today's baseline for the project area.
+  summary: The percent change in housing units per acre under the proposed project compared with
+    today's density in the project area. This input describes how compactly the housing is
+    developed; it does not represent the percent change in population or total housing units.
   source_note: your development program / site plan vs. local baseline (DOLA estimates, zoning)
   tooltip: Proposed housing density vs. today (compare with Department of Local Affairs and zoning references).
   benchmark: 'People/sq mi: single-family suburb ~3,000–5,000; downtown Denver high-rise ~13,000–16,000; Capitol Hill ~25,000.'
   instructions: |
-    Enter the percentage change in housing density compared with today's baseline
-    for the project area. A project that doubles density is +100%. The Colorado
-    Department of Local Affairs (DOLA) housing estimates and local zoning references
-    (such as the New Zoning Atlas) can help you compare proposed density against
-    existing conditions.
+    Compare the proposed housing units per acre with today's housing units per acre
+    for the same project area. Enter the percentage difference; for example, a project
+    that doubles density is +100%. The Colorado Department of Local Affairs (DOLA)
+    housing estimates and local zoning references (such as the New Zoning Atlas) can
+    help you compare proposed density against existing conditions.
 
     Approximate benchmarks (people per square mile):
 

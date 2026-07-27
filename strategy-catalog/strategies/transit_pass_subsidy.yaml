@@ -6,7 +6,10 @@
 id: transit_pass_subsidy
 uid: TR-02
 name: Transit Pass Subsidies
-category: transit
+# Display category moved transit -> support ("Supportive & Programmatic") per the
+# 2026-07-21 content review. The CAPCOA cap grouping is unchanged (capcoa_subsector
+# below), so the displayed subsector cap is still Transit's.
+category: support
 status: implemented
 # --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
 mechanism: [mode_shift]
@@ -23,21 +26,21 @@ tags:
 short_description: Reduce the price of transit passes for residents or targeted users, raising ridership
   and shifting trips off the road.
 extended_description: |
-  Transit pass subsidies reduce the out-of-pocket cost of riding by offering discounted or
-  free passes to residents, students, lower-income riders, or other eligible groups. When
-  transit is less expensive and easily accessible, some trips may shift from driving to
-  transit.
+  This measure reduces the out-of-pocket cost of riding by offering discounted or
+  free passes to residents, students, lower-income riders, or other eligible community
+  members. When transit is less expensive and easily accessible, some trips may shift from
+  driving to transit.
 
   The effect depends on who receives the subsidy and whether transit serves the trips
-  those users need to make. Subsidies in transit-rich areas with parking pressure are
-  likely to have a stronger effect than the same subsidy in places where service is
-  infrequent or indirect.
+  those users need to make. Implementing this measure in areas with high-quality transit is
+  likely to have a stronger effect than implementing the same measure in places where
+  service is infrequent or indirect.
 guidance: |
-  Use this strategy for general or population-wide fare reductions. For
-  employer- or development-provided commute passes, such as an RTD EcoPass, use [Employee
-  Commuting
+  Use this strategy when a transit agency, public program, or other sponsor
+  reduces fares for the broader riding public. For transit passes provided to employees or
+  occupants of a development, such as an RTD EcoPass, use [Employer-Provided Commute
   Benefits](#/strategies/employee_commuting_benefits),
-  which focuses the effect on commute trips.
+  which applies the effect specifically to commute trips.
 images: []
 method: Paulley (2006) short-run fare elasticity (ε=−0.30), all trips
 formula: ΔVMT% = (Δfare × eligible × ε × transit_MS × 1/AVO) / auto_MS
@@ -92,9 +95,10 @@ inputs:
   source_note: your project scope / eligible-population estimate
   tooltip: Share of area transit users covered by the subsidy.
   instructions: |
-    Estimate the share of area transit riders eligible for the subsidized passes.
-    A program targeting students or low-income riders covers a subset; a universal
-    program approaches 100%.
+    Estimate the percentage of transit riders in the project area who would be eligible
+    for the reduced fare. A program limited to students, income-qualified riders, or
+    another specific group will cover only part of the transit-riding population, while
+    a program available to all riders may approach 100%.
 - key: vmt_scope
   label: VMT scope
   control: select

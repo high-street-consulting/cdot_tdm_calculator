@@ -18,7 +18,12 @@ import {
   type StrategyInput,
   type StrategyMeta,
 } from "../strategies/registry";
-import { CATALOG, areaTypeLabel } from "../strategies/catalog";
+import {
+  CATALOG,
+  CAPCOA_SUBSECTOR_CAPS,
+  CAPCOA_SUBSECTOR_LABELS,
+  areaTypeLabel,
+} from "../strategies/catalog";
 import { type StrategyKey } from "../strategies/strategies";
 import { computeStrategyRows } from "../strategies/compute";
 import {
@@ -278,7 +283,15 @@ export function DetailView({
   // are signed positive = reduction, negative = increase (CMT-06/08).
   const isReduction = dailyReduction >= 0;
   const directionSign = isReduction ? "−" : "+";
-  const directionLabel = isReduction ? "reduced" : "added";
+  // A reduction normally reads "reduced". The land-use measures override it with
+  // "avoided" (+ an `impactQualifier`) because their credit is measured against an
+  // alternative development baseline, not against today's travel: a bare
+  // "reduced" there implies the project lowers VMT versus today, which it may not.
+  // An INCREASE always reads "added", whatever the strategy authored.
+  const directionLabel = isReduction
+    ? meta.impactDirection || "reduced"
+    : "added";
+  const impactQualifier = isReduction ? meta.impactQualifier : undefined;
   // Shared, formatted impact values: the live-impact rail card and the commit
   // bar both mirror these so committing reads as the payoff of configuring.
   const signedPct = `${directionSign}${Math.abs(pctReduction * 100).toFixed(2)}%`;
@@ -307,10 +320,26 @@ export function DetailView({
 
   const areaTypes = meta.applicability?.area_types ?? [];
 
+  // Displayed subsector cap. Prefer the strategy's CAPCOA subsector (the real
+  // cap-grouping unit) over its display `category`: the 2026-07-21 content review
+  // regrouped several strategies for browsing (carshare and shared micromobility
+  // under "Shared Mobility", transit pass subsidies under "Supportive &
+  // Programmatic") without changing which subsector caps them. Falls back to the
+  // category's cap when a subsector has no entry.
+  const subsectorCapEntry = meta.capcoaSubsector
+    ? CAPCOA_SUBSECTOR_CAPS[meta.capcoaSubsector]
+    : undefined;
+  const subsectorCap =
+    subsectorCapEntry !== undefined ? subsectorCapEntry : cat?.cap ?? null;
+  const subsectorName =
+    (meta.capcoaSubsector && CAPCOA_SUBSECTOR_LABELS[meta.capcoaSubsector]) ||
+    cat?.name ||
+    "";
+
   // Plain-language explanation of the "subsector cap" term, reused by the hero
   // pill's info cue and the Methodology accordion so the copy stays in sync.
-  const capExplanation = cat
-    ? `The most combined VMT reduction creditable across all strategies in this subsector (${cat.name}). Because these strategies affect overlapping trips, their combined effect is capped to prevent double-counting (per CAPCOA).`
+  const capExplanation = subsectorName
+    ? `The most combined VMT reduction creditable across all strategies in this subsector (${subsectorName}). Because these strategies affect overlapping trips, their combined effect is capped to prevent double-counting (per CAPCOA).`
     : "";
 
   return (
@@ -366,9 +395,9 @@ export function DetailView({
                 {meta.uid && <div className="sku">{meta.uid}</div>}
                 {cat?.name && <div className="cat-name">{cat.name}</div>}
               </div>
-              {cat?.cap != null && (
+              {subsectorCap != null && (
                 <div className="cap-pill">
-                  {cat.cap}% subsector cap
+                  {subsectorCap}% subsector cap
                   {/* Info cue: the standard styled `.info-i` tooltip, fed via
                       `data-tip`. The .band-panel is now overflow: visible (the
                       bled-off imagery is clipped by the inner .band-clip
@@ -389,11 +418,16 @@ export function DetailView({
             </div>
             <div className="dhero-body">
               <h1>{meta.displayName}</h1>
-              <div className="desc">{meta.description}</div>
-              {meta.extendedDescription && (
+              {/* The one-line `description` is the strategy-card summary. It is
+                  deliberately NOT repeated here: the 2026-07-21 content review
+                  found it duplicated the opening of `extendedDescription`. Falls
+                  back to it only when no long-form narrative is authored. */}
+              {meta.extendedDescription ? (
                 <Markdown className="md-prose dhero-about">
                   {meta.extendedDescription}
                 </Markdown>
+              ) : (
+                <div className="desc">{meta.description}</div>
               )}
             </div>
             {meta.images && meta.images.length > 0 && (
@@ -485,16 +519,19 @@ export function DetailView({
                         <span className="wyn-chip">Prerequisite</span>
                       </div>
                       {inp.summary && <div className="wyn-summary">{inp.summary}</div>}
-                      {inp.resources && inp.resources.length > 0 ? (
+                      {/* Both are shown when authored: an input can have a
+                          reference link AND a prose provenance line (e.g. the
+                          statewide transit map plus "your local transit agency's
+                          service plan"). */}
+                      {inp.sourceNote && (
+                        <div className="wyn-source">Source: {inp.sourceNote}</div>
+                      )}
+                      {inp.resources && inp.resources.length > 0 && (
                         <div className="wyn-links">
                           {inp.resources.map((r) => (
                             <ResourceLink key={r.url} label={r.label} url={r.url} />
                           ))}
                         </div>
-                      ) : (
-                        inp.sourceNote && (
-                          <div className="wyn-source">Source: {inp.sourceNote}</div>
-                        )
                       )}
                     </div>
                   </li>
@@ -567,13 +604,18 @@ export function DetailView({
               point). Left echoes the same computed values shown in the rail. */}
           <div className="commit-bar">
             <div className="commit-impact">
-              <div className="overline">Estimated impact at your settings</div>
+              <div className="overline">
+                {impactQualifier
+                  ? "Estimated impact relative to the identified baseline"
+                  : "Estimated impact at your settings"}
+              </div>
               <div className="commit-figure">
                 <span className="commit-pct" style={{ color: impactColor }}>
                   {signedPct}
                 </span>
                 <span className="commit-caption">
                   VMT · {annualM} million mi/yr {directionLabel}
+                  {impactQualifier ? ` ${impactQualifier}` : ""}
                 </span>
               </div>
             </div>
@@ -611,8 +653,10 @@ export function DetailView({
                 <div><b>Method:</b> {meta.method}</div>
                 <div>
                   <b>Subsector cap:</b>{" "}
-                  {cat?.cap ? `${cat.cap}% combined for ${cat.name}` : "n/a"}
-                  {cat?.cap != null && (
+                  {subsectorCap
+                    ? `${subsectorCap}% combined for ${subsectorName}`
+                    : "n/a"}
+                  {subsectorCap != null && (
                     <button
                       type="button"
                       className="info-i"
@@ -650,6 +694,9 @@ export function DetailView({
                 {annualM}
                 <span className="u">million mi/yr</span>
               </div>
+              {impactQualifier && (
+                <div className="impact-qualifier">{impactQualifier}</div>
+              )}
               <div className="impact-baseline">of {baselineM} million mi/yr baseline</div>
             </div>
           </div>

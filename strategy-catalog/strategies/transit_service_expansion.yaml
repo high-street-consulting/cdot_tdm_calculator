@@ -23,20 +23,19 @@ tags:
 short_description: More frequent service (shorter waits) on existing transit routes, drawing riders out
   of cars.
 extended_description: |
-  Transit service frequency increases make existing buses or trains arrive more often.
-  Shorter waits make transit easier to use, reduce scheduling challenges and can make
-  transit more time effective.
+  Transit service frequency improvements reduce the scheduled headway (the time between
+  arriving buses or trains) on an existing transit corridor. Shorter waits make transit
+  easier to use, reduce scheduling challenges, and can make transit more time effective.
 
   The benefit depends on the existing service level, the size of the improvement, corridor
   demand, and reliability. More frequent service on a high-demand route will generally
   produce a larger response than small improvements spread across routes with limited
   demand.
 guidance: |
-  Use this strategy for frequency improvements on existing service. For new
-  routes, route extensions, or service added where transit did not previously exist, use
-  [New Transit
-  Service](#/strategies/new_transit_service)
-  instead.
+  Use this strategy for existing service frequency increases. For implementation of new
+  routes, route extensions, or new service, use the
+  [Transit Service Expansion](#/strategies/new_transit_service)
+  strategy instead.
 images: []
 method: Handy 2013 frequency elasticity (ε=0.5)
 formula: ΔVMT% = −L × Δfreq × transit_MS × ε × (1/AVO) / auto_MS
@@ -69,21 +68,25 @@ inputs:
   suffix: '%'
   default: 0.25
   prerequisite: true
-  summary: The percent change in how often service runs on the affected routes; positive for more frequent service (30 to 20 min = +50%), negative for a service cut.
+  summary: The percent change in how often service will operate compared with the existing service.
+    This percentage will be positive for more frequent service, and it will be negative for a
+    service cut.
   resources:
   - label: CDOT Statewide Transit Routes map
-    url: https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824
-  tooltip: 'Signed: positive = more frequent service, negative = a service cut.'
+    url: https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824
+  tooltip: Positive percentage = more frequent service; negative percentage = service frequency reduction.
   instructions: |
     Enter the percentage change in how often service runs on the affected routes. If
-    service improves from every 30 minutes to every 20 minutes, frequency rises by
-    50% (30 ÷ 20 − 1). Compare the planned trips per hour (or vehicles per day)
-    against today's schedule on the routes the project touches. Use a negative value
-    to model a service cut.
+    service improves from every 30 minutes to every 20 minutes, frequency increases
+    by 50% (30 ÷ 20 − 1); if it improves from every 60 minutes to every 30 minutes,
+    frequency increases by 100% (60 ÷ 30 − 1). Compare the planned trips per hour (or
+    vehicles per day) against the current schedule on the routes that overlap with the
+    selected project area. Use a negative value to model a service cut.
 
-    To check the existing routes, operators, and headways in your area, CDOT's
-    [Statewide Transit Routes map](https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824)
-    maps fixed-route transit statewide.
+    To check the existing transit routes, operators, and service in your area,
+    access CDOT's
+    [Statewide Transit Routes map](https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824)
+    or your local transit agency's service plan.
 - key: level_of_implementation
   label: Implementation level
   control: slider
@@ -93,7 +96,10 @@ inputs:
   scale: 100
   suffix: '%'
   default: 1.0
-  prerequisite: true
+  # Dropped from the "What you'll need" checklist per the 2026-07-21 content
+  # review (the reviewer questioned whether a phase-in factor is needed here at
+  # all); the control itself is retained pending a decision on removing it.
+  prerequisite: false
   summary: What share of the frequency change will actually be in place. Use 100% for a full roll-out, less for a pilot on part of the network or a multi-year phase-in.
   source_note: your project scope / agency service plan
   tooltip: Phase-in factor. 100% = fully implemented across the impacted service area.
@@ -102,7 +108,8 @@ inputs:
     place across the impacted service area; a pilot on part of the network or a
     multi-year roll-out would be lower.
 
-    To check the existing routes, operators, and headways in your area, CDOT's
-    [Statewide Transit Routes map](https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824)
-    maps fixed-route transit statewide.
+    To check the existing transit routes, operators, and service in your area,
+    access CDOT's
+    [Statewide Transit Routes map](https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824)
+    or your local transit agency's service plan.
 notes: 'Split from the merged transit service tile. Engine: strategy_transit_service_expansion (basis=frequency).'

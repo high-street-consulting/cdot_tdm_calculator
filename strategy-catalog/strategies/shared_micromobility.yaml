@@ -4,7 +4,10 @@
 id: shared_micromobility
 uid: BP-03
 name: Shared Micromobility
-category: bikeped
+# Display category moved bikeped -> vanpool ("Shared Mobility") per the 2026-07-21
+# content review: it is a shared service, not bike/ped infrastructure. The CAPCOA
+# cap grouping is unchanged (capcoa_subsector below).
+category: vanpool
 status: implemented
 # --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
 mechanism: [mode_shift]
@@ -20,20 +23,17 @@ tags:
 short_description: Shared bikes, e-bikes, or scooters available for short trips. How much driving they
   replace varies by device type.
 extended_description: |
-  Shared micromobility provides short-term access to shared bicycles, e-bikes, or scooters
-  for short trips and connections to transit. It is most useful in places where trips are
-  too long to walk comfortably but short enough that driving is not time or cost
-  effective.
+  Shared micromobility provides access to shared bicycles, e-bikes, or scooters for various
+  trip types. It is most useful for trips that are too long for walking comfortably but short
+  enough that driving is not time or cost effective.
 
-  The benefits of shared micromobility depend on how many micromobility trips replace car
-  trips rather than walking, transit, or personal bike trips. Systems located near
-  transit, campuses, downtowns, and dense neighborhoods generally have stronger potential,
-  especially when shared micromobility devices are easy to find and parking is well
-  managed.
+  The benefits of shared micromobility depend on how many trips replace car trips. Systems
+  located near transit, campuses, downtowns, and dense neighborhoods generally have stronger
+  potential, especially when shared micromobility devices are easily accessible.
 guidance: |
-  Use this strategy for launching or expanding a shared fleet. Enter how
-  much of the population can reach a vehicle before and after the project, and select the
-  device type that matches the system.
+  Use this strategy when preparing to launch or expand a shared micromobility
+  program. Enter how much of the population can reach the service area before and after the
+  project, and select the device type available through the program.
 images: []
 method: Effect-size estimate (adapted CAPCOA T-22-A / T-22-B / T-22-C; NACTO trip-substitution research)
 formula: ΔVMT% = −Δaccess × micro_trips × sub_ratio × L_micro / (veh_trips × L_veh)
@@ -76,7 +76,7 @@ inputs:
   source_note: your system plan or vendor / operator agreement
   tooltip: Determines the default substitution ratio.
   instructions: |
-    Pick the device type that matches the system. It sets the auto-substitution
+    Pick the device type that matches the system. It sets the car trip substitution
     ratio: e-bikes and scooters replace car trips more often than pedal bikes, so
     they yield a larger VMT effect for the same number of trips.
 - key: pct_pop_access_before
@@ -89,14 +89,14 @@ inputs:
   suffix: '%'
   default: 0.0
   prerequisite: true
-  summary: The share of the area's population that already lives within an easy walk (about a
-    quarter mile) of an existing dock, station, or service zone. Enter 0% if none today.
+  summary: The share of the area's population that is located within a quarter mile of micromobility
+    parking areas, docks, etc. Enter 0% if there is no system currently.
   source_note: your existing service map / station locations
   tooltip: Estimate of households within walking distance (≈¼ mi) of an existing dock/station.
   instructions: |
-    Estimate the share of the area's population that already lives within an easy
-    walk (about ¼ mile) of an existing dock, station, or service zone. If there is
-    no system today, this is 0%.
+    Estimate the share of the area's population that already lives within a quarter
+    mile of micromobility parking areas, docks, etc. If there is no system today,
+    this is 0%.
 - key: pct_pop_access_after
   label: '% population with access after'
   control: slider
@@ -107,13 +107,13 @@ inputs:
   suffix: '%'
   default: 0.3
   prerequisite: true
-  summary: The share of the area's population within an easy walk of the system after the
+  summary: The share of the area's population within a quarter mile of the system after the
     deployment or expansion is complete.
   source_note: your proposed deployment plan / service-area map
   tooltip: Estimate after the proposed deployment is complete.
   instructions: |
-    Estimate the share of the population within an easy walk of the system after
-    the deployment or expansion. The difference from today's access drives the
-    reduction: a citywide dockless permit reaches far more people than a few
-    downtown stations.
+    Estimate the share of the population within a quarter-mile walk of the system
+    after the deployment or expansion. The difference from today's access drives the
+    reduction: a citywide dockless program reaches far more people than docked
+    stations concentrated in certain areas.
 notes: ''

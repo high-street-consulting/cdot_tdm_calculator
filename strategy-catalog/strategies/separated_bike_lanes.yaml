@@ -30,11 +30,11 @@ extended_description: |
   with unsafe intersection crossings, missing connections or other issues may make biking
   less appealing.
 guidance: |
-  Use this strategy for separated bicycle facilities. Facilities that are
-  non-separated bike lanes or just sharrows should select the [Striped Bike Lanes,
+  Use this strategy only for protected or buffered bike lanes. For conventional
+  striped bike lanes, neighborhood bikeways, or sharrows, use the [Striped Bike Lanes,
   Neighborhood Bikeways and
   Sharrows](#/strategies/sharrows_bike_lanes)
-  strategy. The model also factors in seasonality when estimating bike ridership.
+  strategy.
 images: []
 # TODO: add an illustrative photo or cross-section diagram, e.g.
 # images:
@@ -45,11 +45,12 @@ images: []
 method: Adapted CAPCOA T-19-A
 formula: ΔVMT% = −%VMT_parallel × (days/365) × ε × L_bike / L_veh
 methodology_detail: |
-  A protected lane gives people a comfortable enough route that some who would have
-  driven choose to bike instead, lowering vehicle miles traveled (VMT). The effect
-  grows with the share of nearby driving on the streets the lane parallels and with
-  the number of days a year that are comfortable for cycling, and it is adjusted for
-  the fact that bike trips are typically shorter than car trips, following CAPCOA
+  A protected or buffered bike lane can make bicycling a practical option for some trips
+  that would otherwise be made by car, reducing vehicle miles traveled (VMT). The estimated
+  effect depends on the share of study-area VMT occurring on the bikeway corridor and
+  relevant parallel streets, the number of days per year suitable for bicycling, and the
+  typically shorter length of bicycle trips compared with car trips. The calculation follows
+  CAPCOA
   [T-19-A (Construct or Improve Bike Facility)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-19-a.pdf)
   and [T-20 (Expand Bikeway Network)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-20.pdf),
   using a +0.07 effect size.
@@ -74,7 +75,7 @@ applicability:
   warn_message: Protected bike lanes show a limited effect below suburban densities.
 inputs:
 - key: pct_parallel_vmt_affected
-  label: Share of area VMT on parallel roadways
+  label: Share of study-area VMT affected by the bikeway
   control: slider
   min: 0
   max: 70
@@ -83,23 +84,23 @@ inputs:
   suffix: '%'
   default: 0.05
   prerequisite: true
-  summary: The share of your area's driving carried on the street the new bike lane runs along
-    and nearby parallel roads.
+  summary: The percentage of total VMT in the selected area that occurs on the bikeway corridor
+    and nearby parallel streets where some driving trips could reasonably shift to bicycling.
   resources:
   - label: CDOT Traffic Data Explorer
     url: https://dtdapps.codot.gov/otis/trafficdata
   tooltip: 'Engineering judgment: share of the corridor''s driving carried on the street the new bike lane runs on and nearby parallel roads.'
   instructions: |
-    Estimate the share of your area's driving that happens on the streets your new
-    bike lane runs alongside. A quick approach: identify the parallel street(s) the
-    lane serves, then judge what fraction of all local driving they carry. A
-    protected lane along a single arterial in a small area might be 5–15%; a lane
-    along a minor street might be 1–3%. If you have a travel demand model or traffic
-    counts, divide the driving on the parallel streets by total area driving. When
-    in doubt, start with the 5% default and adjust.
+    Estimate the share of total VMT in the selected study area that occurs on the
+    bikeway corridor and nearby parallel streets where driving trips could reasonably
+    shift to bicycling. Because the calculator uses TAZ-based travel data, it cannot
+    directly model a specific bikeway on a single corridor. If VMT data is available
+    for the corridor, divide the VMT on the bikeway corridor and relevant parallel
+    streets by total VMT in the selected study area. Otherwise, use available traffic
+    counts and local knowledge to develop and document a reasonable estimate.
 
-    To check traffic on a specific street, CDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)
-    maps annual average daily traffic (AADT) counts for state highways statewide.
+    CDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)
+    provides annual average daily traffic counts for state highways.
 - key: annual_use_days
   label: Annual ridable days
   control: number
@@ -108,11 +109,12 @@ inputs:
   tooltip: Filled in from National Oceanic and Atmospheric Administration (NOAA) 1991-2020 climate records for
     your area. Adjust if you have a project-specific number.
   instructions: |
-    This is the number of days per year the weather is comfortable for cycling: a
-    daytime high between 32°F and 95°F with no rain or snow. You usually don't need
-    to look this up: the calculator fills it in from National Oceanic and Atmospheric
-    Administration (NOAA) climate records for your area. Only override it if you have
-    a local estimate, for example a community with an unusually long riding season.
+    Enter the estimated number of days per year with weather suitable for bicycling.
+    The calculator automatically fills this value using National Oceanic and
+    Atmospheric Administration (NOAA) climate records and a default definition of
+    daytime temperatures between 32°F and 95°F with no rain or snow. Override the
+    default only when a better local estimate is available, such as community
+    bicycle-count or travel-survey data.
   min: 0
   max: 365
   unit: days

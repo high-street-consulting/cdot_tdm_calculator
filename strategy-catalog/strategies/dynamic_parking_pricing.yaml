@@ -22,17 +22,19 @@ tags:
 short_description: Adjust parking prices by demand, time, or location; estimated from the resulting
   average price drivers pay.
 extended_description: |
-  Dynamic parking pricing adjusts rates by time of day, location, observed occupancy, or
-  other factors. The purpose is to keep some spaces available in high-demand areas, reduce
-  time spent searching for parking, and encourage commuters to consider other travel
-  options when appropriate.
+  Dynamic parking pricing adjusts parking rates based on demand, time of day, location, or
+  observed occupancy. By charging more when and where demand is highest, this strategy can
+  help maintain parking availability, reduce time spent searching for a space, and encourage
+  some travelers to consider other transportation options.
 
-  The additional effect of dynamic pricing can be difficult to separate from parking
-  pricing generally, so results should be interpreted as approximate.
+  The effect depends on the size of the price change, when and where it applies, and the
+  availability of alternatives to driving. Because dynamic pricing overlaps with the broader
+  effects of paid parking, its estimated VMT reduction should be treated as approximate.
 guidance: |
   Handy et al. (2025) advise against treating dynamic pricing as a distinct
-  measure because its added effect beyond parking pricing is difficult to isolate. When in
-  doubt, model the average price under [Parking Fees and Curb
+  measure because its added effect beyond parking pricing is difficult to isolate. Use this
+  strategy when parking prices change based on demand, time, location, or occupancy. If you
+  only need to model the average parking price, use [Parking Fees and Curb
   Management](#/strategies/parking_fees_curb_management)
   instead.
 images: []
@@ -82,7 +84,8 @@ inputs:
   suffix: '%'
   default: 0.3
   prerequisite: true
-  summary: The share of the area's driving whose destinations fall within the demand-responsive pricing zone.
+  summary: The estimated share of the area's vehicle trip destinations that fall within the
+    demand-responsive pricing zone.
   source_note: your pricing-zone boundary vs. area travel patterns
   tooltip: Share of the area's driving whose destinations fall under the dynamic pricing.
   instructions: |

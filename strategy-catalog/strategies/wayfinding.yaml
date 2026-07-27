@@ -20,11 +20,11 @@ tags:
 short_description: Signage and navigation tools that help people easily find routes, destinations, and
   transportation options.
 extended_description: |
-  Wayfinding helps users identify routes, destinations, and transportation options. For the
-  purposes of this tool, wayfinding estimates the potential VMT reductions associated with
-  making walking, biking, and transit connections easier to understand and navigate.
-  Wayfinding can include directional signage, maps, pavement markings, artwork, and other
-  visual identifiers.
+  Wayfinding improvements help people navigate to key destinations using clear routes and
+  directions. Wayfinding can include directional signage, maps, pavement markings, artwork,
+  and other visual identifiers. For the purposes of this tool, wayfinding estimates the
+  potential VMT reductions associated with making walking, biking, and transit connections
+  easier to understand and navigate.
 
   The effect of wayfinding will vary based on the strength of the underlying transportation
   network and the ease of using the system. Wayfinding is most effective when paired with
@@ -33,7 +33,7 @@ extended_description: |
   community in this way.
 guidance: |
   Use this strategy where a project helps people understand how to navigate
-  between key destinations while walking, biking, or rolling. Wayfinding should generally be
+  between key destinations while walking, biking, or rolling. Wayfinding should primarily be
   modeled when it supports an existing or planned multimodal network; it will not have a
   major impact on its own without multimodal improvements.
 images: []
@@ -94,7 +94,7 @@ inputs:
   summary: The share of the area's transit stops or stations that will receive wayfinding such as
     signage, maps, and real-time information.
   source_note: your wayfinding plan and existing transit stop inventory
-  tooltip: Level of implementation for the transit channel, meaning the share of area transit stops receiving wayfinding. Credited only where transit service exists.
+  tooltip: Level of implementation for the transit corridor, meaning the share of area transit stops receiving wayfinding. Credited only where transit service exists.
   instructions: |
     Estimate the share of the area's transit stops or stations that will receive wayfinding
     (signage, maps, real-time information). This channel is credited only in places that
@@ -115,9 +115,8 @@ inputs:
   tooltip: Level of implementation for the active-mode channel, meaning the share of the bike/ped network receiving wayfinding. Credited only where a bike/ped network exists.
   instructions: |
     Estimate the share of the existing bike/pedestrian network that will receive wayfinding
-    (directional signage, pavement markings, maps). This channel is credited only where a
-    bike/ped network already exists; wayfinding improves usability, it does not add
-    infrastructure.
+    improvements. This channel is credited only where a bike/ped network already exists;
+    wayfinding improves usability, it does not add infrastructure.
 notes: 'Promoted from todo. Derived, assumption-bounded; 0.25%/channel uplift is a conservative default. Closed-form: math lives in the compute block below (no code calc fn). strategy_wayfinding in scripts/strategy_calculations.py is retained as the cross-check oracle. NOTE: the parent-gate fields (transit_vrh, transit_route_count, bike_centerline_mi) and observed avo are NOT yet published on the app TAZ layer; until they are, the app uses row_defaults (gates OFF -> conservative no-credit) and the statewide default AVO, so app numbers approximate Python until those fields are added to queryTaz TAZ_FIELDS + the feature service.'
 # Closed-form math (single source of truth). Evaluated identically in Python and the app.
 # Mirrors strategy_wayfinding. Reads IMPUTED row fields (transit_mode_share, auto_mode_share,

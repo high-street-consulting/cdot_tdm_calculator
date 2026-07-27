@@ -160,6 +160,14 @@ export interface StrategyMeta {
   applicability?: CatalogApplicability;
   /** Markdown "When to use this strategy" copy shown in the Applicability section. */
   guidance?: string;
+  /**
+   * Overrides the word the results views use for a VMT reduction (default
+   * "reduced"). The land-use measures set "avoided" because their credit is
+   * measured against an alternative development baseline, not today's travel.
+   */
+  impactDirection?: string;
+  /** What the reduction is measured against, e.g. "relative to lower-density development". */
+  impactQualifier?: string;
   /** Human list for the "filled automatically" reassurance line (checklist footer). */
   autoFilledSummary?: string[];
   /**

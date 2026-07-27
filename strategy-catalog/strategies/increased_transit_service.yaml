@@ -1,12 +1,15 @@
-# TR-06 Increased Transit Service
+# TR-06 Transit Service Expansion
 # Split from the former merged "Transit service expansion" tile: this file is the
 # service-miles-elasticity (new route / added revenue miles) half. The frequency
 # half lives in transit_service_expansion.yaml. Both call
 # strategy_transit_service_expansion (this one fixes basis=service_miles).
+# NOTE the id/filename are historical: `new_transit_service` is the display
+# "Transit Service Expansion" strategy, while the id `transit_service_expansion`
+# is the frequency strategy. Ids are stable and must not be renamed.
 
 id: new_transit_service
 uid: TR-06
-name: Increased Transit Service
+name: Transit Service Expansion
 category: transit
 status: implemented
 # --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
@@ -24,12 +27,12 @@ short_description: New routes, route extensions, or expanded operating hours for
   network, giving more people a transit option.
 extended_description: |
   Increased transit service introduces transit access where it was not previously available
-  or extends service to new markets. This may include a new local route, an extension of an
-  existing route, or a new regional connection. This may also include expanding operating
-  hours. The service is most useful when it links people to jobs, schools, services, or
-  activity centers at times that match actual travel needs.
+  or extends service to new areas. This may include a new local route, an extension of an
+  existing route, or expanded operating hours. The service is most useful when it links
+  people to jobs, schools, services, or activity centers at times that match actual travel
+  needs.
 
-  The effect of increased transit service depends on how many riders the service attracts
+  The effect of expanded transit service depends on how many riders the service attracts
   and how many of those trips would otherwise have been made by driving alone. Increased
   service is most likely to reduce VMT where it connects places people already need to
   travel, offers reliable travel times, and offers connectivity between transit stops and
@@ -37,11 +40,11 @@ extended_description: |
 
   This strategy models **fixed-route** transit service (scheduled routes along a fixed
   alignment). Demand-responsive services such as microtransit and on-demand circulators
-  are modeled separately and are not included here.
+  are not modeled as part of this strategy.
 guidance: |
-  Use this when a project expands fixed-route service, such as new routes, route
-  extensions, regional connections, or expanded operating hours. To increase how often existing
-  routes run, use [Transit Service Frequency Increase](#/strategies/transit_service_expansion)
+  Use this when a project expands fixed-route service with new routes, route extensions,
+  or expanded operating hours. To increase how often existing routes run, use
+  [Transit Service Frequency Increase](#/strategies/transit_service_expansion)
   instead.
 images: []
 method: TCRP 95 service-miles elasticity (ε=0.75)
@@ -81,10 +84,11 @@ inputs:
   prerequisite: true
   summary: The percent change in revenue miles the new or extended service adds, compared with
     the existing network serving your area.
+  source_note: your local transit agency’s service plan
   resources:
   - label: CDOT Statewide Transit Routes map
-    url: https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824
-  tooltip: 'Signed: positive = added revenue miles / new routes, negative = a service cut.'
+    url: https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824
+  tooltip: Positive percentage = added revenue miles / new routes; negative percentage = a service cut.
   instructions: |
     Enter the percentage change in transit revenue miles for the affected area.
     Compare the daily (or annual) revenue miles of the new/extended service
@@ -92,9 +96,10 @@ inputs:
     area with little prior service, this can be large; for a modest extension it
     may be a few percent.
 
-    To check the existing routes, operators, and service in your area, CDOT's
-    [Statewide Transit Routes map](https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824)
-    maps fixed-route transit statewide.
+    To check the existing transit routes, operators, and service in your area,
+    access CDOT's
+    [Statewide Transit Routes map](https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824)
+    or your local transit agency's service plan.
 - key: level_of_implementation
   label: Implementation level
   control: slider
@@ -105,17 +110,25 @@ inputs:
   suffix: '%'
   default: 1.0
   prerequisite: true
-  summary: What share of the planned service will actually be operating. Use 100% for a full
-    build-out, less for a pilot or phased roll-out.
+  summary: Compare the existing transit service (if any) to the planned transit service expansion.
+    Considerations include any changes to routes, service area, operating hours, or days of
+    service. Also determine whether the service will be fully implemented from the start or
+    if there will be an initial pilot program or phased service roll-out.
   source_note: your project scope / agency service plan
-  tooltip: Phase-in factor. 100% = the new/expanded service is fully operating.
+  tooltip: 100% = the new/expanded service is fully operating.
   instructions: |
-    Use this to phase in the effect. 100% means the new or expanded service is
-    fully operating across the impacted area; a pilot or partial roll-out lowers it.
+    If the planned service will be fully implemented and available throughout the
+    entire project area from the start, enter 100%. If the service will initially
+    operate as a pilot or at a reduced scale, enter a lower percentage based on how
+    much of the full planned service will be provided. Consider factors such as the
+    number of routes, service area, operating hours, or days of service included in
+    the initial phase. For example, if the initial phase provides approximately half
+    of the routes or service hours included in the full plan, enter 50%.
 
-    To check the existing routes, operators, and service in your area, CDOT's
-    [Statewide Transit Routes map](https://cdot.maps.arcgis.com/apps/mapviewer/index.html?layers=dd812c7abb8e4017bc83e2cf9ef54824)
-    maps fixed-route transit statewide.
+    To check the existing transit routes, operators, and service in your area,
+    access CDOT's
+    [Statewide Transit Routes map](https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824)
+    or your local transit agency's service plan.
 auto_filled_summary:
 - mode share
 - vehicle occupancy

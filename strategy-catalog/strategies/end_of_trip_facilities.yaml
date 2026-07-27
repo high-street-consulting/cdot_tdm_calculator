@@ -23,23 +23,24 @@ tags:
 short_description: Workplace bike parking, showers, and lockers that raise bike commute mode share by a
   documented effect size.
 extended_description: |
-  Workplace bicycle amenities provide secure bicycle parking, lockers, showers, changing
-  rooms, repair stations, or similar amenities for employees. These amenities address
-  common barriers that can keep employees from considering biking as a commute option.
+  Workplace bike amenities, such as secure bicycle parking, lockers, showers, changing
+  rooms, and repair stations, make bicycling to work more practical and convenient for
+  employees. These amenities help address common barriers that may otherwise discourage
+  bicycle commuting.
 
   The effect depends on whether employees live within a reasonable bicycling distance and
-  whether the surrounding bike network provides a comfortable and direct connection to the
-  worksite. Amenities at a worksite near safe, connected bicycle routes will generally
-  have a stronger effect than the same amenities at a site that is not close to
-  high-quality bike facilities that are part of a larger bike network.
+  whether the surrounding bicycle network provides a safe, comfortable, and direct
+  connection to the worksite. Amenities at locations served by connected, high-quality
+  bicycle routes will generally have a stronger effect than similar amenities at sites that
+  are difficult to reach by bicycle.
 guidance: |
-  This is a workplace measure, led by an employer or developer, that applies
-  to commute trips. For area-wide on-street bicycle infrastructure, use [Striped Bike
-  Lanes, Neighborhood Bikeways and
+  Use this strategy for workplace bicycle amenities provided by an employer or
+  developer to support employee commute trips. For improvements to the surrounding
+  on-street bicycle network, use one of the bike facility infrastructure strategies instead:
+  [Striped Bike Lanes, Neighborhood Bikeways and
   Sharrows](#/strategies/sharrows_bike_lanes)
   or [Protected or Buffered Bike
-  Lanes](#/strategies/separated_bike_lanes)
-  instead.
+  Lanes](#/strategies/separated_bike_lanes).
 images: []
 method: CAPCOA T-10 (Provide End-of-Trip Bicycle Facilities), commute scope
 formula: Δcommute_VMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)
@@ -56,7 +57,7 @@ methodology_detail: |
   `Δcommute_VMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)`
 
   This applies the same bike effect as [Striped Bike Lanes, Neighborhood Bikeways and
-  Sharrows](https://high-street.bitbucket.io/cdot_tdm_calculator/#/strategies/sharrows_bike_lanes),
+  Sharrows](#/strategies/sharrows_bike_lanes),
   focused on commuters at a worksite rather than across an area.
 applicability:
   area_types:
@@ -75,10 +76,10 @@ inputs:
   suffix: '%'
   default: 0.4
   prerequisite: true
-  summary: The share of commuters in your area who work at sites that will provide end-of-trip
-    bicycle facilities such as secure parking, showers, and lockers.
-  source_note: your employer roster or development standards / site plans
-  tooltip: Share of area commuters at workplaces that provide end-of-trip facilities.
+  summary: The share of commuters in your area who work at sites that will provide workplace
+    bicycle amenities.
+  source_note: current or planned building amenities
+  tooltip: The percentage of project area commuters who work at sites that provide workplace bike amenities.
   instructions: |
     Estimate the share of commuters in your project area who work at sites that
     will provide end-of-trip facilities. For a single large employer, this is the

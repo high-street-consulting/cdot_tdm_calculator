@@ -212,6 +212,8 @@ def main():
         "place_type_caps": g.get("place_type_caps", {}),
         "ctr_subgroup_cap": g.get("ctr_subgroup_cap"),
         "capcoa_subsectors": g.get("capcoa_subsectors", []),
+        "capcoa_subsector_caps": g.get("capcoa_subsector_caps", {}),
+        "capcoa_subsector_labels": g.get("capcoa_subsector_labels", {}),
         "mechanisms": g.get("mechanisms", []),
         "strategies": strategies,
     }

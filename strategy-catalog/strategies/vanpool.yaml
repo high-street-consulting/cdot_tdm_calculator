@@ -1,9 +1,9 @@
-# VP-01 Vanpool
+# VP-01 Commuter Vanpool
 # Seeded from app/src/strategies/registry.ts. This file is now the source of truth.
 
 id: vanpool
 uid: VP-01
-name: Vanpool
+name: Commuter Vanpool
 category: vanpool
 status: implemented
 # --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
@@ -21,19 +21,19 @@ tags:
 short_description: Employer-supported or regional vanpools that consolidate commute trips into a single
   high-occupancy vehicle.
 extended_description: |
-  Vanpools organize commuters with similar origins, destinations, and schedules into a
-  shared vehicle, replacing several drive-alone commute trips with one vehicle trip. They
-  are most effective for longer commutes, shift-based worksites, and locations that are
-  not well served by fixed-route transit.
+  Vanpools bring together commuters with similar origins, destinations, and schedules to
+  share a vehicle, replacing several drive-alone commute trips with one vanpool trip. They
+  are generally most effective for longer commutes, shift-based workplaces, and locations
+  that are not well served by fixed-route transit.
 
   The effect depends on whether enough commuters have compatible schedules and travel
   patterns. A vanpool serving a long commute to a major employment site can reduce more
   vehicle miles than one serving short trips or dispersed schedules, and successful
-  programs require rider matching and reliable vehicle management.
+  programs require rider matching and reliable vehicle operations.
 guidance: |
-  Use this strategy for employer-supported or regional vanpool programs.
-  Enter the share of area commute trips the program can realistically reach and how fully
-  the program is implemented.
+  Use this strategy for implementation of employer-, agency-, or regionally
+  supported commuter vanpool programs. Enter the share of area commute trips the program can
+  realistically reach and how fully the program is implemented.
 images: []
 method: Effect-size adaptation of TCRP 95 service-miles elasticity, commute scope (cf. CAPCOA T-11)
 formula: Δcommute_VMT% = −%trips_impacted × Δservice × transit_MS × ε × 1/AVO
@@ -61,14 +61,17 @@ inputs:
   suffix: '%'
   default: 0.05
   prerequisite: true
-  summary: The share of the area's commute trips the vanpool program will carry, typically a percent or two; use observed local rates rather than an aspirational target.
-  source_note: observed local vanpool participation (e.g. DRCOG Way to Go rates by region)
+  summary: The share of the area's commute trips the vanpool program will carry. This is typically just
+    a percent or two of all area commute trips; use existing vanpool participation rates rather than
+    an aspirational target.
+  source_note: observed local vanpool participation (e.g. DRCOG Way to Go Vanpool Program rates)
   tooltip: DRCOG Way-to-Go statistics on vanpool participation rates by region.
   instructions: |
-    Estimate the share of the area's commute trips the vanpool program will carry.
-    Regional participation is typically small (a percent or two), so use observed
-    vanpool rates where you have them (DRCOG's Way to Go program publishes
-    participation by region) rather than an aspirational target.
+    Estimate the share of the area's commute trips the vanpool program will serve.
+    Regional participation is typically small (a percent or two), so use existing
+    vanpool participation rates if available (for example, DRCOG's Way to Go Vanpool
+    Program publishes participation information for the DRCOG region) rather than an
+    aspirational target.
 - key: pct_service_change
   label: Service intensity
   control: slider
@@ -79,13 +82,15 @@ inputs:
   suffix: '%'
   default: 1.0
   prerequisite: true
-  summary: How fully the vanpool program will operate, from 10% for a small pilot to 100% for a fully deployed program; this scales the effect without changing commuters reached.
+  summary: The scale at which the vanpool program will operate, from a small pilot to 100% for a fully
+    deployed program; this adjusts the estimated effect without changing the number of commuters
+    reached.
   source_note: your project scope / program deployment plan
   tooltip: Fraction of full deployment (10% = pilot, 100% = full program).
   instructions: |
-    Use this to scale the program from pilot to full deployment: 10% for a small
-    pilot, 100% for a fully operating program. It phases in the effect without
-    changing the share of commuters reached.
+    Use this to scale the program from pilot to full deployment: from a small pilot to
+    100% for a fully operating program. It phases in the effect without changing the
+    share of commuters reached.
 notes: ''
 # Closed-form. Reads imputed transit_mode_share + avo. strategy_vanpool retained as oracle.
 compute:

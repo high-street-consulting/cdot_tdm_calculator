@@ -1,9 +1,9 @@
-# SP-05 - TMO Coverage Expansion
+# SP-05 - TMO or TMA Coverage Expansion
 # Seeded from app/src/strategies/registry.ts. This file is now the source of truth.
 
 id: tmo_coverage
 uid: SP-05
-name: TMO Coverage Expansion
+name: TMO or TMA Coverage Expansion
 category: support
 status: implemented
 # --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
@@ -18,21 +18,25 @@ tags:
 - employer
 - local-government
 - mpo
-short_description: Bring more employers under a Transportation Management Organization that coordinates
-  TDM programs across a district.
+short_description: Bring more employers under a Transportation Management Organization or Association
+  that coordinates TDM programs across a district.
 extended_description: |
-  A transportation management organization or association is a formal partnership that
-  coordinates travel demand management programs for a defined area, corridor, district, or
-  employment center. TMOs provide shared staff capacity, employer outreach, program
-  administration, and coordination that individual employers or jurisdictions may not be
-  able to sustain alone.
+  Expanded Transportation Management Organization or Association (TMO/TMA) coverage (whether
+  from an existing or new TMO/TMA) extends coordinated TDM services to more employers and
+  commuters within a defined area, corridor, district, or employment center.
 
-  The effect depends on the number of commuters reached, the strength of the services
-  provided, and the availability of practical alternatives to driving alone.
+  A TMO/TMA is a formal partnership that provides shared TDM services for a defined area.
+  These services may include employer outreach, program administration, commuter assistance,
+  marketing, data collection, and coordination among employers, property owners, and public
+  agencies.
+
+  The effect depends on the number of commuters reached, the range and quality of services
+  provided, employer participation, and the availability of practical alternatives to driving
+  alone.
 guidance: |
-  Use this strategy to model the creation of a new TMO or the expansion of
+  Use this strategy to model the creation of a new TMO/TMA or the expansion of
   an existing one. The benefit should be based on the additional share of the workforce or
-  travel market covered by active TMO services.
+  travel market covered by active TMO/TMA services.
 images: []
 method: CAPCOA T-5 (voluntary CTR) midpoint, 4% per eligible
 formula: Δcommute_VMT% = −(share_after − share_before) × r_CTR
@@ -55,7 +59,7 @@ applicability:
   warn_message: Transportation Management Organizations rely on a cluster of employers and commute alternatives, which are limited in rural areas.
 inputs:
 - key: share_before
-  label: Workforce coverage today
+  label: TMO/TMA Workforce coverage today
   control: slider
   min: 0
   max: 100
@@ -64,15 +68,15 @@ inputs:
   suffix: '%'
   default: 0.0
   prerequisite: true
-  summary: The share of the area's employees who already work at TMO-member worksites today (0% for a brand-new TMO).
-  source_note: current TMO membership rolls vs. area employment
-  tooltip: Share of area employees at TMO-member workplaces.
+  summary: The share of the area's employees who already work at TMO-member worksites today (0% for a brand-new TMO/TMA).
+  source_note: current TMO/TMA membership rolls vs. area employment
+  tooltip: Share of area employees at TMO/TMA member workplaces.
   instructions: |
-    Estimate the share of the area's employees who already work at TMO-member
-    worksites today. For a brand-new TMO this is 0%; for an expansion, use the
+    Estimate the share of the area's employees who already work at TMO/TMA member
+    worksites today. For a brand-new TMO/TMA this is 0%; for an expansion, use the
     current membership's share of area employment.
 - key: share_after
-  label: Workforce coverage after
+  label: TMO/TMA Workforce coverage after
   control: slider
   min: 0
   max: 100
@@ -81,11 +85,12 @@ inputs:
   suffix: '%'
   default: 0.4
   prerequisite: true
-  summary: The target share of area employees who will work at TMO-member worksites after the new or expanded organization is in place.
-  source_note: your TMO expansion plan / membership targets
-  tooltip: Target share after new TMO is established or existing TMO grows.
+  summary: The target share of area employees who will work at TMO/TMA member worksites after the new
+    or expanded organization is in place.
+  source_note: your TMO/TMA expansion plan / membership targets
+  tooltip: Target share after new TMO/TMA is established or an existing TMO/TMA expands.
   instructions: |
-    Estimate the share of area employees who will work at TMO-member worksites
+    Estimate the share of area employees who will work at TMO/TMA member worksites
     after the new or expanded organization is in place. The difference between
     this and today's coverage is what drives the reduction.
 notes: ''

@@ -4,7 +4,9 @@
 id: car_share_access
 uid: PK-06
 name: Carshare
-category: parking
+# Display category moved parking -> vanpool ("Shared Mobility") per the 2026-07-21
+# content review. The CAPCOA cap grouping is unchanged (capcoa_subsector below).
+category: vanpool
 status: implemented
 # --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
 mechanism: [mode_shift]
@@ -17,23 +19,23 @@ tags:
 - auto
 - urban
 - local-government
-short_description: Availability of shared vehicles for short-term use as an alternative to personal car
-  ownership.
+short_description: Carshare provides members with short-term access to shared vehicles as an alternative
+  to owning a personal vehicle.
 extended_description: |
-  Carshare programs provide members access to shared vehicles for short-term use, billed by
-  the hour or trip, as an alternative to owning a personal vehicle. By making it practical to
-  live with fewer (or no) household vehicles, carshare nudges members toward transit, walking,
-  biking, and as-needed driving, reducing overall vehicle miles traveled.
+  Carshare programs allow members to reserve vehicles for occasional use. By making it easier
+  to meet some driving needs without owning a car, carshare can help households reduce vehicle
+  ownership and rely more on transit, walking, bicycling, and other travel options.
 
-  The effect of carshare depends on how many residents join and how readily transit and
-  active modes can serve their everyday trips. Carshare is most effective in compact,
-  mixed-use areas with good transit and parking pressure, where the cost and hassle of car
-  ownership are highest and members can comfortably go car-light or car-free.
+  The effect depends on program availability, membership, and whether other modes can meet
+  most everyday travel needs. Carshare is generally most effective in compact, mixed-use areas
+  where transit, walking, and bicycling can meet many everyday travel needs. Limited or costly
+  parking can further encourage households to rely on carshare and live with fewer or no
+  personal vehicles.
 guidance: |
-  Use this strategy where a project supports access to shared vehicles, such as
-  round-trip or one-way carshare pods, dedicated parking, or partnerships with a carshare
-  operator. Carshare works best alongside density, transit, and parking-management
-  strategies.
+  Use this strategy when a project establishes, expands, or improves access to a
+  carshare program. Examples include adding carshare vehicles, providing dedicated carshare
+  parking, or partnering with a carshare operator. Carshare is generally most effective when
+  combined with compact development, good transit access, and parking-management strategies.
 images: []
 method: CAPCOA T-21 (structural; constants pending fact-sheet confirmation)
 formula: ΔVMT% = −min(participation_rate × service_area_share × member_vmt_reduction, 10%)
@@ -77,13 +79,14 @@ inputs:
   suffix: '%'
   default: 1.0
   prerequisite: true
-  summary: The share of the area's residents who live within walking distance of a shared vehicle or carshare pod.
-  source_note: your carshare program plan / operator service-area map
-  tooltip: Share of the area's population living within the carshare service area (walking distance of a shared vehicle).
+  summary: The percentage of residents in the project area who live within walking distance of a
+    carshare vehicle or designated carshare location.
+  source_note: your carshare program plan / operator's vehicle location or service-area map
+  tooltip: Share of the area's population living within the carshare service area (walking distance of a carshare vehicle or designated carshare location).
   instructions: |
     Estimate the share of the area's residents who live within the carshare service area,
-    roughly walking distance of a shared vehicle or pod. Use 100% if the whole area is
-    served; lower it for a pilot covering only part of the area.
+    roughly walking distance of a carshare vehicle or designated carshare location. Use
+    100% if the whole area is served; lower it for a pilot covering only part of the area.
 notes: 'Promoted from todo. CAPCOA T-21; participation_rate and member_vmt_reduction are PLACEHOLDER constants pending fact-sheet confirmation. Closed-form: math lives in the compute block below (no code calc fn). strategy_carshare in scripts/strategy_calculations.py is retained as the cross-check oracle.'
 # Closed-form math (single source of truth). Evaluated identically in Python and the app.
 # Mirrors strategy_carshare. PLACEHOLDER constants; confirm against the T-21 fact sheet.

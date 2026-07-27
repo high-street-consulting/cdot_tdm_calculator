@@ -19,10 +19,9 @@ tags:
 short_description: New and repaired sidewalks that close gaps in the pedestrian network, shifting short
   trips from driving to walking.
 extended_description: |
-  Pedestrian network improvements add new sidewalks and repair degraded or substandard ones,
-  closing gaps that make walking impractical. A more complete, comfortable pedestrian network
-  encourages people to walk for short trips that would otherwise be made by car, lowering
-  vehicle miles traveled.
+  Pedestrian network improvements include adding new sidewalks. A more complete, comfortable
+  pedestrian network encourages people to walk for short trips that would otherwise be made
+  by car, lowering vehicle miles traveled.
 
   The effect depends on how much the sidewalk network expands relative to the street network
   and on how many nearby trips are short enough to walk. Sidewalk investments are most
@@ -30,9 +29,9 @@ extended_description: |
   barrier is a missing or broken pedestrian connection.
 guidance: |
   Use this strategy for projects that add or repair sidewalks within a study
-  area (about a 0.6-mile radius, a 6–10 minute walk, around the improvement). Measure
-  sidewalk length on both sides of the street: a 0.5-mile street with full coverage is 1.0
-  mile of sidewalk.
+  area (about a 0.5-mile radius, a 6–10 minute walk, around the improvement). Measure
+  sidewalk length on both sides of the street: a 0.5-mile street with a sidewalk on both
+  sides of the street is 1.0 mile of sidewalk.
 images: []
 method: CAPCOA T-18 (verbatim)
 formula: ΔHouseholdVMT% = ((C / B) − 1) × −0.05
@@ -44,7 +43,7 @@ methodology_detail: |
   `ΔVMT% = ((C / B) − 1) × D`
 
   where **B** is existing sidewalk length, **C** is sidewalk length with the measure (both
-  measured on both sides of the street within a ~0.6-mile study area), and **D = −0.05** is
+  measured on both sides of the street within a ~0.5-mile study area), and **D = −0.05** is
   the elasticity of household vehicle travel with respect to the sidewalk-to-street ratio
   (Frank et al. 2011; Handy et al. 2014).
 
@@ -80,13 +79,12 @@ inputs:
   default: 9
   unit: miles
   prerequisite: true
-  summary: The existing sidewalk length in the study area (about a 0.6-mile radius), measured on
-    both sides of the street.
+  summary: The existing sidewalk length in the study area (about a 0.5-mile radius).
   source_note: your sidewalk inventory or GIS layer / study-area measurement
   tooltip: Existing sidewalk length in the study area, measured on both sides of the street.
   instructions: |
-    Enter the existing sidewalk length in the study area (about a 0.6-mile radius around the
-    improvement). Measure on both sides of the street: a 0.5-mile street with sidewalk on
+    Enter the existing sidewalk length in the study area (about a 0.5-mile radius around the
+    improvement). Measure on both sides of the street: a 0.5-mile street with a sidewalk on
     both sides is 1.0 mile; coverage on one side only is 0.5 mile.
 - key: sidewalk_mi_with_measure
   label: Sidewalk length with the project

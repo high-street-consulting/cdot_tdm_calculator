@@ -859,6 +859,10 @@
 }
 .shop-detail .impact-annual .u { font-size: 13px; color: #6B6B6B; font-weight: 400; margin-left: 4px; }
 .shop-detail .impact-baseline { font-size: 11px; color: #6B6B6B; margin-top: 2px; }
+/* What the reduction is measured against (land-use measures: "relative to
+   lower-density development"). Slightly darker than .impact-baseline: it
+   qualifies the figure rather than annotating it. */
+.shop-detail .impact-qualifier { font-size: 11px; color: #565656; margin-top: 3px; line-height: 1.35; }
 
 .shop-detail .ctx-card .ctx-title { display: block; }
 .shop-detail .ctx-card .ctx-sub { font-size: 12px; color: #6B6B6B; line-height: 1.45; margin: 4px 0 14px; }

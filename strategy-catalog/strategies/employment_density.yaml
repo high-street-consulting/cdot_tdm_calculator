@@ -23,19 +23,28 @@ tags:
 short_description: Increase jobs per acre (including mixed-use intensification) to shorten trips and
   support non-auto commuting.
 extended_description: |
-  Increasing employment density concentrates jobs, stores, and services closer together
-  and closer to residents. Shorter distances can make walking, bicycling, and transit more
-  practical and can reduce the amount of driving required for daily activities.
+  Increasing employment density places more jobs, stores, and services within a smaller
+  area. When development is also well connected to housing, transit, and safe walking and
+  biking routes, this can shorten some trips, make non-driving options more practical, and
+  reduce VMT compared with accommodating the same amount of employment in a lower-density,
+  more automobile-oriented pattern.
 
-  The effect is strongest when added jobs or services are located in a mixed-use context
-  with safe walking and bicycling conditions. The same number of jobs in an isolated
-  office park, for example, will generally have less effect if most trips still require a
-  car.
+  Adding jobs and destinations can still increase the total number of trips and total VMT
+  within the project area. This strategy should therefore not be interpreted as showing that
+  a new development will reduce overall VMT compared with today.
 guidance: |
-  Use this strategy for job-focused or mixed-use development. To model a
-  project that adds both homes and jobs, or a broader change in land use mix, combine it
-  with [Increased Residential
+  Use this strategy to compare a job-focused or mixed-use development with a
+  lower-density development pattern accommodating a similar amount of employment. This
+  strategy does not estimate whether adding jobs will reduce total VMT in the project area.
+  For a project that changes both housing and employment density, combine this strategy with
+  [Increased Residential
   Density](#/strategies/residential_density).
+  Consider the results together, since the relationship between homes, jobs, destinations,
+  and transportation options influences the actual VMT outcome.
+# Results framing: the credit is VMT avoided against the identified lower-density baseline,
+# not a reduction versus today's travel (2026-07-21 content review).
+impact_direction: avoided
+impact_qualifier: relative to the identified baseline
 images: []
 method: Stevens (2016) employment VMT-density elasticity (ε=−0.07)
 formula: ΔVMT% = Δemp_density × ε_emp
@@ -68,13 +77,15 @@ inputs:
   suffix: '%'
   default: 0.2
   prerequisite: true
-  summary: The percent change in jobs per acre the project adds, compared with today's baseline for the project area.
+  summary: The percent change in jobs per acre under the proposed development compared with the
+    selected baseline. The baseline should represent either current job density or a clearly
+    defined lower-density development alternative.
   source_note: your development program / site plan vs. local baseline job density
-  tooltip: Proposed job density vs. today's baseline.
+  tooltip: Proposed job density compared with the identified baseline.
   benchmark: 'Jobs/sq mi: suburban office park ~5,000–15,000; dense urban district ~30,000–50,000; downtown Denver core ~60,000.'
   instructions: |
-    Enter the percentage change in job density compared with today's baseline for
-    the project area. A project that doubles job density is +100%.
+    Enter the percentage change in job density compared with the identified baseline
+    for the project area. A project that doubles job density is +100%.
 
     Approximate benchmarks (jobs per square mile):
 
@@ -82,8 +93,7 @@ inputs:
     - Dense urban employment district: ~30,000–50,000
     - Downtown Denver office core: ~60,000
 
-    These are order-of-magnitude anchors; local figures vary with how tightly the
-    district is drawn.
+    These are order-of-magnitude anchors that will vary based on the project area.
 notes: 'Split from density_change. Engine: strategy_density_change (pct_change_res_density=0).'
 # Closed-form (densityChange with res=0). strategy_employment_density retained as oracle.
 compute:

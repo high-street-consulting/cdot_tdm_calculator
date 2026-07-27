@@ -22,18 +22,21 @@ short_description: Shelters and station amenities that make waiting for transit 
   ridership.
 extended_description: |
   Transit shelters and station improvements (covered seating, lighting, real-time arrival
-  information, and other amenities) make waiting for transit more comfortable and
-  predictable. More attractive stops produce a modest ridership gain, and some of those
-  riders would otherwise have driven, lowering vehicle miles traveled.
+  information, and other amenities) make waiting for transit more comfortable. Transit
+  shelters provide covered waiting areas that make using transit more comfortable and
+  convenient, particularly during poor weather. Improved waiting conditions can support a
+  modest increase in transit ridership, including some trips that would otherwise have been
+  made by driving, reducing vehicle miles traveled.
 
   The effect depends on how many stops are improved and on the area's existing transit mode
   share, and shelters add the most where transit is already a viable option. Shelters are a
-  station-improvement amenity within the broader transit toolkit and are best paired with
-  service-frequency and fare strategies.
+  station-improvement amenity within the broader transit toolkit, and they are best paired
+  with the calculator's transit service frequency and fare reduction strategies.
 guidance: |
   Use this strategy for projects that add or upgrade transit shelters and stop
-  amenities. Do not combine it with Bus Rapid Transit where BRT already covers all community
-  routes, since BRT investments already account for station improvements.
+  amenities. Do not combine this strategy with the Bus Rapid Transit coverage configuration
+  below. This configuration option includes BRT station amenities as part of the BRT corridor
+  investment.
 images: []
 method: CAPCOA T-46 (structural; constants pending fact-sheet confirmation)
 formula: ΔVMT% = −clamp(LOI × ridership_uplift × transit_MS × (1/AVO) / vehicle_MS, 0, 15%)
@@ -85,7 +88,9 @@ inputs:
   suffix: '%'
   default: 1.0
   prerequisite: true
-  summary: The share of the area's transit stops or stations that will receive new shelters or amenity improvements. Use 100% for a system-wide program, less for a targeted set.
+  summary: The share of the area's transit stops or stations that will receive new shelters or amenity
+    improvements. Use 100% for improvements at all transit stops within the study area, or less for
+    improvements only at a subset of stops.
   source_note: your project scope / stop-improvement plan
   tooltip: Share of area transit stops receiving shelters or station improvements.
   instructions: |
@@ -102,7 +107,8 @@ inputs:
   - value: 'yes'
     label: BRT already covers all community routes
   prerequisite: true
-  summary: Whether Bus Rapid Transit already covers all community routes. If yes, shelters are mutually exclusive with BRT and the credit is zeroed to avoid double-counting.
+  summary: Whether the corridor is already served by Bus Rapid Transit. If yes, shelters are assumed
+    to be part of the BRT project in order to not double count this amenity.
   source_note: your area's existing/planned BRT coverage
   tooltip: If Bus Rapid Transit already covers all community routes, shelters are mutually exclusive with BRT and the credit is zeroed.
   instructions: |

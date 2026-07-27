@@ -374,7 +374,7 @@ export function MethodologyView() {
             </tr>
           </thead>
           <tbody>
-            <tr><td>tmo_voluntary_ctr_per_eligible</td><td>{(PROGRAM_EFFECTS.tmo_voluntary_ctr_per_eligible * 100).toFixed(0)}%</td><td>TMO coverage: CAPCOA TRT-1 midpoint</td></tr>
+            <tr><td>tmo_voluntary_ctr_per_eligible</td><td>{(PROGRAM_EFFECTS.tmo_voluntary_ctr_per_eligible * 100).toFixed(0)}%</td><td>TMO/TMA coverage: CAPCOA TRT-1 midpoint</td></tr>
             <tr><td>commute_program_per_eligible</td><td>{(PROGRAM_EFFECTS.commute_program_per_eligible * 100).toFixed(0)}%</td><td>Marketing / incentives: CAPCOA TRT-7 midpoint</td></tr>
             <tr><td>parking_cashout_per_eligible</td><td>{(PROGRAM_EFFECTS.parking_cashout_per_eligible * 100).toFixed(0)}%</td><td>Parking cash-out: CAPCOA TRT-15</td></tr>
             <tr><td>tod_mode_share_ratio</td><td>{PROGRAM_EFFECTS.tod_mode_share_ratio.toFixed(1)}×</td><td>TOD-resident transit share vs. area: CAPCOA LUT-4</td></tr>

@@ -80,6 +80,10 @@ export interface CatalogStrategy {
   notes: string;
   /** "When to use this strategy" markdown (Applicability section). */
   guidance?: string;
+  /** Overrides "reduced" in the results views (e.g. "avoided"). */
+  impact_direction?: string;
+  /** What the reduction is measured against, e.g. "relative to lower-density development". */
+  impact_qualifier?: string;
   /** Human list for the "filled automatically" reassurance line. */
   auto_filled_summary?: string[];
   /** Closed-form math (optional); see computeDsl. Absent for code-backed strategies. */
@@ -133,6 +137,10 @@ export interface Catalog {
   place_type_caps?: PlaceTypeCaps;
   ctr_subgroup_cap?: number;
   capcoa_subsectors?: CapcoaSubsector[];
+  /** Displayed subsector caps (percent VMT), keyed by CAPCOA subsector. */
+  capcoa_subsector_caps?: Record<string, number | null>;
+  /** Human labels for the CAPCOA subsectors, keyed by subsector id. */
+  capcoa_subsector_labels?: Record<string, string>;
   mechanisms?: Mechanism[];
   strategies: CatalogStrategy[];
 }
@@ -224,6 +232,8 @@ export function toMeta(s: CatalogStrategy): StrategyMeta {
     tags: s.tags ?? [],
     applicability: s.applicability ?? {},
     guidance: s.guidance || undefined,
+    impactDirection: s.impact_direction || undefined,
+    impactQualifier: s.impact_qualifier || undefined,
     autoFilledSummary: s.auto_filled_summary ?? undefined,
     compute: s.compute,
     // CAPCOA combination tags (snake_case → camelCase):
@@ -268,6 +278,14 @@ export const PLACE_TYPE_CAPS: PlaceTypeCaps = CATALOG.place_type_caps ?? {
   land_use: { urban_core: 65, urban: 30, suburban: 10, rural: 10 },
 };
 export const CTR_SUBGROUP_CAP: number = CATALOG.ctr_subgroup_cap ?? 45;
+
+// Displayed subsector cap + label, keyed by CAPCOA subsector. The detail view
+// prefers these over the display category's cap so the figure stays correct when
+// a strategy is grouped under a category with a different cap (e.g. carshare).
+export const CAPCOA_SUBSECTOR_CAPS: Record<string, number | null> =
+  CATALOG.capcoa_subsector_caps ?? {};
+export const CAPCOA_SUBSECTOR_LABELS: Record<string, string> =
+  CATALOG.capcoa_subsector_labels ?? {};
 export const AREA_TYPE_THRESHOLDS: Record<string, number> =
   CATALOG.area_type_thresholds ?? {
     urban_core: 10000,

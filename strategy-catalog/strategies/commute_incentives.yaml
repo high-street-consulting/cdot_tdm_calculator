@@ -1,11 +1,11 @@
-# SP-04 Commuter Incentives
+# SP-04 Commuter Rewards and Incentives
 # Split from the former merged "Commute program (marketing / incentives)" tile:
 # this is the incentive-campaign half (~3%). Engine: strategy_commute_program
 # (defaults to the incentive effect size).
 
 id: commute_incentives
 uid: SP-04
-name: Commuter Incentives
+name: Commuter Rewards and Incentives
 category: support
 status: implemented
 # --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
@@ -19,24 +19,27 @@ tags:
 - commute
 - employer
 - local-government
-short_description: Financial or non-financial rewards (transit benefits, rideshare subsidies, prizes) that
-  pay employees to shift out of driving alone.
+short_description: Financial or non-financial rewards that encourage employees to try or maintain a
+  specific non-drive-alone commute behavior.
 extended_description: |
-  Commuter incentives provide a financial or other tangible benefit for changing travel
-  behavior. The incentive may support transit use, carpooling, vanpooling, bicycling,
-  telework, remote parking, or another specific action, but it should be tied to a
-  measurable change rather than general awareness.
+  Financial or non-financial rewards that encourage employees to try or maintain a specific
+  non-drive-alone commute behavior. Examples may include prizes, gift cards, trip-based
+  rewards, commute challenges, or temporary bonuses for using transit, carpooling,
+  vanpooling, bicycling, or another eligible option.
 
-  The effect is strongest when incentives support repeated behavior or change the relative
-  cost of driving alone. Short-term incentives can encourage commuters to try a new mode,
-  while recurring benefits, like free transit passes provided by employers for example,
-  are more likely to influence ongoing commute choices.
+  Use this strategy when the benefit is tied to completing a specific action or meeting a
+  participation goal. For ongoing transit passes, fare subsidies, or other recurring
+  employer-provided commute benefits, use [Employer-Provided Commute
+  Benefits](#/strategies/employee_commuting_benefits).
 guidance: |
-  Use this strategy for incentive-driven programs. For awareness and
-  promotion without payments, use [Commute Trip Reduction
-  Marketing](#/strategies/commute_marketing).
-  Avoid double-counting if an overlapping fare subsidy or parking cash-out is also modeled
-  for the same commuters.
+  Use this strategy for reward and incentive-driven programs. To avoid
+  double-counting for awareness and promotion without payments, use the
+  [TDM Marketing
+  Campaigns](#/strategies/commute_marketing)
+  strategy. To avoid double counting for benefits provided by employers, use the
+  [Employer-Provided Commute
+  Benefits](#/strategies/employee_commuting_benefits)
+  strategy.
 images: []
 method: CAPCOA T-5 / T-6 (Commute Trip Reduction), incentive-heavy ≈3%
 formula: Δcommute_VMT% = −%eligible × reduction_per_eligible
@@ -63,7 +66,9 @@ inputs:
   suffix: '%'
   default: 0.5
   prerequisite: true
-  summary: The share of area employees eligible for the incentive program. For a single employer this is its share of area commuters; for a regional program, use the eligible workforce share.
+  summary: The share of area employees eligible for the reward/incentive program. For a single
+    employer, this is its share of area commuters; for a regional program, use the eligible
+    workforce share.
   source_note: your project scope / employer or program participation estimate
   tooltip: Share of area employees eligible for the incentives.
   instructions: |
@@ -80,12 +85,14 @@ inputs:
   suffix: '%'
   default: 0.03
   prerequisite: true
-  summary: The commute-VMT reduction per eligible commuter. Keep 3% for incentive-heavy programs, or lower toward 1-2% for token incentives.
+  summary: The estimated percentage reduction in commute VMT among employees eligible for the program.
+    Use 3% for programs that provide meaningful, recurring rewards for changing commute behavior.
+    Use a lower value for programs with small, temporary, or infrequently offered rewards.
   source_note: CAPCOA T-5/T-6 default (3%); adjust from your program's incentive level
-  tooltip: 3% = incentive-heavy default. Lower to 1-2% for light incentives.
+  tooltip: 3% = default for a well-rounded program; 1-2% for a program with less frequent or impactful rewards.
   instructions: |
-    The default 3% reflects programs with meaningful financial incentives. Lower it
-    toward 1-2% for token incentives.
+    The default 3% reflects programs that provide meaningful and recurring rewards for
+    commute behavior changes. Use a lower figure for less frequent or impactful rewards.
 notes: 'Split from commute_program. Engine: strategy_commute_program (incentive default ~3%).'
 # Closed-form (commute program). reduction_per_eligible is a user input (default 0.03).
 compute:

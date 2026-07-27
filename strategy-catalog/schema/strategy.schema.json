@@ -113,6 +113,14 @@
       "type": "string",
       "description": "Markdown. \"When to use this strategy\" copy shown in the Applicability section. Split out of extended_description (the former '**Guidance:** …' paragraph). May include a relative hash cross-link to a related strategy, e.g. [Name](#/strategies/other_id)."
     },
+    "impact_direction": {
+      "type": "string",
+      "description": "Overrides the word the results views use for a VMT reduction (default 'reduced'). Set to 'avoided' for measures whose credit is relative to an alternative development baseline rather than to today's travel (the land-use measures). Ignored for VMT-increasing results, which always read 'added'."
+    },
+    "impact_qualifier": {
+      "type": "string",
+      "description": "Short phrase naming what the reduction is measured against, e.g. 'relative to lower-density development'. Shown with the results figure. Use alongside impact_direction where a bare percentage would otherwise read as a reduction versus today."
+    },
     "auto_filled_summary": {
       "type": "array",
       "items": { "type": "string" },

@@ -19,21 +19,21 @@ tags:
 - bike
 - corridor
 - local-government
-short_description: Lower-grade on-street bike infrastructure (sharrows, painted lanes) applied across an
-  area, raising bike mode share by a documented effect size.
+short_description: Lower-comfort on-street bike infrastructure that raises bike mode share by a
+  documented effect size.
 extended_description: |
-  Bike lanes are facilities that do not have separation between the roadway and the
-  bikeway. They are typically defined by pavement markings, such as a painted line, rather
+  Striped bike lanes are facilities that do not have separation between the roadway and the
+  bikeway. They are typically defined by pavement markings, such as painted lines, rather
   than by curbs, posts or other physical separation.
+
+  Neighborhood bikeways are travel lanes shared by vehicles and bicyclists, but they are
+  an improvement over sharrows because they include additional intersection and mid-block
+  safety measures to reduce vehicle speeds and volumes.
 
   Sharrows, or shared lane markings, are pavement markings that indicate where bicyclists
   may ride within a shared travel lane. They can help alert drivers to expect bicyclists
   along a corridor, but they do not provide any significant comfort and safety
   improvements for those riding bikes.
-
-  Neighborhood bikeways are travel lanes shared by vehicles and bicyclists, but they are
-  an improvement over sharrows because they include additional intersection and mid-block
-  safety measures to reduce vehicle speeds and volumes.
 
   The relative comfortability and safety of each facility type depends on vehicle speed,
   vehicle volume, connectivity to the larger bike network, and other corridor factors.
@@ -60,7 +60,7 @@ methodology_detail: |
   `ΔVMT% = −scope_share × L_bike × (bike_MS × adj) / (L_veh × auto_MS)`
 
   This uses the same bike effect as [Workplace Bicycle
-  Amenities](https://high-street.bitbucket.io/cdot_tdm_calculator/#/strategies/end_of_trip_facilities),
+  Amenities](#/strategies/end_of_trip_facilities),
   applied across an area rather than to commuters at a worksite.
 applicability:
   area_types:
@@ -70,7 +70,7 @@ applicability:
   warn_message: On-street bike treatments shift the most trips in denser, walkable areas; the effect is limited in rural areas.
 inputs:
 - key: scope_share
-  label: Share of area VMT treated
+  label: Share of study-area VMT affected by the bikeway
   control: slider
   min: 0
   max: 100
@@ -79,20 +79,23 @@ inputs:
   suffix: '%'
   default: 0.1
   prerequisite: true
-  summary: The share of your area's driving carried on the streets that will receive the new
-    sharrows or painted bike lanes.
+  summary: The percentage of total VMT in the selected area that occurs on the bikeway corridor
+    and nearby parallel streets where some driving trips could shift to bicycling.
   resources:
   - label: CDOT Traffic Data Explorer
     url: https://dtdapps.codot.gov/otis/trafficdata
-  tooltip: Share of area driving on the streets receiving sharrows / painted lanes.
+  tooltip: Share of total study-area VMT that occurs on the bikeway corridor and nearby parallel streets where driving trips could reasonably shift to bicycling.
   instructions: |
-    Estimate the share of your area's driving carried on the streets that get the
-    new markings or painted lanes. Identify the treated streets, then judge what
-    fraction of local driving they carry. A network of sharrows across many streets
-    covers more than a single painted lane.
+    Because the calculator uses TAZ-based travel data, it cannot directly model travel
+    on a single roadway. Estimate the combined VMT on the streets affected by the
+    bikeway as a share of total VMT in the selected study area. If roadway-level VMT
+    is available, divide VMT on those streets by total study-area VMT. Otherwise, use
+    traffic counts and local knowledge to develop a reasonable estimate and document
+    the source. A network covering several streets will generally affect a larger
+    share of area VMT than a single facility.
 
-    To check traffic on a specific street, CDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)
-    maps annual average daily traffic (AADT) counts for state highways statewide.
+    CDOT's [Traffic Data Explorer](https://dtdapps.codot.gov/otis/trafficdata)
+    provides annual average daily traffic (AADT) counts for state highways.
 notes: 'Split from bike_mode_share_booster. Engine: strategy_bike_mode_share_booster (scope=area_vmt).'
 # Closed-form (bike mode-share booster, area_vmt scope fixed). Reads imputed bike/auto mode share.
 compute:

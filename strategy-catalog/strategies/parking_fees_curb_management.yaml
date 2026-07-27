@@ -21,19 +21,18 @@ tags:
 short_description: Price and manage on- and off-street public parking across an area to reduce auto trips
   and improve turnover.
 extended_description: |
-  Parking fees and curb management price public parking in areas such as metered on-street
-  spaces, municipal lots, or managed curb zones. Pricing helps manage limited parking so
-  spaces are more likely to be available for people who need them, while also encouraging
-  some commuters to consider lower-cost options such as transit, carpooling, biking,
-  walking, or other travel options.
+  Parking fees and curb management use pricing and other management tools for on-street
+  spaces, public parking lots, and curb areas. These strategies can improve parking
+  availability and turnover while encouraging some travelers to consider options that do not
+  require parking, such as transit, carpooling, bicycling, or walking.
 
-  The effect depends on the price, whether free parking is still available nearby, and the
-  quality of other possible travel options that avoid the need for parking.
+  The effect depends on the parking price, the availability of free or lower-cost parking
+  nearby, and whether practical alternatives to driving are available.
 guidance: |
-  This strategy applies the price change to a share of area driving
-  specified by the user. For parking charged by employers, use [Workplace Parking
+  Use this strategy for parking fees applied across public parking areas. For
+  parking fees charged by an employer or workplace, use [Workplace Parking
   Pricing](#/strategies/workplace_parking_pricing).
-  For rates that change with demand, use [Dynamic Parking
+  For parking rates that vary by demand, time, location, or occupancy, use [Dynamic Parking
   Pricing](#/strategies/dynamic_parking_pricing).
 images: []
 method: Lehner & Peer (2019) parking demand elasticity (ε=−0.40), all trips
@@ -68,7 +67,7 @@ inputs:
   prerequisite: true
   summary: The new average full-day price for the priced or managed public parking; if parking is free today, any new price counts as an increase.
   source_note: your proposed parking rate schedule / curb management plan
-  tooltip: New average price for the managed parking. The starting price defaults to the typical price for this type of area.
+  tooltip: New average price for the managed parking. The starting price defaults to the typical price for this type of area, but this starting price can be modified in the Project Context section.
   instructions: |
     Enter the new average price for the priced/managed parking (a representative
     full-day equivalent for the affected spaces). If parking is free today, any new

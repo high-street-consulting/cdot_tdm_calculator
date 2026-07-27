@@ -1,11 +1,11 @@
-# SP-06 Employee Commuting Benefits
+# SP-06 Employer-Provided Commute Benefits
 # Promoted from strategies/todo and split from the transit fare-subsidy engine:
 # this is the commute/employer half (scope=commute). The general half is
 # transit_pass_subsidy.yaml. Engine: strategy_transit_fare_subsidy.
 
 id: employee_commuting_benefits
 uid: SP-06
-name: Employee Commuting Benefits
+name: Employer-Provided Commute Benefits
 category: support
 status: implemented
 # --- CAPCOA combination tags (Phase 1; see tdm_strategy_combination_spec.md) ---
@@ -20,24 +20,26 @@ tags:
 - employer
 - developer
 - commute
-short_description: Employer- or development-provided subsidized/free transit passes (ECO passes) and commute
-  benefits, scoped to commute travel.
+short_description: Employer-provided transit passes (ECO passes), pre-tax commuter benefits, and other
+  recurring support that makes non-drive-alone commuting more affordable.
 extended_description: |
-  Employee commuting benefits reduce the cost or inconvenience of commuting without
-  driving alone. Benefits may include employer-provided transit passes, vanpool support,
-  commuter incentives, workplace bicycle amenities, flexible work options, or other
-  assistance that makes non-drive-alone commuting easier.
+  Employer-provided commute benefits make transit, vanpooling, and other non-drive-alone
+  commute options more affordable for eligible employees. Examples include a subsidized
+  transit pass, pre-tax commuter benefits, vanpool subsidies, and other recurring financial
+  support for non-drive-alone commuting.
 
-  The effectiveness of this strategy depends on how well the benefit matches employee
-  travel needs. Transit passes work best with high quality, frequent, and accessible
-  transit. These benefits can also be paired with clear promotion of benefits and other
-  TDM measures that make non-single-occupancy vehicle modes more appealing.
+  The effectiveness of this strategy depends on the value of the benefit, the share of
+  commuters eligible, and whether the supported travel options meet employees' needs.
+  Transit benefits are generally most effective where service is frequent, reliable, and
+  easy to access. Clear communication and complementary TDM measures can further increase
+  participation.
 guidance: |
-  Use this strategy for employer- or development-provided commute benefits,
-  such as an RTD EcoPass or other pass or subsidy program. For a general transit pass
-  subsidy that is not tied to a worksite or development, use [Transit Pass
+  Use this strategy for employer-provided commute benefits. For a general
+  transit pass subsidy that is not tied to a worksite or development, use [Transit Pass
   Subsidies](#/strategies/transit_pass_subsidy).
-  Avoid double-counting if parking cash-out or [Commuter
+  Avoid double-counting if [Workplace Parking
+  Pricing](#/strategies/workplace_parking_pricing)
+  cash-outs or [Commuter Rewards and
   Incentives](#/strategies/commute_incentives)
   are modeled for the same commuters.
 images: []
@@ -71,14 +73,18 @@ inputs:
   default: 2.0
   unit: $ per trip
   prerequisite: true
-  summary: The per-trip dollar value of the commute benefit; if you have a monthly pass value, divide by the typical monthly commute transit trips to get a per-trip figure.
-  source_note: your employer or development's transit benefit (ECO pass / subsidy) offering
+  summary: 'Enter the transit benefit for one one-way commute trip. For a monthly pass or subsidy,
+    divide the monthly value by the number of one-way transit commute trips taken in a typical
+    month. For example, if someone uses their RTD Monthly Pass ($88 per month) to get to and from
+    work 20 days per month (40 one-way trips), this equals $2.20 per trip.'
+  source_note: transit benefits provided by your employer, such as an employer-provided unlimited
+    transit pass, fare subsidy, or monthly transit allowance
   tooltip: Dollar value of the commute benefit per transit trip; converted to an effective fare reduction.
   instructions: |
-    Enter the per-trip dollar value of the commute benefit (the calculator
-    converts it to a fare reduction using the average fare). If your benefit is a
-    monthly pass value, divide by the typical number of commute transit trips per
-    month to get a per-trip figure.
+    Enter the dollar value of the benefit for each transit trip. The calculator will
+    compare this amount with the average transit fare. If the benefit is provided as a
+    monthly pass or allowance, divide its monthly value by the typical number of commute
+    transit trips made each month.
 - key: pct_eligible
   label: Share of commuters eligible
   control: slider
@@ -93,9 +99,8 @@ inputs:
   source_note: your project scope / employer or development participation estimate
   tooltip: Share of area commuters offered the benefit.
   instructions: |
-    Estimate the share of area commuters offered the benefit. For a single
-    employer, this is its share of area commuters; for a development requirement,
-    estimate the share of commuters at the affected sites.
+    Estimate the share of area commuters offered the benefit. For a development
+    requirement, estimate the share of commuters at the affected sites.
 notes: 'Promoted from todo; split from the fare engine. Engine: strategy_transit_fare_subsidy (scope=commute).'
 # Closed-form (transit fare subsidy, scope=commute, $-subsidy). Reads imputed mode share + avo.
 compute:

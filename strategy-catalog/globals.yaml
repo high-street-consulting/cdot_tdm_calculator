@@ -13,27 +13,30 @@ categories:
     cap: 15
     image: ""          # category fallback image (strategy-catalog/images/), TODO
   - id: bikeped
-    name: Bike / ped & micromobility
+    name: Bike and Ped Infrastructure and Amenities
     css_color_var: "var(--cdot-orange)"
     cap: 8
     image: ""
   - id: landuse
-    name: Land use
+    name: Land Use
     css_color_var: "var(--cdot-green)"
     cap: 20
     image: ""
+  # `vanpool` is the historical id; the display name is now "Shared Mobility" and
+  # the group holds vanpool, carshare, and shared micromobility (2026-07-21 content
+  # review). Ids are stable, so the id is deliberately NOT renamed.
   - id: vanpool
-    name: Vanpool & ridesharing
+    name: Shared Mobility
     css_color_var: "#7A4EA8"
     cap: 6
     image: ""
   - id: support
-    name: Supportive & programmatic
+    name: Supportive & Programmatic
     css_color_var: "var(--cdot-dark-blue-80)"
     cap: 10
     image: ""
   - id: induced
-    name: Induced demand
+    name: Roadway Capacity
     css_color_var: "#6D3A5D"
     cap: null
     image: ""
@@ -41,7 +44,7 @@ categories:
   # into the app. Kept here so `category` enum validation passes for planned
   # strategies. Set caps when these are implemented.
   - id: parking
-    name: Parking management
+    name: Parking Management
     css_color_var: "var(--cdot-dark-blue)"
     cap: null
     image: ""
@@ -111,6 +114,27 @@ capcoa_subsectors:
   - transit
   - commute_trip_reduction
   - induced   # induced-demand (VMT increase); excluded from reduction caps
+
+# Subsector caps and labels for DISPLAY (percent VMT reduction). The detail view
+# shows the cap for a strategy's `capcoa_subsector`, not its display `category`,
+# so the figure stays correct when the display grouping differs from the cap
+# grouping (carshare and shared micromobility display under "Shared Mobility" but
+# cap under Neighborhood Design; transit pass subsidies display under
+# "Supportive & Programmatic" but cap under Transit). null = no cap shown.
+capcoa_subsector_caps:
+  land_use: 20
+  neighborhood_design: 8
+  parking: null
+  transit: 15
+  commute_trip_reduction: 10
+  induced: null
+capcoa_subsector_labels:
+  land_use: Land Use
+  neighborhood_design: Neighborhood Design
+  parking: Parking
+  transit: Transit
+  commute_trip_reduction: Commute Trip Reduction
+  induced: Induced Demand
 
 # Mechanism vocabulary — which multiplicative VMT factor a strategy acts on.
 mechanisms:

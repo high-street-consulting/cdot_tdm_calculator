@@ -19,14 +19,13 @@ tags:
 - site
 short_description: Hybrid or full-remote work policies that eliminate commute trips on telework days.
 extended_description: |
-  Flexible work schedules and telework policies reduce commute travel by changing when,
-  how often, or whether employees commute to their workplace. Telework eliminates commute
-  trips on days where employees work from home, while compressed work schedules, staggered
-  shifts, and flexible start times can also reduce peak period commute pressure.
+  Telework and remote work policies reduce commute travel by allowing employees to work away
+  from their usual workplace on some or all workdays. Each telework day can eliminate a
+  round-trip commute that would otherwise occur.
 
-  The largest VMT reductions occur for eligible employees who would otherwise drive long
-  distances. Outcomes depend on job eligibility, participation, and how employers manage
-  their policies.
+  The largest VMT reductions occur when eligible employees participate regularly and would
+  otherwise drive longer distances. Results depend on the share of jobs eligible for
+  telework, how often employees work remotely, and actual participation in the policy.
 guidance: |
   Use this strategy for hybrid or fully remote policies and compressed work
   weeks. Enter the realistic average number of days worked from home, not the maximum
@@ -69,15 +68,13 @@ inputs:
   suffix: '%'
   default: 0.5
   prerequisite: true
-  summary: The share of the area's workers in jobs that can be done remotely; office and professional roles raise it, manual roles lower it.
-  source_note: your employer's job mix (or the area's occupation mix)
-  tooltip: ACS occupation-mix-derived. Office/professional roles → higher; manual/in-person → lower.
+  summary: The estimated share of project area workers in jobs that can be done remotely.
+  source_note: the area's occupation mix and assumptions around remote work policies
+  tooltip: ACS occupation-mix-derived. Office/professional roles higher; manual/in-person roles lower.
   instructions: |
     Estimate the share of the area's workers in jobs that can be done remotely. The
-    default is based on the local mix of jobs: office and professional roles raise
-    it, manual and in-person roles lower it. Adjust it if you know the specific
-    employers involved: a single office employer is mostly able to telework, a
-    warehouse is not.
+    default is based on the local mix of jobs and assumptions around remote work.
+    Adjust it if you know the specific employers involved.
 - key: telework_days_per_week
   label: Days/week teleworked
   control: slider
@@ -89,12 +86,13 @@ inputs:
   default: 2
   prerequisite: true
   summary: The average number of days per week eligible employees actually work remotely, not the policy maximum (typical hybrid is 2-3 days).
-  source_note: your employer's telework policy and actual participation
+  source_note: assumptions around remote work policies and/or actual policies implemented by employers
+    in the project area
   tooltip: Average across eligible workers. Typical hybrid = 2-3 days.
   instructions: |
-    Enter the average number of days per week eligible employees actually work
-    remotely, not the policy maximum. A typical hybrid policy lands around 2–3
-    days once you account for staff who come in more often than allowed.
+    Estimate the average number of days per week eligible employees actually work
+    remotely, not the policy maximum. A typical hybrid policy lands around 2–3 days
+    per week.
 notes: ''
 # Closed-form. UI bounds telework_days_per_week to 0-5 (the Python fn raises outside that).
 compute:

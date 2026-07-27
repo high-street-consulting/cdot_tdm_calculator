@@ -24,23 +24,31 @@ short_description: Higher-density mixed-use development around high-quality tran
   trips to transit at a rate documented by CAPCOA T-3.
 extended_description: |
   Transit-oriented development places compact, mixed-use development within walking
-  distance of high-quality transit, typically around a rail station or major bus hub. The
-  transportation benefit comes from locating more homes, jobs, shops, and services near
-  frequent transit so some trips can be made without driving or with fewer household
-  vehicles.
+  distance of high-quality transit, typically around a rail station or major bus hub.
+  Locating residents near frequent transit can increase transit commuting and reduce
+  driving compared with accommodating the same residents in a less transit-accessible
+  development pattern. Nearby jobs, shops, and services can provide additional benefits by
+  allowing some daily trips to be made without driving.
 
-  The effect depends on the quality of both the transit service and the walking
-  environment around the station area. Compact development near reliable service, safe
-  crossings, limited parking, and active street-level uses will generally shift more
-  travel than similar density near infrequent service or a station that is hard to reach.
+  Adding homes, jobs, and activity around a station can still increase total trips and total
+  VMT within the project area. This strategy should therefore not be interpreted as showing
+  that a new development will reduce overall VMT compared with today. The calculator
+  estimates reduced driving among those traveling to and from the TOD walkshed compared with
+  the baseline. Benefits are greatest where frequent transit, safe walking routes, connected
+  streets, and parking management make driving less necessary.
 guidance: |
-  Use this strategy for development around an existing or planned
-  high-quality transit station. For density that is not tied to a transit station, use
+  Use this strategy to compare development around an existing or planned
+  high-quality transit station with otherwise similar development in a non-TOD area. For
+  density that is not associated with a transit station, use
   [Increased Residential
   Density](#/strategies/residential_density)
   or [Increased Employment
   Density](#/strategies/employment_density)
   instead.
+# Results framing: the credit is VMT avoided against a less transit-accessible baseline
+# development pattern, not a reduction versus today's travel (2026-07-21 content review).
+impact_direction: avoided
+impact_qualifier: relative to the baseline travel pattern
 images: []
 method: CAPCOA T-3 (Transit-Oriented Development); Lund 2004 / Cervero 2007 / Chatman 2013
 formula: ΔVMT% = −%TAZ_in_TOD × (min(TOD_ratio × transit_MS, cap) − transit_MS) / auto_MS
@@ -76,7 +84,8 @@ inputs:
   suffix: '%'
   default: 0.1
   prerequisite: true
-  summary: The share of the area's population that will live inside the ½-mile walkshed around the station, based on planned TOD housing.
+  summary: The share of the project area's population that is expected to live inside the ½-mile
+    walkshed around the station, based on planned TOD housing.
   source_note: your development program / site plan vs. the TAZ population
   tooltip: Share of the area's population estimated to live within the ½-mi transit-oriented development walkshed.
   instructions: |
