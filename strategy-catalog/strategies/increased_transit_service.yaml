@@ -96,6 +96,11 @@ inputs:
     area with little prior service, this can be large; for a modest extension it
     may be a few percent.
 
+    Revenue miles can grow either way: a new route or route extension adds miles
+    of new alignment, and **expanded operating hours add miles on alignments that
+    already exist** (running an existing route two hours later each evening adds
+    those trips' revenue miles). Either one belongs in this input.
+
     To check the existing transit routes, operators, and service in your area,
     access CDOT's
     [Statewide Transit Routes map](https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824)

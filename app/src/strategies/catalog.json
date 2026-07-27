@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T20:29:45.237882+00:00",
+  "generated_at": "2026-07-27T21:13:55.384797+00:00",
   "categories": [
     {
       "id": "transit",
@@ -785,7 +785,7 @@
             }
           ],
           "tooltip": "Positive percentage = added revenue miles / new routes; negative percentage = a service cut.",
-          "instructions": "Enter the percentage change in transit revenue miles for the affected area.\nCompare the daily (or annual) revenue miles of the new/extended service\nagainst the existing network serving the area. For a brand-new route in an\narea with little prior service, this can be large; for a modest extension it\nmay be a few percent.\n\nTo check the existing transit routes, operators, and service in your area,\naccess CDOT's\n[Statewide Transit Routes map](https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824)\nor your local transit agency's service plan.\n"
+          "instructions": "Enter the percentage change in transit revenue miles for the affected area.\nCompare the daily (or annual) revenue miles of the new/extended service\nagainst the existing network serving the area. For a brand-new route in an\narea with little prior service, this can be large; for a modest extension it\nmay be a few percent.\n\nRevenue miles can grow either way: a new route or route extension adds miles\nof new alignment, and **expanded operating hours add miles on alignments that\nalready exist** (running an existing route two hours later each evening adds\nthose trips' revenue miles). Either one belongs in this input.\n\nTo check the existing transit routes, operators, and service in your area,\naccess CDOT's\n[Statewide Transit Routes map](https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824)\nor your local transit agency's service plan.\n"
         },
         {
           "key": "level_of_implementation",
@@ -2245,7 +2245,7 @@
       "images": [],
       "method": "Handy 2013 frequency elasticity (ε=0.5)",
       "formula": "ΔVMT% = −L × Δfreq × transit_MS × ε × (1/AVO) / auto_MS",
-      "methodology_detail": "When transit comes more often, riders spend less time waiting and more people\nchoose transit over driving, lowering vehicle miles traveled (VMT). The bigger the\nimprovement in frequency, the larger the ridership gain. This follows CAPCOA\n[T-26 (Increase Transit Service Frequency)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf)\nand the frequency relationship in Handy et al. (2013).\n\n`ΔVMT% = −L × Δfreq × transit_MS × ε × (1/AVO) / auto_MS`\n\nThe calculator uses local commute mode share from the American Community Survey\n(ACS) and a statewide average for vehicle occupancy. Use the implementation level\nto phase in a change that isn't fully in place yet.\n",
+      "methodology_detail": "When transit comes more often, riders spend less time waiting and more people\nchoose transit over driving, lowering vehicle miles traveled (VMT). The bigger the\nimprovement in frequency, the larger the ridership gain. This follows CAPCOA\n[T-26 (Increase Transit Service Frequency)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf)\nand the frequency relationship in Handy et al. (2013).\n\n`ΔVMT% = −L × Δfreq × transit_MS × ε × (1/AVO) / auto_MS`\n\nThe calculator uses local commute mode share from the American Community Survey\n(ACS) and a statewide average for vehicle occupancy. The frequency elasticity\napplies only to the service the project actually touches, so the result is scaled\nby the share of the area's transit routes that receive the change.\n",
       "applicability": {
         "area_types": [
           "urban_core",
@@ -2278,7 +2278,7 @@
         },
         {
           "key": "level_of_implementation",
-          "label": "Implementation level",
+          "label": "Share of area routes with the frequency change",
           "control": "slider",
           "min": 0,
           "max": 100,
@@ -2286,11 +2286,11 @@
           "scale": 100,
           "suffix": "%",
           "default": 1.0,
-          "prerequisite": false,
-          "summary": "What share of the frequency change will actually be in place. Use 100% for a full roll-out, less for a pilot on part of the network or a multi-year phase-in.",
+          "prerequisite": true,
+          "summary": "The share of the transit routes serving your project area that will actually receive the frequency change. A change on a single corridor within a larger network is a small share; a network-wide schedule change approaches 100%.",
           "source_note": "your project scope / agency service plan",
-          "tooltip": "Phase-in factor. 100% = fully implemented across the impacted service area.",
-          "instructions": "Use this to phase in the effect. 100% means the frequency change is fully in\nplace across the impacted service area; a pilot on part of the network or a\nmulti-year roll-out would be lower.\n\nTo check the existing transit routes, operators, and service in your area,\naccess CDOT's\n[Statewide Transit Routes map](https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824)\nor your local transit agency's service plan.\n"
+          "tooltip": "Share of the area's transit routes the frequency change applies to. 100% = every route serving the area.",
+          "instructions": "Enter the share of the transit service in the project area that the frequency\nchange actually covers. The frequency change above describes how much better\nthe service on those routes gets; this input describes how much of the area's\ntransit service they represent.\n\nIf the project improves headways on one corridor out of roughly ten comparable\nroutes serving the area, enter about 10%. If every route serving the area moves\nto a new, more frequent schedule, enter 100%. Where routes differ a lot in size,\nweight by service (revenue hours or trips per day) rather than counting routes.\n\nTo check the existing transit routes, operators, and service in your area,\naccess CDOT's\n[Statewide Transit Routes map](https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824)\nor your local transit agency's service plan.\n"
         }
       ],
       "notes": "Split from the merged transit service tile. Engine: strategy_transit_service_expansion (basis=frequency).",

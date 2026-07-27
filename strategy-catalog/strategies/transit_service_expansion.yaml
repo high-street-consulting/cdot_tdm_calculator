@@ -49,8 +49,9 @@ methodology_detail: |
   `ΔVMT% = −L × Δfreq × transit_MS × ε × (1/AVO) / auto_MS`
 
   The calculator uses local commute mode share from the American Community Survey
-  (ACS) and a statewide average for vehicle occupancy. Use the implementation level
-  to phase in a change that isn't fully in place yet.
+  (ACS) and a statewide average for vehicle occupancy. The frequency elasticity
+  applies only to the service the project actually touches, so the result is scaled
+  by the share of the area's transit routes that receive the change.
 applicability:
   area_types:
   - urban_core
@@ -88,7 +89,11 @@ inputs:
     [Statewide Transit Routes map](https://cdot.maps.arcgis.com/home/item.html?id=dd812c7abb8e4017bc83e2cf9ef54824)
     or your local transit agency's service plan.
 - key: level_of_implementation
-  label: Implementation level
+  # Relabelled from the ambiguous "Implementation level" (2026-07-21 content
+  # review): this input is the share of the ROUTES serving the area that the
+  # frequency change applies to, not a schedule phase-in. The engine key is
+  # unchanged; mathematically it is the same linear scalar.
+  label: Share of area routes with the frequency change
   control: slider
   min: 0
   max: 100
@@ -96,17 +101,22 @@ inputs:
   scale: 100
   suffix: '%'
   default: 1.0
-  # Dropped from the "What you'll need" checklist per the 2026-07-21 content
-  # review (the reviewer questioned whether a phase-in factor is needed here at
-  # all); the control itself is retained pending a decision on removing it.
-  prerequisite: false
-  summary: What share of the frequency change will actually be in place. Use 100% for a full roll-out, less for a pilot on part of the network or a multi-year phase-in.
+  prerequisite: true
+  summary: The share of the transit routes serving your project area that will actually receive the
+    frequency change. A change on a single corridor within a larger network is a small share; a
+    network-wide schedule change approaches 100%.
   source_note: your project scope / agency service plan
-  tooltip: Phase-in factor. 100% = fully implemented across the impacted service area.
+  tooltip: Share of the area's transit routes the frequency change applies to. 100% = every route serving the area.
   instructions: |
-    Use this to phase in the effect. 100% means the frequency change is fully in
-    place across the impacted service area; a pilot on part of the network or a
-    multi-year roll-out would be lower.
+    Enter the share of the transit service in the project area that the frequency
+    change actually covers. The frequency change above describes how much better
+    the service on those routes gets; this input describes how much of the area's
+    transit service they represent.
+
+    If the project improves headways on one corridor out of roughly ten comparable
+    routes serving the area, enter about 10%. If every route serving the area moves
+    to a new, more frequent schedule, enter 100%. Where routes differ a lot in size,
+    weight by service (revenue hours or trips per day) rather than counting routes.
 
     To check the existing transit routes, operators, and service in your area,
     access CDOT's
