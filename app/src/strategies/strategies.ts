@@ -114,6 +114,15 @@ export interface SharedMicromobilityArgs {
   daily_micro_trips_per_person?: number;
   substitution_ratio?: number;
   avg_micro_trip_length?: number;
+  /**
+   * Fleet composition. Blends the per-device substitution ratios by share so a
+   * mixed fleet (scooters plus permit-required e-bikes, say) is representable.
+   * Normalized, so the three need not total 100%. All zero or absent falls back to
+   * the single-device `micromobility_type` ratio.
+   */
+  pct_fleet_pedal?: number;
+  pct_fleet_ebike?: number;
+  pct_fleet_scooter?: number;
 }
 
 export function sharedMicromobility(
@@ -128,11 +137,31 @@ export function sharedMicromobility(
   }
   const dailyMicro = args.daily_micro_trips_per_person ?? BEHAVIORAL_DEFAULTS.daily_micro_trips_per_person;
   const microLen = args.avg_micro_trip_length ?? BEHAVIORAL_DEFAULTS.avg_micro_trip_length_mi;
+  // Fleet mix -> share-weighted substitution ratio. Keys mirror
+  // MICRO_SUBSTITUTION_BY_TYPE so the per-device ratios stay single-sourced.
+  const fleet: [MicromobilityType, number][] = [
+    ["bikeshare", Math.max(args.pct_fleet_pedal ?? 0, 0)],
+    ["e-bikeshare", Math.max(args.pct_fleet_ebike ?? 0, 0)],
+    ["scootershare", Math.max(args.pct_fleet_scooter ?? 0, 0)],
+  ];
+  const fleetTotal = fleet.reduce((a, [, share]) => a + share, 0);
+
   let subRatio: number;
   let subAssumption: string;
   if (args.substitution_ratio != null) {
     subRatio = args.substitution_ratio;
     subAssumption = `substitution_ratio=${fmtPctUnsigned(subRatio)}_user_specified`;
+  } else if (fleetTotal > 0) {
+    subRatio =
+      fleet.reduce(
+        (a, [k, share]) => a + share * MICRO_SUBSTITUTION_BY_TYPE[k].ratio,
+        0,
+      ) / fleetTotal;
+    const mixDesc = fleet
+      .filter(([, share]) => share > 0)
+      .map(([k, share]) => `${k}:${fmtPctUnsigned(share / fleetTotal)}`)
+      .join("+");
+    subAssumption = `substitution_ratio=${fmtPctUnsigned(subRatio, 1)}_blended_from_fleet_mix(${mixDesc})`;
   } else {
     subRatio = cfg.ratio;
     const src = cfg.source.replace(/ /g, "_");

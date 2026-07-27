@@ -121,6 +121,17 @@ RUNS: list[tuple[str, dict, str]] = [
         dict(pct_pop_access_before=0.0, pct_pop_access_after=0.50,
              micromobility_type="scootershare"),
         "micromobility_0_50_scooter"),
+    # Fleet mix (2026-07-27): blended ratio (0.8*38.5% + 0.2*35.0% = 37.8%), plus a
+    # mix whose shares do not total 1.0 to pin the normalization. The blend itself is
+    # also covered data-independently by app/src/strategies/micromobilityFleetMix.test.ts.
+    ("shared_micromobility",
+        dict(pct_pop_access_before=0.0, pct_pop_access_after=0.30,
+             pct_fleet_pedal=0.0, pct_fleet_ebike=0.20, pct_fleet_scooter=0.80),
+        "micromobility_fleet_mix_scooter_ebike"),
+    ("shared_micromobility",
+        dict(pct_pop_access_before=0.0, pct_pop_access_after=0.30,
+             pct_fleet_pedal=0.5, pct_fleet_ebike=0.5, pct_fleet_scooter=0.5),
+        "micromobility_fleet_mix_unnormalized"),
 
     # 6. Transit Oriented Development -------------------------------------
     ("transit_oriented_development", dict(), "tod_defaults"),

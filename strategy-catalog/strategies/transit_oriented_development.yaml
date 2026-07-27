@@ -45,6 +45,14 @@ guidance: |
   or [Increased Employment
   Density](#/strategies/employment_density)
   instead.
+
+  **Choose by policy lever, not by distance.** Transit-oriented development and a density
+  increase often look alike on the ground, since both add density, but they are separate
+  policy actions working through different mechanisms. Use this strategy when the action is
+  station-area development coordinated with high-quality transit. Use the density strategies
+  when the action is a land use or zoning change that raises density, even if the site
+  happens to sit near transit and the travel effect ends up similar. There is no distance
+  threshold that decides this for you.
 # Results framing: the credit is VMT avoided against a less transit-accessible baseline
 # development pattern, not a reduction versus today's travel (2026-07-21 content review).
 impact_direction: avoided
@@ -66,7 +74,8 @@ methodology_detail: |
   The effect grows with the share of the area's population that lives inside the
   walkshed. Commute mode share comes from American Community Survey (ACS) data.
   Lower the multiplier for development served by bus only, which shifts fewer trips
-  than rail.
+  than rail. Where a station has both bus and rail, the higher (rail) value applies:
+  the strongest service sets the ceiling on how much travel the station area shifts.
 applicability:
   area_types:
   - urban_core
@@ -89,23 +98,33 @@ inputs:
   source_note: your development program / site plan vs. the TAZ population
   tooltip: Share of the area's population estimated to live within the ½-mi transit-oriented development walkshed.
   instructions: |
-    Estimate the share of the TAZ's population that will live inside the TOD
+    Estimate the share of the area's population that will live inside the TOD
     walkshed, roughly the ½-mile area around the station that is comfortable to
-    walk. Compare the planned TOD housing (or population) against the TAZ total.
-    If the TOD covers only part of a large TAZ, this share is small.
+    walk. Compare the planned TOD housing (or population) against the total for the
+    area you selected. If the TOD covers only part of a large zone, this share is
+    small.
+
+    You need to estimate this yourself: the calculator cannot derive the walkshed from
+    a station location, because it has no zone geometry available while you are working.
 - key: tod_mode_share_ratio
-  label: TOD transit-MS multiplier
+  label: Transit Mode Share Multiplier
   control: number
   step: 0.1
   default: 4.9
   prerequisite: true
-  summary: The transit mode-share multiplier for the TOD; keep 4.9x for a rail station, or lower it (2-3x) for a bus-served TOD.
+  summary: The transit mode-share multiplier for the TOD. Keep 4.9x where the station has rail, or
+    lower it (2-3x) for a TOD served by bus only. Where a station has both, use the rail value.
   source_note: the transit service serving your TOD (rail vs. bus)
-  tooltip: CAPCOA T-3 default = 4.9× (rail-station TODs). Lower for bus-served TODs.
+  tooltip: CAPCOA T-3 default = 4.9× (rail-station TODs). Lower for bus-only TODs. Rail plus bus uses the rail value.
   instructions: |
     Leave at the 4.9× default for development around a rail station (the CAPCOA
     T-3 value). Lower it for TODs served by bus only, which shift fewer trips; a
     2–3× multiplier is more realistic for frequent bus service.
+
+    Where a station is served by **both** bus and rail, take the higher of the two
+    values, which means using the rail multiplier. The stronger service sets the
+    ceiling on how much travel the station area can shift; adding bus alongside rail
+    does not lower it.
   min: 1.0
   max: 10.0
 notes: ''

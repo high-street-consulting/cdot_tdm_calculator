@@ -917,6 +917,9 @@ def strategy_shared_micromobility(
     daily_micro_trips_per_person: float | None = None,
     substitution_ratio: float | None = None,
     avg_micro_trip_length: float | None = None,
+    pct_fleet_pedal: float | None = None,
+    pct_fleet_ebike: float | None = None,
+    pct_fleet_scooter: float | None = None,
 ) -> pd.DataFrame:
     """
     5. Shared Micromobility.
@@ -935,7 +938,18 @@ def strategy_shared_micromobility(
       * 'e-bikeshare'  -> 35.0% (Fitch et al. 2021)
       * 'scootershare' -> 38.5% (McQueen et al. 2020)
 
-    Pass ``substitution_ratio`` explicitly to override the per-type value.
+    **Fleet mix (2026-07-27).** Real systems are rarely single-device: a city may
+    run mostly scooters while requiring e-bikes in the same permit. Pass the three
+    ``pct_fleet_*`` shares to blend the ratios by fleet composition::
+
+        sub_ratio = SUM(share_i x ratio_i) / SUM(share_i)
+
+    The shares are normalized, so they need not total exactly 1.0; only their
+    relative proportions matter. If every share is 0 (or none are passed), the
+    single-device ``micromobility_type`` ratio is used instead, which keeps direct
+    callers and the analysis scripts working unchanged.
+
+    Pass ``substitution_ratio`` explicitly to override everything above.
 
     Other defaults: daily_micro_trips/person = 0.05, avg_micro_trip_length = 1.0
     mi (NACTO).
@@ -950,13 +964,33 @@ def strategy_shared_micromobility(
         daily_micro_trips_per_person = BEHAVIORAL_DEFAULTS["daily_micro_trips_per_person"]
     if avg_micro_trip_length is None:
         avg_micro_trip_length = BEHAVIORAL_DEFAULTS["avg_micro_trip_length_mi"]
-    if substitution_ratio is None:
+
+    # Fleet mix -> share-weighted substitution ratio. Keys mirror
+    # MICRO_SUBSTITUTION_BY_TYPE so the per-device ratios stay single-sourced.
+    fleet = {
+        "bikeshare":    max(float(pct_fleet_pedal or 0.0), 0.0),
+        "e-bikeshare":  max(float(pct_fleet_ebike or 0.0), 0.0),
+        "scootershare": max(float(pct_fleet_scooter or 0.0), 0.0),
+    }
+    fleet_total = sum(fleet.values())
+
+    if substitution_ratio is not None:
+        sub_assumption = f"substitution_ratio={substitution_ratio:.0%}_user_specified"
+    elif fleet_total > 0:
+        substitution_ratio = sum(
+            share * float(MICRO_SUBSTITUTION_BY_TYPE[k]["ratio"])
+            for k, share in fleet.items()
+        ) / fleet_total
+        mix_desc = "+".join(
+            f"{k}:{share / fleet_total:.0%}"
+            for k, share in fleet.items() if share > 0
+        )
+        sub_assumption = (f"substitution_ratio={substitution_ratio:.1%}"
+                          f"_blended_from_fleet_mix({mix_desc})")
+    else:
         substitution_ratio = float(MICRO_SUBSTITUTION_BY_TYPE[micromobility_type]["ratio"])
         sub_source = MICRO_SUBSTITUTION_BY_TYPE[micromobility_type]["source"]
         sub_assumption = f"substitution_ratio={micromobility_type}={substitution_ratio:.0%}_per_{sub_source.replace(' ','_')}"
-    else:
-        sub_source = "user_specified"
-        sub_assumption = f"substitution_ratio={substitution_ratio:.0%}_user_specified"
 
     persons = (taz_df["population"] + taz_df["employment"]).clip(lower=1.0)
     daily_veh_trips_per_person = taz_df["daily_trips"].fillna(0) / persons

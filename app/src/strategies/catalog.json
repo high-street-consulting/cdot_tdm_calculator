@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T21:43:37.129726+00:00",
+  "generated_at": "2026-07-27T21:54:53.775962+00:00",
   "categories": [
     {
       "id": "transit",
@@ -1564,11 +1564,11 @@
       ],
       "short_description": "Shared bikes, e-bikes, or scooters available for short trips. How much driving they replace varies by device type.",
       "extended_description": "Shared micromobility provides access to shared bicycles, e-bikes, or scooters for various\ntrip types. It is most useful for trips that are too long for walking comfortably but short\nenough that driving is not time or cost effective.\n\nThe benefits of shared micromobility depend on how many trips replace car trips. Systems\nlocated near transit, campuses, downtowns, and dense neighborhoods generally have stronger\npotential, especially when shared micromobility devices are easily accessible.\n",
-      "guidance": "Use this strategy when preparing to launch or expand a shared micromobility\nprogram. Enter how much of the population can reach the service area before and after the\nproject, and select the device type available through the program.\n",
+      "guidance": "Use this strategy when preparing to launch or expand a shared micromobility\nprogram. Enter how much of the population can reach the service area before and after the\nproject, and the mix of device types the program will deploy.\n",
       "images": [],
       "method": "Effect-size estimate (adapted CAPCOA T-22-A / T-22-B / T-22-C; NACTO trip-substitution research)",
       "formula": "ΔVMT% = −Δaccess × micro_trips × sub_ratio × L_micro / (veh_trips × L_veh)",
-      "methodology_detail": "When a shared bike, e-bike, or scooter is within easy reach, some trips that would\nhave been made by car are made on the device instead, lowering vehicle miles\ntraveled (VMT). The reduction depends on how many more people can reach the system\nand the device type, since each type replaces car trips at a different rate: pedal\nbikes about 20%, e-bikes about 35%, and scooters about 39% (McQueen et al. 2020;\nFitch et al. 2021).\n\n`ΔVMT% = −Δaccess × micro_trips × sub_ratio × L_micro / (veh_trips × L_veh)`\n\nThis estimate is adapted from CAPCOA\n[T-22-A (pedal bikeshare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-a.pdf),\n[T-22-B (electric bikeshare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-b.pdf),\nand [T-22-C (scootershare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-c.pdf),\nwith trip data from the National Association of City Transportation Officials\n(NACTO).\n",
+      "methodology_detail": "When a shared bike, e-bike, or scooter is within easy reach, some trips that would\nhave been made by car are made on the device instead, lowering vehicle miles\ntraveled (VMT). The reduction depends on how many more people can reach the system\nand the device type, since each type replaces car trips at a different rate: pedal\nbikes about 20%, e-bikes about 35%, and scooters about 39% (McQueen et al. 2020;\nFitch et al. 2021).\n\n`ΔVMT% = −Δaccess × micro_trips × sub_ratio × L_micro / (veh_trips × L_veh)`\n\n**Mixed fleets.** `sub_ratio` is the share-weighted average of the device ratios, using\nthe fleet mix you enter:\n\n`sub_ratio = Σ(fleet_share × device_ratio) ÷ Σ(fleet_share)`\n\nSo a fleet that is 80% scooters and 20% e-bikes gets `0.8 × 38.5% + 0.2 × 35.0% = 37.8%`,\nrather than forcing the whole system to one device. The shares are normalized, so they do\nnot have to total exactly 100%.\n\nThis estimate is adapted from CAPCOA\n[T-22-A (pedal bikeshare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-a.pdf),\n[T-22-B (electric bikeshare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-b.pdf),\nand [T-22-C (scootershare)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-22-c.pdf),\nwith trip data from the National Association of City Transportation Officials\n(NACTO).\n",
       "applicability": {
         "area_types": [
           "urban_core",
@@ -1578,29 +1578,52 @@
       },
       "inputs": [
         {
-          "key": "micromobility_type",
-          "label": "Mode type",
-          "control": "select",
-          "options": [
-            {
-              "value": "bikeshare",
-              "label": "Pedal bikeshare (19.6% sub)"
-            },
-            {
-              "value": "e-bikeshare",
-              "label": "E-bike share (35.0% sub)"
-            },
-            {
-              "value": "scootershare",
-              "label": "Scooter share (38.5% sub)"
-            }
-          ],
-          "default": "bikeshare",
+          "key": "pct_fleet_pedal",
+          "label": "Fleet mix: pedal bikes",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 1.0,
           "prerequisite": true,
-          "summary": "The device type that matches the system (pedal bikeshare, e-bike share, or scooter share), which sets how often it replaces a car trip.",
+          "summary": "The share of the fleet that is pedal (non-electric) bikes. Pedal bikes replace a car trip 19.6% of the time, the lowest of the three device types.",
           "source_note": "your system plan or vendor / operator agreement",
-          "tooltip": "Determines the default substitution ratio.",
-          "instructions": "Pick the device type that matches the system. It sets the car trip substitution\nratio: e-bikes and scooters replace car trips more often than pedal bikes, so\nthey yield a larger VMT effect for the same number of trips.\n"
+          "tooltip": "Share of the fleet that is pedal bikes (19.6% car-trip substitution).",
+          "instructions": "Enter the share of the fleet made up of pedal (non-electric) bikes.\n\nThe three fleet-mix shares set the car trip substitution ratio together: pedal bikes\n19.6%, e-bikes 35.0%, scooters 38.5%. The calculator blends them in proportion, so a\nmixed system is represented directly rather than by picking one dominant device. For a\nsingle-device system, put 100% on that device and 0% on the others.\n\nThe shares are normalized, so they do not have to total exactly 100%; only their\nproportions matter.\n"
+        },
+        {
+          "key": "pct_fleet_ebike",
+          "label": "Fleet mix: e-bikes",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0,
+          "prerequisite": true,
+          "summary": "The share of the fleet that is electric bikes. E-bikes replace a car trip 35.0% of the time, because they serve longer and hillier trips than pedal bikes.",
+          "source_note": "your system plan or vendor / operator agreement",
+          "tooltip": "Share of the fleet that is e-bikes (35.0% car-trip substitution).",
+          "instructions": "Enter the share of the fleet made up of electric bikes. Include e-bikes a permit\nrequires an operator to deploy alongside scooters, which is a common arrangement.\n"
+        },
+        {
+          "key": "pct_fleet_scooter",
+          "label": "Fleet mix: scooters",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0,
+          "prerequisite": true,
+          "summary": "The share of the fleet that is standing scooters. Scooters replace a car trip 38.5% of the time, the highest of the three device types.",
+          "source_note": "your system plan or vendor / operator agreement",
+          "tooltip": "Share of the fleet that is scooters (38.5% car-trip substitution).",
+          "instructions": "Enter the share of the fleet made up of standing scooters. Many Colorado systems are\nscooter-dominant, so this is often the largest share.\n"
         },
         {
           "key": "pct_pop_access_before",
@@ -1637,7 +1660,9 @@
       ],
       "notes": "",
       "_defaults": {
-        "micromobility_type": "bikeshare",
+        "pct_fleet_pedal": 1.0,
+        "pct_fleet_ebike": 0,
+        "pct_fleet_scooter": 0,
         "pct_pop_access_before": 0.0,
         "pct_pop_access_after": 0.3
       }
@@ -2012,13 +2037,13 @@
       ],
       "short_description": "Higher-density mixed-use development around high-quality transit. Residents shift commute trips to transit at a rate documented by CAPCOA T-3.",
       "extended_description": "Transit-oriented development places compact, mixed-use development within walking\ndistance of high-quality transit, typically around a rail station or major bus hub.\nLocating residents near frequent transit can increase transit commuting and reduce\ndriving compared with accommodating the same residents in a less transit-accessible\ndevelopment pattern. Nearby jobs, shops, and services can provide additional benefits by\nallowing some daily trips to be made without driving.\n\nAdding homes, jobs, and activity around a station can still increase total trips and total\nVMT within the project area. This strategy should therefore not be interpreted as showing\nthat a new development will reduce overall VMT compared with today. The calculator\nestimates reduced driving among those traveling to and from the TOD walkshed compared with\nthe baseline. Benefits are greatest where frequent transit, safe walking routes, connected\nstreets, and parking management make driving less necessary.\n",
-      "guidance": "Use this strategy to compare development around an existing or planned\nhigh-quality transit station with otherwise similar development in a non-TOD area. For\ndensity that is not associated with a transit station, use\n[Increased Residential\nDensity](#/strategies/residential_density)\nor [Increased Employment\nDensity](#/strategies/employment_density)\ninstead.\n",
+      "guidance": "Use this strategy to compare development around an existing or planned\nhigh-quality transit station with otherwise similar development in a non-TOD area. For\ndensity that is not associated with a transit station, use\n[Increased Residential\nDensity](#/strategies/residential_density)\nor [Increased Employment\nDensity](#/strategies/employment_density)\ninstead.\n\n**Choose by policy lever, not by distance.** Transit-oriented development and a density\nincrease often look alike on the ground, since both add density, but they are separate\npolicy actions working through different mechanisms. Use this strategy when the action is\nstation-area development coordinated with high-quality transit. Use the density strategies\nwhen the action is a land use or zoning change that raises density, even if the site\nhappens to sit near transit and the travel effect ends up similar. There is no distance\nthreshold that decides this for you.\n",
       "impact_direction": "avoided",
       "impact_qualifier": "relative to the baseline travel pattern",
       "images": [],
       "method": "CAPCOA T-3 (Transit-Oriented Development); Lund 2004 / Cervero 2007 / Chatman 2013",
       "formula": "ΔVMT% = −%TAZ_in_TOD × (min(TOD_ratio × transit_MS, cap) − transit_MS) / auto_MS",
-      "methodology_detail": "Living within walking distance of high-quality transit leads residents to ride\ntransit far more and drive far less, lowering vehicle miles traveled (VMT). The\ncalculator gives residents inside the walkshed a transit share equal to the\narea's transit share times a multiplier (4.9× by default, the typical rail-station\nvalue), capped at 50% as a realistic ceiling. This follows CAPCOA\n[T-3 (Provide Transit-Oriented Development)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-3.pdf),\ndrawing on Lund (2004), Cervero (2007), and Chatman (2013).\n\n`ΔVMT% = −%TAZ_in_TOD × (min(TOD_ratio × transit_MS, cap) − transit_MS) / auto_MS`\n\nThe effect grows with the share of the area's population that lives inside the\nwalkshed. Commute mode share comes from American Community Survey (ACS) data.\nLower the multiplier for development served by bus only, which shifts fewer trips\nthan rail.\n",
+      "methodology_detail": "Living within walking distance of high-quality transit leads residents to ride\ntransit far more and drive far less, lowering vehicle miles traveled (VMT). The\ncalculator gives residents inside the walkshed a transit share equal to the\narea's transit share times a multiplier (4.9× by default, the typical rail-station\nvalue), capped at 50% as a realistic ceiling. This follows CAPCOA\n[T-3 (Provide Transit-Oriented Development)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-3.pdf),\ndrawing on Lund (2004), Cervero (2007), and Chatman (2013).\n\n`ΔVMT% = −%TAZ_in_TOD × (min(TOD_ratio × transit_MS, cap) − transit_MS) / auto_MS`\n\nThe effect grows with the share of the area's population that lives inside the\nwalkshed. Commute mode share comes from American Community Survey (ACS) data.\nLower the multiplier for development served by bus only, which shifts fewer trips\nthan rail. Where a station has both bus and rail, the higher (rail) value applies:\nthe strongest service sets the ceiling on how much travel the station area shifts.\n",
       "applicability": {
         "area_types": [
           "urban_core",
@@ -2042,19 +2067,19 @@
           "summary": "The share of the project area's population that is expected to live inside the ½-mile walkshed around the station, based on planned TOD housing.",
           "source_note": "your development program / site plan vs. the TAZ population",
           "tooltip": "Share of the area's population estimated to live within the ½-mi transit-oriented development walkshed.",
-          "instructions": "Estimate the share of the TAZ's population that will live inside the TOD\nwalkshed, roughly the ½-mile area around the station that is comfortable to\nwalk. Compare the planned TOD housing (or population) against the TAZ total.\nIf the TOD covers only part of a large TAZ, this share is small.\n"
+          "instructions": "Estimate the share of the area's population that will live inside the TOD\nwalkshed, roughly the ½-mile area around the station that is comfortable to\nwalk. Compare the planned TOD housing (or population) against the total for the\narea you selected. If the TOD covers only part of a large zone, this share is\nsmall.\n\nYou need to estimate this yourself: the calculator cannot derive the walkshed from\na station location, because it has no zone geometry available while you are working.\n"
         },
         {
           "key": "tod_mode_share_ratio",
-          "label": "TOD transit-MS multiplier",
+          "label": "Transit Mode Share Multiplier",
           "control": "number",
           "step": 0.1,
           "default": 4.9,
           "prerequisite": true,
-          "summary": "The transit mode-share multiplier for the TOD; keep 4.9x for a rail station, or lower it (2-3x) for a bus-served TOD.",
+          "summary": "The transit mode-share multiplier for the TOD. Keep 4.9x where the station has rail, or lower it (2-3x) for a TOD served by bus only. Where a station has both, use the rail value.",
           "source_note": "the transit service serving your TOD (rail vs. bus)",
-          "tooltip": "CAPCOA T-3 default = 4.9× (rail-station TODs). Lower for bus-served TODs.",
-          "instructions": "Leave at the 4.9× default for development around a rail station (the CAPCOA\nT-3 value). Lower it for TODs served by bus only, which shift fewer trips; a\n2–3× multiplier is more realistic for frequent bus service.\n",
+          "tooltip": "CAPCOA T-3 default = 4.9× (rail-station TODs). Lower for bus-only TODs. Rail plus bus uses the rail value.",
+          "instructions": "Leave at the 4.9× default for development around a rail station (the CAPCOA\nT-3 value). Lower it for TODs served by bus only, which shift fewer trips; a\n2–3× multiplier is more realistic for frequent bus service.\n\nWhere a station is served by **both** bus and rail, take the higher of the two\nvalues, which means using the rail multiplier. The stronger service sets the\nceiling on how much travel the station area can shift; adding bus alongside rail\ndoes not lower it.\n",
           "min": 1.0,
           "max": 10.0
         }
