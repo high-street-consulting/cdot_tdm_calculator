@@ -13,6 +13,7 @@ import {
 import {
   AREA_TYPE_THRESHOLDS,
   CTR_SUBGROUP_CAP,
+  MEASURE_SUPERSESSIONS,
   PLACE_TYPE_CAPS,
 } from "./catalog";
 import { STRATEGY_REGISTRY, type StrategyKey } from "./strategies";
@@ -28,6 +29,42 @@ import {
 } from "./combineEngine";
 
 const PURPOSE_POOLS: PurposePool[] = ["commute", "recreational", "other"];
+
+/**
+ * Resolve CAPCOA hard supersessions across a basket (spec §4.1).
+ *
+ * Where the Handbook says a program-level measure already accounts for the
+ * individual measures beneath it, crediting both double counts the same mode
+ * shift. The 45% CTR subgroup cap does not catch this: a cap only bites once the
+ * combined reduction is large, whereas the double count exists at any magnitude.
+ *
+ * Returns, per superseded strategy id, the strategy that absorbed it. Rules come
+ * from globals.yaml and match on `capcoa_measure`, so a strategy added later with
+ * a covered measure is handled without touching this code.
+ */
+function resolveSupersessions(
+  metas: { id: string; meta: StrategyMeta }[],
+): Record<string, { byName: string; reason: string }> {
+  const out: Record<string, { byName: string; reason: string }> = {};
+  for (const rule of MEASURE_SUPERSESSIONS) {
+    const superseding = metas.filter(
+      (m) => m.meta.capcoaMeasure && rule.measures.includes(m.meta.capcoaMeasure),
+    );
+    if (superseding.length === 0) continue;
+    // Name the first present superseding strategy; with several, the rule is the
+    // same and the reason explains the measure-level basis.
+    const byName = superseding[0].meta.displayName;
+    for (const m of metas) {
+      const measure = m.meta.capcoaMeasure;
+      if (!measure || !rule.supersedes.includes(measure)) continue;
+      // A strategy never supersedes itself, and a superseding strategy is never
+      // itself superseded by the same rule.
+      if (superseding.some((s) => s.id === m.id)) continue;
+      out[m.id] = { byName, reason: rule.reason };
+    }
+  }
+  return out;
+}
 
 /** Display category → CAPCOA subsector fallback (used only if a strategy is untagged). */
 const CATEGORY_TO_SUBSECTOR: Record<string, CapcoaSubsector> = {
@@ -274,6 +311,17 @@ export interface PerStrategyAggregate {
    * PERCENT VMT (e.g. 30). Undefined when not capped.
    */
   cap?: BindingCap;
+  /**
+   * True when a comprehensive measure in the basket already accounts for this
+   * one, so crediting it too would double count (CAPCOA hard supersession, spec
+   * §4.1). Its contribution to the combined total is zero; its standalone
+   * `pct_vmt_reduction` is left intact so the detail view still shows what the
+   * strategy would do on its own.
+   */
+  superseded?: boolean;
+  /** When superseded: the display name of the strategy that absorbed it, plus why. */
+  supersededBy?: string;
+  supersededReason?: string;
   /** Per-TAZ rows (debugging / export). */
   rows: StrategyResult[];
 }
@@ -552,11 +600,26 @@ export function computeResults(
   }
   const reducers: Reducer[] = [];
   let inducedDelta = 0; // net mi/day from induced-demand (bypass), signed (+saved)
+  // CAPCOA hard supersessions: a superseded strategy contributes nothing to the
+  // combined total, so it never reaches the engine at all.
+  const superseded = resolveSupersessions(
+    basket.map((e) => ({ id: e.id as string, meta: byId.get(e.id as string)!.meta })),
+  );
   for (const entry of basket) {
     const p = byId.get(entry.id as string)!;
     if (p.meta.excludedFromCaps) {
       inducedDelta += p.daily_vmt_reduction; // usually negative (a VMT increase)
       p.combined_daily_vmt_reduction = p.daily_vmt_reduction;
+      continue;
+    }
+    const sup = superseded[entry.id as string];
+    if (sup) {
+      // Standalone figures stay as computed (the detail view still shows what the
+      // strategy would do alone); only its share of the combined total is zeroed.
+      p.superseded = true;
+      p.supersededBy = sup.byName;
+      p.supersededReason = sup.reason;
+      p.combined_daily_vmt_reduction = 0;
       continue;
     }
     const pools = resolvedPools(p.meta, entry.values);

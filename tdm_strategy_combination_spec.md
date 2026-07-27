@@ -165,7 +165,9 @@ These are individual measure or subcategory ceilings from the CAPCOA fact sheets
 | Voluntary CTR program (T-5), standalone | ~4% | CAPCOA T-5 fact sheet (context-dependent). |
 | Commute TDM / employer programs (LA calculator implementation of TRT-9 family) | 15% of commute VMT | Reflects the commute-VMT scope limit. |
 
-> **Double-counting guard built into the CTR cap:** the 45% CTR subcategory cap is CAPCOA's mechanism for absorbing overlap among employer programs, transit subsidy, ridesharing, and parking cash-out, which all pull from the same commuter mode-shift pool. Let the cap absorb the overlap rather than trying to flag every pair.
+> **Double-counting guard built into the CTR cap:** the 45% CTR subcategory cap is CAPCOA's mechanism for absorbing overlap among employer programs, transit subsidy, ridesharing, and parking cash-out, which all pull from the same commuter mode-shift pool. Let the cap absorb *general* overlap rather than trying to flag every pair.
+>
+> **But not where the Handbook states an exclusion outright.** The cap is the wrong instrument for T-5/T-6 vs T-7…T-11: a cap only binds once the combined reduction is large, whereas that double count exists at any magnitude. See §4.1, which enforces it as a supersession in the engine.
 
 ---
 
@@ -182,6 +184,15 @@ These are explicit CAPCOA / calculator-implementation exclusions where the strat
 | Transit fare subsidy / unlimited transit pass (TRT-11 family) | Neighborhood Shuttle **or** Required (Mandatory) Commute Trip Reduction Program | The activities overlap; LA VMT Calculator disallows combining these because the described activity is already captured. Treat as hard block. |
 | Provide Transit-Oriented Development (T-3) | Standalone Increase Residential Density (T-1) **applied to the same parcels** | TOD already embeds density + transit proximity; stacking re-counts the same effect. Allow only one per location. |
 | Voluntary CTR Program (T-5) | Mandatory CTR Program (T-6) | Same program, two implementation intensities. Mutually exclusive by definition. |
+| Voluntary or Mandatory CTR Program (T-5 / T-6) | Each of T-7, T-8, T-9, T-10, T-11 | **Implemented 2026-07-27.** T-5 fact sheet, Mutually Exclusive Measures: "If this measure is selected, the user may not also take credit for Measures T-7 through T-11. Measure T-5 accounts for the combined GHG reductions achieved by each of these individual measures. To combine the GHG reductions from T-5 with any of these measures would be considered double counting." T-12 and T-13 stay creditable alongside T-5, bounded by the 45% CTR cap. |
+
+**Implementation note: supersession, not blocking.** T-5/T-6 vs T-7…T-11 is enforced in the engine rather than by blocking the second selection. `compute.ts::resolveSupersessions` zeroes the superseded strategies' contribution to the combined total, leaves their standalone estimates intact so the detail view still shows what each would do alone, and the results view tags them "Already counted" with the reason. Enforcing it in the engine makes the total correct regardless of the order strategies were added, which blocking at the point of selection would not guarantee on its own. Rules are declared in `strategy-catalog/globals.yaml` under `measure_supersessions` and matched on `capcoa_measure`, so a strategy added later carrying a covered measure is handled without a code change.
+
+Affected strategies today: `commute_incentives` and `tmo_coverage` are T-5 (superseding); `commute_marketing` T-7, `employee_commuting_benefits` T-9, `end_of_trip_facilities` T-10, `vanpool` T-11 (superseded); `workplace_parking_pricing` T-12 (unaffected, per the fact sheet's own carve-out).
+
+This supersedes the earlier guidance in §3 that the 45% CTR cap alone should absorb this overlap. A cap only binds once the combined reduction is large; the double count exists at any magnitude, so the cap is the wrong instrument for an exclusion the Handbook states outright.
+
+**Open question.** Two of our strategies both carry T-5 (`commute_incentives` and `tmo_coverage`). CAPCOA defines a single T-5, so selecting both arguably double counts that measure against itself. The current rule does not catch it, because a superseding measure is never superseded by its own rule. Left as-is pending a decision on whether those two model genuinely distinct programs.
 
 ### 4.2 Soft overlap flags (WARN, do not block)
 

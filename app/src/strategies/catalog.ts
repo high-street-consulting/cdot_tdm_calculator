@@ -113,6 +113,20 @@ export type CapcoaSubsector =
   | "commute_trip_reduction"
   | "induced";
 
+/**
+ * A CAPCOA rule that one measure already accounts for others, so crediting both
+ * double counts. Matched on `capcoa_measure`, not strategy id, so it applies to
+ * any strategy carrying the measure.
+ */
+export interface MeasureSupersession {
+  /** Measures that, when present, absorb the ones in `supersedes`. */
+  measures: string[];
+  supersedes: string[];
+  /** Short human name for the superseding measure, used in the results view. */
+  label: string;
+  reason: string;
+}
+
 /** Place-type-tiered CAPCOA cap tables (percent VMT), keyed by place type. */
 export interface PlaceTypeCaps {
   global: Record<string, number>;
@@ -136,6 +150,8 @@ export interface Catalog {
   // CAPCOA 2021 combination caps + vocabularies (see globals.yaml).
   place_type_caps?: PlaceTypeCaps;
   ctr_subgroup_cap?: number;
+  /** Hard measure supersessions (see globals.yaml, spec §4.1). */
+  measure_supersessions?: MeasureSupersession[];
   capcoa_subsectors?: CapcoaSubsector[];
   /** Displayed subsector caps (percent VMT), keyed by CAPCOA subsector. */
   capcoa_subsector_caps?: Record<string, number | null>;
@@ -278,6 +294,8 @@ export const PLACE_TYPE_CAPS: PlaceTypeCaps = CATALOG.place_type_caps ?? {
   land_use: { urban_core: 65, urban: 30, suburban: 10, rural: 10 },
 };
 export const CTR_SUBGROUP_CAP: number = CATALOG.ctr_subgroup_cap ?? 45;
+export const MEASURE_SUPERSESSIONS: MeasureSupersession[] =
+  CATALOG.measure_supersessions ?? [];
 
 // Displayed subsector cap + label, keyed by CAPCOA subsector. The detail view
 // prefers these over the display category's cap so the figure stays correct when

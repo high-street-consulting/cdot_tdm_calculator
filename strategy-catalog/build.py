@@ -211,6 +211,7 @@ def main():
         # Phase-2 combination engine). See tdm_strategy_combination_spec.md §3.
         "place_type_caps": g.get("place_type_caps", {}),
         "ctr_subgroup_cap": g.get("ctr_subgroup_cap"),
+        "measure_supersessions": g.get("measure_supersessions", []),
         "capcoa_subsectors": g.get("capcoa_subsectors", []),
         "capcoa_subsector_caps": g.get("capcoa_subsector_caps", {}),
         "capcoa_subsector_labels": g.get("capcoa_subsector_labels", {}),

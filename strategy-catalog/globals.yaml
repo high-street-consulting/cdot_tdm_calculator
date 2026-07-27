@@ -105,6 +105,35 @@ place_type_caps:
 # telework, and parking cash-out. Applied within the commute pool.
 ctr_subgroup_cap: 45
 
+# ─────────────────────────────────────────────────────────────────────────
+# Hard measure supersessions (spec §4.1). Where CAPCOA states that a
+# program-level measure already accounts for the individual measures beneath
+# it, crediting both is double counting and the 45% CTR cap is too soft to
+# catch it: the cap only binds once the combined reduction is large, whereas
+# the double count exists at any size. The engine zeroes the superseded
+# strategies' contributions and the results view says which measure absorbed
+# them (compute.ts, applySupersessions).
+#
+# Matched on `capcoa_measure`, so this holds for any strategy carrying the
+# measure, including ones added later.
+measure_supersessions:
+  - measures: [T-5, T-6]
+    supersedes: [T-7, T-8, T-9, T-10, T-11]
+    label: comprehensive commute trip reduction program
+    # Verbatim basis, T-5 fact sheet, "Mutually Exclusive Measures":
+    #   "If this measure is selected, the user may not also take credit for
+    #    Measures T-7 through T-11. Measure T-5 accounts for the combined GHG
+    #    reductions achieved by each of these individual measures. To combine the
+    #    GHG reductions from T-5 with any of these measures would be considered
+    #    double counting. However, the user may take credit for Measures T-12
+    #    through T-13 within the larger CTR subcategory, so long as the combined
+    #    VMT reduction does not exceed 45 percent."
+    # T-12/T-13 are deliberately absent from `supersedes` for that reason.
+    reason: >-
+      A comprehensive commute trip reduction program (CAPCOA T-5/T-6) already
+      accounts for the combined effect of the individual commute measures, so
+      crediting those separately would double count the same mode shift.
+
 # CAPCOA subsectors — the cap-grouping unit (distinct from the display
 # `category` above; a strategy's `capcoa_subsector` may differ, e.g. carshare).
 capcoa_subsectors:

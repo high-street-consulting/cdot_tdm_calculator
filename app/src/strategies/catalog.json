@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T22:34:45.761056+00:00",
+  "generated_at": "2026-07-27T23:12:30.591113+00:00",
   "categories": [
     {
       "id": "transit",
@@ -144,6 +144,23 @@
     }
   },
   "ctr_subgroup_cap": 45,
+  "measure_supersessions": [
+    {
+      "measures": [
+        "T-5",
+        "T-6"
+      ],
+      "supersedes": [
+        "T-7",
+        "T-8",
+        "T-9",
+        "T-10",
+        "T-11"
+      ],
+      "label": "comprehensive commute trip reduction program",
+      "reason": "A comprehensive commute trip reduction program (CAPCOA T-5/T-6) already accounts for the combined effect of the individual commute measures, so crediting those separately would double count the same mode shift."
+    }
+  ],
   "capcoa_subsectors": [
     "land_use",
     "neighborhood_design",
@@ -521,7 +538,7 @@
       "images": [],
       "method": "Paulley (2006) fare elasticity (ε=−0.30), commute scope",
       "formula": "Δcommute_VMT% = (Δfare × eligible × ε × transit_MS × 1/AVO × p_drive) / auto_MS",
-      "methodology_detail": "Same short-run fare elasticity as the general pass subsidy (ε = −0.30, Paulley\net al. 2006), here implementing CAPCOA\n[T-9 (Implement Subsidized or Discounted Transit Program)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-9.pdf),\nscoped to commute VMT and discounted by the share of benefiting commuters who\nwould otherwise drive:\n\n`Δcommute_VMT% = (Δfare × eligible × ε × transit_MS × 1/AVO × p_drive) / auto_MS`\n\nWhen the benefit is entered as a dollar subsidy, the effective fare reduction is\nthe subsidy divided by the average fare (statewide default unless provided).\nMode share comes from the American Community Survey (ACS); Average vehicle occupancy is from the 2017 National Household Travel Survey (NHTS) statewide default.\n",
+      "methodology_detail": "Same short-run fare elasticity as the general pass subsidy (ε = −0.30, Paulley\net al. 2006), here implementing CAPCOA\n[T-9 (Implement Subsidized or Discounted Transit Program)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-9.pdf),\nscoped to commute VMT and discounted by the share of benefiting commuters who\nwould otherwise drive:\n\n`Δcommute_VMT% = (Δfare × eligible × ε × transit_MS × 1/AVO × p_drive) / auto_MS`\n\nWhen the benefit is entered as a dollar subsidy, the effective fare reduction is\nthe subsidy divided by the average fare (statewide default unless provided).\nMode share comes from the American Community Survey (ACS); Average vehicle occupancy is from the 2017 National Household Travel Survey (NHTS) statewide default.\n\n> **Caveat on the mode share (CAPCOA T-9).** The fact sheet warns against using\n> reported ACS commute mode share for this measure \"unless the land use is office\n> or employment based on work location (rather than from home location).\" ACS\n> commute mode share is tabulated by where people **live**, and this measure acts\n> on people who **work** at the benefiting site. The calculator uses the selected\n> zones' ACS mode share, so where a project area's residents commute differently\n> from the people who work there, the transit share feeding this estimate is off,\n> and it is a residence-based proxy for a workplace-based quantity. T-9 prefers a\n> work-trip mode share at census-tract scale or finer, which the calculator does\n> not currently carry. Treat the result as approximate in areas whose resident and\n> worker travel patterns diverge, such as a job centre with little housing.\n",
       "applicability": {
         "area_types": [
           "urban_core",

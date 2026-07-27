@@ -199,6 +199,9 @@ export function CartView({
                   const capTip = p.cap
                     ? `Limited by the ${CAP_TIER_LABEL[p.cap.tier] ?? "maximum"} (${capPct}%). See the Methodology page for how caps are set.`
                     : "This strategy's combined reduction was limited by a maximum. See the Methodology page for how the cap is set.";
+                  const supersededTip = p.supersededReason
+                    ? `${p.supersededReason} Its own estimate is unchanged, but it adds nothing on top of ${p.supersededBy}. See the Methodology page.`
+                    : "A broader strategy in your package already accounts for this one, so counting it again would double count. See the Methodology page.";
                   return (
                   <li key={p.id} className="cart-line">
                     <div className="stripe" style={{ background: cat.cssColorVar }} />
@@ -221,6 +224,32 @@ export function CartView({
                               href="#/methodology"
                               data-tip={capTip}
                               aria-label={`Why is this capped? ${capTip}`}
+                              style={{ width: 14, height: 14, fontSize: 10 }}
+                            >
+                              i
+                            </a>
+                          </span>
+                        )}
+                        {/* A superseded strategy contributes 0 to the package: a
+                            comprehensive measure already in the basket accounts for
+                            it (CAPCOA hard supersession). Say so where the zero
+                            appears, so it never reads as a broken calculation. */}
+                        {p.superseded && (
+                          <span
+                            className="capped-tag"
+                            style={{
+                              fontSize: 10, color: "var(--cdot-orange-press)",
+                              background: "#FFF1E8", padding: "2px 6px",
+                              borderRadius: 2, fontWeight: 600,
+                              display: "inline-flex", alignItems: "center", gap: 4,
+                            }}
+                          >
+                            ALREADY COUNTED
+                            <a
+                              className="info-i capped-info"
+                              href="#/methodology"
+                              data-tip={supersededTip}
+                              aria-label={`Why does this add nothing? ${supersededTip}`}
                               style={{ width: 14, height: 14, fontSize: 10 }}
                             >
                               i

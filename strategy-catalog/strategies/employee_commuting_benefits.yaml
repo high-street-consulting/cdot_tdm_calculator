@@ -57,6 +57,18 @@ methodology_detail: |
   When the benefit is entered as a dollar subsidy, the effective fare reduction is
   the subsidy divided by the average fare (statewide default unless provided).
   Mode share comes from the American Community Survey (ACS); Average vehicle occupancy is from the 2017 National Household Travel Survey (NHTS) statewide default.
+
+  > **Caveat on the mode share (CAPCOA T-9).** The fact sheet warns against using
+  > reported ACS commute mode share for this measure "unless the land use is office
+  > or employment based on work location (rather than from home location)." ACS
+  > commute mode share is tabulated by where people **live**, and this measure acts
+  > on people who **work** at the benefiting site. The calculator uses the selected
+  > zones' ACS mode share, so where a project area's residents commute differently
+  > from the people who work there, the transit share feeding this estimate is off,
+  > and it is a residence-based proxy for a workplace-based quantity. T-9 prefers a
+  > work-trip mode share at census-tract scale or finer, which the calculator does
+  > not currently carry. Treat the result as approximate in areas whose resident and
+  > worker travel patterns diverge, such as a job centre with little housing.
 applicability:
   area_types:
   - urban_core

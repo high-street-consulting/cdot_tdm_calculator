@@ -68,20 +68,30 @@ describe("purpose-scope gating (transit_pass_subsidy vmt_scope)", () => {
 });
 
 describe("soft overlap warnings (shared mechanism + population + pool)", () => {
-  // commute_marketing and commute_incentives are both mode_shift + commute
-  // target population in the commute pool -> should warn (non-blocking).
+  // employee_commuting_benefits (T-9) and workplace_parking_pricing (T-12) are both
+  // mode_shift + commute target population in the commute pool -> should warn
+  // (non-blocking). Neither is superseded here: no T-5/T-6 program is in the basket,
+  // and T-12 stays creditable alongside T-5 in any case.
+  //
+  // This pair replaced commute_marketing + commute_incentives, which is now a HARD
+  // supersession rather than a soft overlap: commute_incentives is T-5, which
+  // absorbs T-7 marketing outright (see compute.supersession.test.ts). A superseded
+  // strategy contributes nothing and so is no longer a candidate for an overlap
+  // warning; the stronger rule replaces the weaker one.
   const res = computeResults(
     [
-      { id: "commute_marketing" as never, values: {} },
-      { id: "commute_incentives" as never, values: {} },
+      { id: "employee_commuting_benefits" as never, values: {} },
+      { id: "workplace_parking_pricing" as never, values: {} },
     ],
     TAZS,
   );
   it("emits a warning for the overlapping commute pair", () => {
     const w = res.overlap_warnings.find(
       (x) =>
-        (x.a === "commute_marketing" && x.b === "commute_incentives") ||
-        (x.a === "commute_incentives" && x.b === "commute_marketing"),
+        (x.a === "employee_commuting_benefits" &&
+          x.b === "workplace_parking_pricing") ||
+        (x.a === "workplace_parking_pricing" &&
+          x.b === "employee_commuting_benefits"),
     );
     expect(w).toBeTruthy();
     expect(w!.mechanism).toBe("mode_shift");
