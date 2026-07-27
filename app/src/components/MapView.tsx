@@ -61,6 +61,7 @@ import {
   type ProbedReferenceLayer,
 } from "../data/referenceLayers";
 import { ReferenceLayers } from "./ReferenceLayers";
+import { ReferenceLegend } from "./ReferenceLegend";
 
 // MapView.on("click") event shape: we only read .native and pass the whole
 // event to view.hitTest(). Importing the class type from @arcgis/core fails
@@ -119,6 +120,9 @@ export function MapCanvas({
   // Empty `refLayers` (nothing loaded, or probe not finished) hides the picker.
   const [refLayers, setRefLayers] = useState<ProbedReferenceLayer[]>([]);
   const [refEnabled, setRefEnabled] = useState<Set<string>>(new Set());
+  // The view as state (not just the ref) so the legend can re-derive itself once
+  // the view exists and whenever the map settles after a pan/zoom.
+  const [readyView, setReadyView] = useState<MapView | null>(null);
   const drawingRef = useRef(false);
   drawingRef.current = drawing;
 
@@ -286,6 +290,7 @@ export function MapCanvas({
           );
         }
         setRefLayers(probed);
+        setReadyView(view);
       });
       (window as unknown as Record<string, unknown>).__cdotView = view;
       (window as unknown as Record<string, unknown>).__cdotTazLayer = tazLayer;
@@ -681,6 +686,14 @@ export function MapCanvas({
           Click a TAZ · Shift-click to add or remove · or Select zones in view
         </div>
       </div>
+      {/* Legend for whatever reference layers are on. Derived from each layer's own
+          renderer and narrowed to the classes present in view; renders nothing when
+          no reference layer is enabled. Bottom-left, clear of the tool stack. */}
+      <ReferenceLegend
+        view={readyView}
+        available={refLayers}
+        enabled={refEnabled}
+      />
       {/* Confirmation for the "Select zones in view" action (which has no map-click
           equivalent), announced politely to screen-reader users. */}
       <div className="sr-only" role="status" aria-live="polite">
