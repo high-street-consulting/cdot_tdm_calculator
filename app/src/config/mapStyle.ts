@@ -30,6 +30,23 @@ export interface MapStyle {
     outlineWidth: number;
     outlineStyle: string;
   };
+  /**
+   * Symbology for the optional reference layers (data/referenceLayers.ts), keyed
+   * by layer id. Line layers read lineColor/lineWidth, point layers the marker*
+   * fields. Every field is optional, so a layer can be listed before it is styled
+   * and the code falls back to a neutral grey.
+   */
+  referenceLayers?: Record<
+    string,
+    {
+      lineColor?: number[];
+      lineWidth?: number;
+      markerColor?: number[];
+      markerSize?: number;
+      markerOutlineColor?: number[];
+      markerOutlineWidth?: number;
+    }
+  >;
 }
 
 export const MAP_STYLE = raw as MapStyle;

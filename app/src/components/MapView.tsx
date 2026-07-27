@@ -53,6 +53,14 @@ import { VTL_ITEM_ID, TAZ_LAYER_URL, PORTAL_URL } from "../data/agol";
 // Basemap, initial view, and all symbology live in one standalone, editable
 // config file rather than being baked into this component.
 import { MAP_STYLE } from "../config/mapStyle";
+// Optional context layers (transit, traffic counts). Probed after the map is
+// ready; unavailable sources are dropped silently and the picker hides entirely
+// when none load.
+import {
+  probeReferenceLayers,
+  type ProbedReferenceLayer,
+} from "../data/referenceLayers";
+import { ReferenceLayers } from "./ReferenceLayers";
 
 // MapView.on("click") event shape: we only read .native and pass the whole
 // event to view.hitTest(). Importing the class type from @arcgis/core fails
@@ -107,6 +115,10 @@ export function MapCanvas({
   // confirmation that N zones were added).
   const [selectingInView, setSelectingInView] = useState(false);
   const [viewSelectStatus, setViewSelectStatus] = useState("");
+  // Reference layers that actually loaded, and which of them are switched on.
+  // Empty `refLayers` (nothing loaded, or probe not finished) hides the picker.
+  const [refLayers, setRefLayers] = useState<ProbedReferenceLayer[]>([]);
+  const [refEnabled, setRefEnabled] = useState<Set<string>>(new Set());
   const drawingRef = useRef(false);
   drawingRef.current = drawing;
 
@@ -243,6 +255,21 @@ export function MapCanvas({
       // TAZs" (in Edge and generally while the map is still loading).
       await tazLayer.load().catch((e) => console.warn("MapCanvas: TAZ layer load failed", e));
       setMapLoading(false);
+
+      // Reference layers: probe AFTER the map is usable so their metadata
+      // requests never delay first paint or TAZ selection. Each starts hidden, so
+      // adding them costs nothing until the user switches one on. Inserted at the
+      // bottom of the stack (above the basemap, below the transparent hit-test TAZ
+      // layer) so they can never sit over the selection highlight or swallow a
+      // click. Anything that fails to load is silently absent.
+      void probeReferenceLayers().then((probed) => {
+        if (!isMounted || probed.length === 0) return;
+        map.addMany(
+          probed.map((p) => p.layer),
+          0,
+        );
+        setRefLayers(probed);
+      });
       (window as unknown as Record<string, unknown>).__cdotView = view;
       (window as unknown as Record<string, unknown>).__cdotTazLayer = tazLayer;
       // Deterministic selection hook for E2E tests: drives the same selection
@@ -569,6 +596,22 @@ export function MapCanvas({
     }
   }, []);
 
+  // Reference layer on/off. Visibility only: the layer is already in the map, so
+  // toggling costs one tile/query round-trip the first time and nothing after.
+  const handleRefToggle = useCallback((id: string, on: boolean) => {
+    setRefLayers((current) => {
+      const hit = current.find((p) => p.def.id === id);
+      if (hit) hit.layer.visible = on;
+      return current;
+    });
+    setRefEnabled((prev) => {
+      const next = new Set(prev);
+      if (on) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }, []);
+
   return (
     <div style={{ position: "relative", width: "100%", height: "100%", minHeight: 320 }}>
       <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
@@ -611,6 +654,12 @@ export function MapCanvas({
         >
           Clear selection
         </button>
+        {/* Renders nothing when no reference layer loaded. */}
+        <ReferenceLayers
+          available={refLayers}
+          enabled={refEnabled}
+          onToggle={handleRefToggle}
+        />
         <div className="map-tool-hint">
           Click a TAZ · Shift-click to add or remove · or Select zones in view
         </div>
