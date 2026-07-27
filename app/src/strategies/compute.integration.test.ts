@@ -33,8 +33,8 @@ const BASKET: BasketEntry[] = [
   { id: "pedestrian_network_improvements" as never, values: { existing_sidewalk_mi: 9, sidewalk_mi_with_measure: 10 } },
   { id: "car_share_access" as never, values: { service_area_share: 1.0 } },
   { id: "wayfinding" as never, values: { loi_transit: 0.5, loi_active: 0.5 } },
-  { id: "transit_shelters" as never, values: { level_of_implementation: 1.0, brt_covers_all_routes: "no" } },
-  { id: "park_and_ride" as never, values: { n_spaces: 200, l_access_mi: 4, utilization: 0.7, isolated_facility: "isolated", total_transit_commute_trips_catchment: 0 } },
+  { id: "transit_shelters" as never, values: { level_of_implementation: 1.0, brt_stop_share: 0 } },
+  { id: "park_and_ride" as never, values: { n_spaces: 200, l_access_mi: 4, utilization: 0.7, isolated_facility: "isolated", total_transit_trips_catchment: 0 } },
 ];
 
 describe("computeResults dispatch (DSL + aggregate + registry)", () => {
@@ -347,7 +347,7 @@ describe("project-level baseline VMT override (computeResults opts)", () => {
       id: "park_and_ride" as never,
       values: {
         n_spaces: 200, l_access_mi: 4, utilization: 0.7,
-        isolated_facility: "isolated", total_transit_commute_trips_catchment: 0,
+        isolated_facility: "isolated", total_transit_trips_catchment: 0,
       },
     },
   ];

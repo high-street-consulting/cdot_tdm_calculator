@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T21:13:55.384797+00:00",
+  "generated_at": "2026-07-27T21:36:00.104737+00:00",
   "categories": [
     {
       "id": "transit",
@@ -999,7 +999,7 @@
       "images": [],
       "method": "Derived (Duncan & Cao 2020) with local TAZ catchment",
       "formula": "ΔCommuteVMT% = −(min(supply, demand) × V_net) / commute_VMT_catchment",
-      "methodology_detail": "A park-and-ride converts a would-be drive-all-the-way commute into a shorter drive to the\nlot plus a transit trip. The credit is the avoided line-haul mileage, net of the access\ndrive, for the riders who would otherwise have driven the whole way. No CAPCOA measure or\nCARB brief quantifies park-and-ride, so this method is built on the only US study that\nisolates the *marginal* VMT effect (Duncan & Cao 2020), with the avoided mileage\nreconstructed from local Colorado trip lengths.\n\n**Spatial catchment.** Savings accrue along the corridor riders come from, not at the lot.\nThe calculator identifies the catchment (the Traffic Analysis Zones, or TAZs, within the\naverage access drive of the facility) and measures the reduction against the commute\nvehicle miles traveled (VMT) *produced by those TAZs*.\n\n**Binding constraint.** Diverted round trips are computed two ways and the lower (binding)\nvalue is used:\n\n- *Supply side* (parking capacity): `spaces × utilization × diversion_fraction`\n- *Demand side* (who actually drives to transit): `transit_commute_trips × drive-to-transit share × diversion_fraction`\n\nThe drive-to-transit access share comes from the area's observed transit-access split (the\nshare of transit riders who reach transit by car versus on foot) rather than a national\ndefault. The avoided VMT per diverted round trip is `V_net = 2 × (commute trip length −\naccess drive length)`, using the area's observed commute trip length. The diversion\nfraction is 0.80 for an isolated facility and 0.32 where a comparable alternative exists\n(Duncan & Cao 2020). Where local trip lengths are unavailable, the method falls back to\nDuncan & Cao's empirical 19 mi (isolated) / 10 mi (alternative) per round trip, which\nalready embed the diversion behavior.\n\n**Context limitation:** This method is defensible for the US auto-oriented commuter\ncontext that matches Colorado. International studies (Mingardo 2013; Parkhurst 2000) find\npark-and-ride can *increase* vehicle travel in some European settings; those are out of\nscope here. Commute-VMT reductions above ~5% of the catchment are flagged for review.\n\n**Sources**\n\n- Duncan, M., & Cao, J. (2020). *Marginal Impacts of Park-and-Ride Facilities in the Twin\n  Cities*. Transportation Research Record 2674. https://doi.org/10.1177/0361198120945696\n- Duncan, M. (2019). *Would the replacement of park-and-ride facilities with\n  transit-oriented development reduce vehicle kilometers traveled...* Transport Policy 81.\n  https://doi.org/10.1016/j.tranpol.2017.12.005\n",
+      "methodology_detail": "A park-and-ride converts a would-be drive-all-the-way commute into a shorter drive to the\nlot plus a transit trip. The credit is the avoided line-haul mileage, net of the access\ndrive, for the riders who would otherwise have driven the whole way. No CAPCOA measure or\nCARB brief quantifies park-and-ride, so this method is built on the only US study that\nisolates the *marginal* VMT effect (Duncan & Cao 2020), with the avoided mileage\nreconstructed from local Colorado trip lengths.\n\n**Spatial catchment.** Savings accrue along the corridor riders come from, not at the lot.\nThe calculator identifies the catchment (the Traffic Analysis Zones, or TAZs, within the\naverage access drive of the facility) and measures the reduction against the commute\nvehicle miles traveled (VMT) *produced by those TAZs*.\n\n**Binding constraint.** Diverted round trips are computed two ways and the lower (binding)\nvalue is used:\n\n- *Supply side* (parking capacity): `spaces × utilization × diversion_fraction`\n- *Demand side* (who actually drives to transit): `transit_trips × drive-to-transit share × commute share × diversion_fraction`\n\nThe drive-to-transit access share comes from the area's observed transit-access split (the\nshare of transit riders who reach transit by car versus on foot) rather than a national\ndefault. The transit trip count you enter is all-purpose, so a **commute share of 80%** is\napplied to the drive-access subset to keep the ceiling matched to this measure's commute-VMT\npool. That 80% is a **placeholder**: the CDOT 2019 model's transit matrices are segmented by\naccess mode rather than trip purpose, so no Colorado transit trip-purpose split was available\nto derive it. It is set high deliberately, because park-and-ride parking is dominated by\nall-day, peak-period commute use and its commute share is well above transit's overall.\nOutputs flag the assumption. The avoided VMT per diverted round trip is `V_net = 2 × (commute trip length −\naccess drive length)`, using the area's observed commute trip length. The diversion\nfraction is 0.80 for an isolated facility and 0.32 where a comparable alternative exists\n(Duncan & Cao 2020). Where local trip lengths are unavailable, the method falls back to\nDuncan & Cao's empirical 19 mi (isolated) / 10 mi (alternative) per round trip, which\nalready embed the diversion behavior.\n\n**Context limitation:** This method is defensible for the US auto-oriented commuter\ncontext that matches Colorado. International studies (Mingardo 2013; Parkhurst 2000) find\npark-and-ride can *increase* vehicle travel in some European settings; those are out of\nscope here. Commute-VMT reductions above ~5% of the catchment are flagged for review.\n\n**Sources**\n\n- Duncan, M., & Cao, J. (2020). *Marginal Impacts of Park-and-Ride Facilities in the Twin\n  Cities*. Transportation Research Record 2674. https://doi.org/10.1177/0361198120945696\n- Duncan, M. (2019). *Would the replacement of park-and-ride facilities with\n  transit-oriented development reduce vehicle kilometers traveled...* Transport Policy 81.\n  https://doi.org/10.1016/j.tranpol.2017.12.005\n",
       "applicability": {
         "area_types": [
           "urban",
@@ -1076,27 +1076,27 @@
           "instructions": "Choose \"Isolated\" when there is no nearby park-and-ride that serves a similar area or\ntransit service. Choose \"Comparable facility nearby\" when riders could reasonably use\nanother park-and-ride instead. This choice helps the tool estimate how much the project\nexpands access to transit rather than shifting riders from one facility to another: a\ncomparable facility nearby lowers the estimated benefit to roughly 40% of what an\nisolated facility would earn, because fewer riders depend on this specific lot.\n"
         },
         {
-          "key": "total_transit_commute_trips_catchment",
-          "label": "Daily transit commute trips in catchment (optional)",
+          "key": "total_transit_trips_catchment",
+          "label": "Daily transit trips in catchment (optional)",
           "control": "number",
           "min": 0,
           "step": 50,
           "default": 0,
           "unit": "trips/day",
           "prerequisite": true,
-          "summary": "Optional but recommended. Enter the estimated number of daily commute trips made by transit that begin within the facility’s catchment area. This limits the estimated benefit to the number of commuters who could reasonably drive to the park-and-ride and transfer to transit.",
+          "summary": "Optional but recommended. Enter the estimated number of daily transit trips, all purposes, that begin within the facility’s catchment area. This limits the estimated benefit to the number of travelers who could reasonably drive to the park-and-ride and transfer to transit.",
           "source_note": "your regional travel model or transit ridership data",
-          "tooltip": "Total daily commute transit trips originating in the catchment area, used as the demand-side ceiling.",
-          "instructions": "This value is optional but recommended. Enter the total daily commute transit trips\noriginating in the catchment area. Combined with the observed drive-to-transit access\nshare, this caps the number of commuters actually driving to transit. Leave at 0 to use\nthe parking-capacity (supply-side) estimate only; the calculator will flag the missing\ndemand ceiling.\n"
+          "tooltip": "Total daily transit trips (all purposes) originating in the catchment area, used as the demand-side ceiling.",
+          "instructions": "This value is optional but recommended. Enter total daily transit boardings or trips\noriginating in the catchment area, counting **all trip purposes**, not commute trips\nonly. Agency ridership reports and regional travel models normally publish the\nall-purpose figure, which is why the calculator asks for it.\n\nThe calculator narrows that count for you. It applies the area's observed\ndrive-to-transit access share (how many riders reach transit by car rather than on\nfoot) and then a commute share, because a park-and-ride serves commute travel.\nThe result caps the estimate at the number of commuters who could realistically\ndrive to this facility and transfer.\n\nLeave at 0 to use the parking-capacity (supply-side) estimate only; the calculator\nwill flag the missing demand ceiling.\n"
         }
       ],
-      "notes": "Promoted from todo; replaces the legacy CAPCOA 2010 T-22 credit with a derived Duncan & Cao (2020) method that uses the observed drive/walk transit-access split and a spatial catchment. COMPLEX (cross-TAZ / spatial): stays a Python calc fn (strategy_park_and_ride) and is hand-ported to app/src/strategies/parkAndRide.ts (AGGREGATE_REGISTRY), pinned to Python by parkAndRide.test.ts via scripts/generate_pnr_golden.py. App approximation: the user's selected TAZs are the catchment (no runtime geometry), the commute split is the statewide default (no observed vmt_share_commute on the app TAZ layer), and with no drive-access/transit-trip data the credit is supply-side only (observed trip length is used where avg_trip_length is present). For a geographic sub-catchment or demand ceiling, those fields must be added to the app TAZ layer.",
+      "notes": "Promoted from todo; replaces the legacy CAPCOA 2010 T-22 credit with a derived Duncan & Cao (2020) method that uses the observed drive/walk transit-access split and a spatial catchment. COMPLEX (cross-TAZ / spatial): stays a Python calc fn (strategy_park_and_ride) and is hand-ported to app/src/strategies/parkAndRide.ts (AGGREGATE_REGISTRY), pinned to Python by parkAndRide.test.ts via scripts/generate_pnr_golden.py. App approximation: the user's selected TAZs are the catchment (there is no runtime TAZ geometry, so a geographic sub-catchment still needs upstream work). The demand ceiling DOES work in the app: drive_to_transit_share, tdm_avg_trip_length_mi and vmt_share_commute are all published on the enriched TAZ layer and queried by queryTaz, so entering a transit trip count engages the ceiling. 2026-07-27: the trip-count input is now ALL-PURPOSE (total_transit_trips_catchment) and scoped to commute by PARK_AND_RIDE_DERIVED[\"commute_share_of_drive_access\"] (0.80 PLACEHOLDER) - agencies rarely publish a commute-only count. Superseded the earlier note claiming the app was supply-side only.",
       "_defaults": {
         "n_spaces": 200,
         "l_access_mi": 4,
         "utilization": 0.7,
         "isolated_facility": "isolated",
-        "total_transit_commute_trips_catchment": 0
+        "total_transit_trips_catchment": 0
       }
     },
     {
@@ -1306,12 +1306,12 @@
         "local-government"
       ],
       "short_description": "New and repaired sidewalks that close gaps in the pedestrian network, shifting short trips from driving to walking.",
-      "extended_description": "Pedestrian network improvements include adding new sidewalks. A more complete, comfortable\npedestrian network encourages people to walk for short trips that would otherwise be made\nby car, lowering vehicle miles traveled.\n\nThe effect depends on how much the sidewalk network expands relative to the street network\nand on how many nearby trips are short enough to walk. Sidewalk investments are most\neffective in compact, mixed-use areas where destinations are close together and the main\nbarrier is a missing or broken pedestrian connection.\n",
-      "guidance": "Use this strategy for projects that add or repair sidewalks within a study\narea (about a 0.5-mile radius, a 6–10 minute walk, around the improvement). Measure\nsidewalk length on both sides of the street: a 0.5-mile street with a sidewalk on both\nsides of the street is 1.0 mile of sidewalk.\n",
+      "extended_description": "Pedestrian network improvements include adding new sidewalks, and repairing sidewalks whose\ncondition makes them unusable today. A more complete, comfortable pedestrian network\nencourages people to walk for short trips that would otherwise be made by car, lowering\nvehicle miles traveled.\n\nThe effect depends on how much the sidewalk network expands relative to the street network\nand on how many nearby trips are short enough to walk. Sidewalk investments are most\neffective in compact, mixed-use areas where destinations are close together and the main\nbarrier is a missing or broken pedestrian connection.\n",
+      "guidance": "Use this strategy for projects that add sidewalks, or repair sidewalks that\nare currently unusable, anywhere in the area you selected. Measure sidewalk length on both\nsides of the street: a 0.5-mile street with a sidewalk on both sides of the street is 1.0\nmile of sidewalk.\n\nCount repaired sidewalk only where the repair takes a segment from unusable to usable, so\nthat it makes walking trips practical where they were not before. Resurfacing or upgrading\na sidewalk that people can already walk on does not add pedestrian coverage, and the method\ncredits added coverage.\n",
       "images": [],
       "method": "CAPCOA T-18 (verbatim)",
       "formula": "ΔHouseholdVMT% = ((C / B) − 1) × −0.05",
-      "methodology_detail": "Adding sidewalk coverage shifts some short household trips from driving to walking,\nfollowing CAPCOA\n[T-18 (Provide Pedestrian Network Improvement)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-18.pdf):\n\n`ΔVMT% = ((C / B) − 1) × D`\n\nwhere **B** is existing sidewalk length, **C** is sidewalk length with the measure (both\nmeasured on both sides of the street within a ~0.5-mile study area), and **D = −0.05** is\nthe elasticity of household vehicle travel with respect to the sidewalk-to-street ratio\n(Frank et al. 2011; Handy et al. 2014).\n\nThe reduction is capped at a **6.4% measure maximum**, derived from the share of vehicle\ntrips short enough to shift to walking (FHWA 2019). *Reviewer note:* the fact sheet\nreferences a 3.4% figure in one location and 6.4% in the cap derivation and worked example;\n6.4% is used here per the worked example, flagged for confirmation. The credit applies to\nhousehold vehicle travel; because the calculator does not carry a household-only VMT split,\nit is applied to all-trip VMT and flagged accordingly.\n\n*Worked example:* B = 9 miles, C = 10 miles → `((10/9) − 1) × −0.05 = −0.56%`.\n\n**Sources**\n\n- CAPCOA *Handbook* (2021), Measure\n  [T-18 (Provide Pedestrian Network Improvement)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-18.pdf),\n  pp. 133–136.\n- Frank, L., et al. (2011). WSDOT Research Report WA-RD 765.1.\n- Handy, S., et al. (2014). *Impacts of Pedestrian Strategies on Passenger Vehicle Use and\n  GHG Emissions*. CARB.\n",
+      "methodology_detail": "Adding sidewalk coverage shifts some short household trips from driving to walking,\nfollowing CAPCOA\n[T-18 (Provide Pedestrian Network Improvement)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-18.pdf):\n\n`ΔVMT% = ((C / B) − 1) × D`\n\nwhere **B** is existing sidewalk length, **C** is sidewalk length with the measure (both\nmeasured on both sides of the street), and **D = −0.05** is the elasticity of household\nvehicle travel with respect to the sidewalk-to-street ratio (Frank et al. 2011; Handy et\nal. 2014).\n\n**Study area.** T-18 frames the ratio over a walkable study area around the improvement.\nThe calculator measures it over **the TAZs you selected** instead, because that is the\ngeography every other input and the baseline VMT already use. Selecting an area larger than\nthe walkshed dilutes the ratio, so this will tend to understate the effect slightly rather\nthan overstate it. Repaired sidewalk counts only where the repair returns an unusable\nsegment to service, since the elasticity is on pedestrian *coverage*, not condition.\n\nThe reduction is capped at a **6.4% measure maximum**, derived from the share of vehicle\ntrips short enough to shift to walking (FHWA 2019). *Reviewer note:* the fact sheet\nreferences a 3.4% figure in one location and 6.4% in the cap derivation and worked example;\n6.4% is used here per the worked example, flagged for confirmation. The credit applies to\nhousehold vehicle travel; because the calculator does not carry a household-only VMT split,\nit is applied to all-trip VMT and flagged accordingly.\n\n*Worked example:* B = 9 miles, C = 10 miles → `((10/9) − 1) × −0.05 = −0.56%`.\n\n**Sources**\n\n- CAPCOA *Handbook* (2021), Measure\n  [T-18 (Provide Pedestrian Network Improvement)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-18.pdf),\n  pp. 133–136.\n- Frank, L., et al. (2011). WSDOT Research Report WA-RD 765.1.\n- Handy, S., et al. (2014). *Impacts of Pedestrian Strategies on Passenger Vehicle Use and\n  GHG Emissions*. CARB.\n",
       "applicability": {
         "area_types": [
           "urban_core",
@@ -1330,10 +1330,10 @@
           "default": 9,
           "unit": "miles",
           "prerequisite": true,
-          "summary": "The existing sidewalk length in the study area (about a 0.5-mile radius).",
+          "summary": "The existing sidewalk length in the selected area.",
           "source_note": "your sidewalk inventory or GIS layer / study-area measurement",
-          "tooltip": "Existing sidewalk length in the study area, measured on both sides of the street.",
-          "instructions": "Enter the existing sidewalk length in the study area (about a 0.5-mile radius around the\nimprovement). Measure on both sides of the street: a 0.5-mile street with a sidewalk on\nboth sides is 1.0 mile; coverage on one side only is 0.5 mile.\n"
+          "tooltip": "Existing sidewalk length in the selected area, measured on both sides of the street.",
+          "instructions": "Enter the existing sidewalk length in the selected area. Measure on both sides of the\nstreet: a 0.5-mile street with a sidewalk on both sides is 1.0 mile; coverage on one\nside only is 0.5 mile.\n"
         },
         {
           "key": "sidewalk_mi_with_measure",
@@ -1344,10 +1344,10 @@
           "default": 10,
           "unit": "miles",
           "prerequisite": true,
-          "summary": "The total sidewalk length in the study area after the project (existing plus new and repaired), measured on both sides of the street.",
+          "summary": "The total sidewalk length in the selected area after the project (existing plus new, plus any sidewalk the project repairs from unusable to usable), measured on both sides of the street.",
           "source_note": "your project design drawings / plan set",
-          "tooltip": "Sidewalk length in the study area after the project (existing plus new/repaired), both sides of the street.",
-          "instructions": "Enter the sidewalk length after the project (existing sidewalk plus the new and repaired\nsidewalk the project adds), measured the same way (both sides of the street). This must be\nat least the existing length.\n"
+          "tooltip": "Sidewalk length in the selected area after the project, both sides of the street. Count repaired sidewalk only where the repair makes an unusable segment usable.",
+          "instructions": "Enter the sidewalk length after the project, measured the same way (both sides of the\nstreet). This must be at least the existing length.\n\nInclude new sidewalk, plus repaired sidewalk **only where the repair takes a segment from\nunusable to usable** and so makes walking trips practical where they were not before.\nResurfacing sidewalk that is already walkable adds no pedestrian coverage and should not\nbe counted, because the method credits added coverage rather than condition.\n"
         }
       ],
       "notes": "New strategy (CAPCOA T-18, verbatim). Trip pool is household VMT, approximated as all-trip VMT. Amax=6.4% (3.4% discrepancy flagged for reviewer). Closed-form: math lives in the compute block below (no code calc fn). strategy_pedestrian_network_improvements in scripts/strategy_calculations.py is retained as the cross-check oracle.",
@@ -2324,11 +2324,11 @@
       ],
       "short_description": "Shelters and station amenities that make waiting for transit more comfortable, raising ridership.",
       "extended_description": "Transit shelters and station improvements (covered seating, lighting, real-time arrival\ninformation, and other amenities) make waiting for transit more comfortable. Transit\nshelters provide covered waiting areas that make using transit more comfortable and\nconvenient, particularly during poor weather. Improved waiting conditions can support a\nmodest increase in transit ridership, including some trips that would otherwise have been\nmade by driving, reducing vehicle miles traveled.\n\nThe effect depends on how many stops are improved and on the area's existing transit mode\nshare, and shelters add the most where transit is already a viable option. Shelters are a\nstation-improvement amenity within the broader transit toolkit, and they are best paired\nwith the calculator's transit service frequency and fare reduction strategies.\n",
-      "guidance": "Use this strategy for projects that add or upgrade transit shelters and stop\namenities. Do not combine this strategy with the Bus Rapid Transit coverage configuration\nbelow. This configuration option includes BRT station amenities as part of the BRT corridor\ninvestment.\n",
+      "guidance": "Use this strategy for projects that add or upgrade transit shelters and stop\namenities. Where some of the area's stops are already BRT stations, enter that share below:\nBRT projects include their own station amenities, so that share is excluded here rather than\ncounted twice.\n",
       "images": [],
       "method": "CAPCOA T-46 (structural; constants pending fact-sheet confirmation)",
       "formula": "ΔVMT% = −clamp(LOI × ridership_uplift × transit_MS × (1/AVO) / vehicle_MS, 0, 15%)",
-      "methodology_detail": "Transit shelters and station improvements raise transit's attractiveness, producing a\nsmall ridership gain that converts to a vehicle miles traveled (VMT) reduction through the\nsame ridership-to-VMT machinery as CAPCOA\n[T-26 (Increase Transit Service Frequency)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf),\nfollowing Measure\n[T-46 (Provide Transit Shelters)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-46.pdf):\n\n`ΔVMT% = −(LOI × ridership_uplift × transit_MS × (1/AVO) / vehicle_MS)`, capped at the 15%\nTransit subsector maximum.\n\nThe mode-shift factor uses the area's **observed** average vehicle occupancy (1/AVO) rather\nthan the national default, and local transit and vehicle mode shares come from the area\ndata. T-46 is **mutually exclusive with Bus Rapid Transit** where BRT covers all community\nroutes, and turning on that flag zeroes the credit.\n\n> **Constants pending confirmation.** The verbatim T-46 equation and constants (the\n> shelter ridership uplift and the measure maximum) were not captured during research and\n> the fact sheet was unreadable at implementation time. The ridership uplift and measure\n> maximum are **placeholders** exposed in the code (`TRANSIT_SHELTERS_T46`) for\n> recalibration and should be confirmed against the T-46 fact sheet before the numeric\n> results are relied upon. Outputs flag this assumption.\n\n**Sources**\n\n- CAPCOA *Handbook* (2021), Measure\n  [T-46 (Provide Transit Shelters)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-46.pdf);\n  conversion machinery from Measure\n  [T-26](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf).\n- Handy, S., et al. (2013). *Impacts of Transit Service Strategies on Passenger Vehicle Use\n  and GHG Emissions*. CARB.\n",
+      "methodology_detail": "Transit shelters and station improvements raise transit's attractiveness, producing a\nsmall ridership gain that converts to a vehicle miles traveled (VMT) reduction through the\nsame ridership-to-VMT machinery as CAPCOA\n[T-26 (Increase Transit Service Frequency)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf),\nfollowing Measure\n[T-46 (Provide Transit Shelters)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-46.pdf):\n\n`ΔVMT% = −(LOI × ridership_uplift × transit_MS × (1/AVO) / vehicle_MS)`, capped at the 15%\nTransit subsector maximum.\n\nThe mode-shift factor uses the area's **observed** average vehicle occupancy (1/AVO) rather\nthan the national default, and local transit and vehicle mode shares come from the area\ndata.\n\n**Overlap with Bus Rapid Transit.** CAPCOA T-28 (Bus Rapid Transit) already funds station\namenities, so shelters at BRT stations would be counted twice. The credit is therefore\nscaled by `1 − BRT stop share`: enter the share of the area's stops already covered by BRT\nstation investment and that share is excluded, leaving the rest creditable. This is a\npartial exclusion, because a BRT corridor inside a project area rarely means every route in\nthe area is BRT.\n\n> **Constants pending confirmation.** The verbatim T-46 equation and constants (the\n> shelter ridership uplift and the measure maximum) were not captured during research and\n> the fact sheet was unreadable at implementation time. The ridership uplift and measure\n> maximum are **placeholders** exposed in the code (`TRANSIT_SHELTERS_T46`) for\n> recalibration and should be confirmed against the T-46 fact sheet before the numeric\n> results are relied upon. Outputs flag this assumption.\n\n**Sources**\n\n- CAPCOA *Handbook* (2021), Measure\n  [T-46 (Provide Transit Shelters)](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-46.pdf);\n  conversion machinery from Measure\n  [T-26](https://www.caleemod.com/documents/handbook/ch_3_transportation/measure_t-26.pdf).\n- Handy, S., et al. (2013). *Impacts of Transit Service Strategies on Passenger Vehicle Use\n  and GHG Emissions*. CARB.\n",
       "applicability": {
         "area_types": [
           "urban_core",
@@ -2355,28 +2355,23 @@
           "instructions": "Estimate the share of the area's transit stops or stations that will receive new shelters\nor amenity improvements. Use 100% for a system-wide program; lower it for a targeted set\nof stops.\n"
         },
         {
-          "key": "brt_covers_all_routes",
-          "label": "Bus Rapid Transit coverage",
-          "control": "select",
-          "default": "no",
-          "options": [
-            {
-              "value": "no",
-              "label": "Not BRT, or BRT does not cover all routes"
-            },
-            {
-              "value": "yes",
-              "label": "BRT already covers all community routes"
-            }
-          ],
+          "key": "brt_stop_share",
+          "label": "Share of stops already covered by BRT stations",
+          "control": "slider",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "scale": 100,
+          "suffix": "%",
+          "default": 0,
           "prerequisite": true,
-          "summary": "Whether the corridor is already served by Bus Rapid Transit. If yes, shelters are assumed to be part of the BRT project in order to not double count this amenity.",
+          "summary": "The share of the area's transit stops that are already BRT stations. BRT projects fund station amenities themselves, so this share is excluded here to avoid double counting. Leave at 0% where the area has no BRT.",
           "source_note": "your area's existing/planned BRT coverage",
-          "tooltip": "If Bus Rapid Transit already covers all community routes, shelters are mutually exclusive with BRT and the credit is zeroed.",
-          "instructions": "Choose the BRT option only if Bus Rapid Transit already covers all community routes. BRT\ninvestments account for station improvements, so crediting shelters too would\ndouble-count, and the calculator zeroes the shelter credit in that case.\n"
+          "tooltip": "Share of area stops already covered by BRT station investment. That share is excluded from the shelter credit; 0% = no BRT in the area.",
+          "instructions": "Enter the share of the area's transit stops that are already BRT stations, or are\nscheduled to receive BRT station investment. Leave it at 0% if the area has no BRT.\n\nBus Rapid Transit projects pay for their own station amenities, so crediting shelters\nat those same stops would double-count. The calculator excludes exactly that share of\nthe credit and keeps the rest, which is the usual case: a BRT corridor running through\na project area rarely means every route in the area is BRT.\n"
         }
       ],
-      "notes": "New strategy (CAPCOA T-46). shelter_ridership_uplift and measure_max are PLACEHOLDER constants pending fact-sheet confirmation. Mutually exclusive with BRT where it covers all routes. Closed-form: math lives in the compute block below (no code calc fn). strategy_transit_shelters in scripts/strategy_calculations.py is retained as the cross-check oracle. brt_covers_all_routes (select yes/no) is coerced to 1/0 by the host.",
+      "notes": "New strategy (CAPCOA T-46). shelter_ridership_uplift and measure_max are PLACEHOLDER constants pending fact-sheet confirmation. Closed-form: math lives in the compute block below (no code calc fn). strategy_transit_shelters in scripts/strategy_calculations.py is retained as the cross-check oracle. 2026-07-27 (content review): the all-or-nothing brt_covers_all_routes select was replaced by brt_stop_share, a 0-100% slider defaulting to 0, and the T-28 overlap is now a PARTIAL exclusion (credit scaled by 1 - brt_stop_share). Rationale: a BRT corridor inside a project area almost never means every route in that area is BRT, so the old flag was either never true or wildly over-applied when it was. brt_stop_share = 100% reproduces the old zeroing.",
       "compute": {
         "pool": "all",
         "const": {
@@ -2391,14 +2386,17 @@
             "a": "clamp(a_raw, 0, measure_max)"
           },
           {
-            "credit": "a * (1 - brt_covers_all_routes)"
+            "brt": "clamp(brt_stop_share, 0, 1)"
+          },
+          {
+            "credit": "a * (1 - brt)"
           }
         ],
         "formula": "-credit"
       },
       "_defaults": {
         "level_of_implementation": 1.0,
-        "brt_covers_all_routes": "no"
+        "brt_stop_share": 0
       }
     },
     {

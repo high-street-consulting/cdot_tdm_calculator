@@ -292,6 +292,17 @@ PARK_AND_RIDE_DERIVED: dict[str, float] = {
     "vnet_fallback_alt":      10.0,  # mi/round trip avoided VMT fallback (alternative; embeds diversion)
     "utilization_default":    0.70,  # occupied / total spaces (planning default)
     "sanity_ceiling_pct":     0.05,  # flag commute-VMT reductions above this share for review
+    # Commute share of DRIVE-ACCESS transit trips. Scopes the demand ceiling when
+    # the user supplies a TOTAL daily transit trip count (the number agencies can
+    # actually source) instead of a commute-only count.
+    # PLACEHOLDER pending a Colorado source: the CDOT 2019 model's transit
+    # matrices are segmented by access mode (Dacc/Wacc), not trip purpose, and the
+    # custom TAZ extract splits VMT by purpose for autos only - neither yields a
+    # transit trip-purpose split. 0.80 is the agreed interim value (2026-07-27).
+    # It applies to the drive-access subset, NOT to transit ridership overall:
+    # park-and-ride parking is dominated by all-day, peak-period commute use, so
+    # its commute share is far higher than transit's commute share generally.
+    "commute_share_of_drive_access": 0.80,
 }
 
 # 6. Wayfinding (DERIVED, two-channel; assumption-bounded). No empirical VMT
@@ -1604,8 +1615,9 @@ def strategy_park_and_ride(
     utilization: float | None = None,
     isolated_facility: bool = True,
     l_commute_catchment_mi: float | None = None,
-    total_transit_commute_trips_catchment: float | None = None,
+    total_transit_trips_catchment: float | None = None,
     drive_access_share: float | None = None,
+    commute_share_of_drive_access: float | None = None,
 ) -> pd.DataFrame:
     """
     17. Park and Ride (DERIVED method; Duncan & Cao 2020 + local TAZ data).
@@ -1644,7 +1656,8 @@ def strategy_park_and_ride(
         #   ...or the Duncan & Cao fallback (19 / 10 mi) which already embeds the
         #   diversion behaviour, so D is NOT also applied (apply_D = False).
         supply       = n_spaces * utilization * (D if apply_D else 1)
-        demand       = transit_commute_trips * drive_access_share * (D if apply_D else 1)
+        demand       = (total_transit_trips * drive_access_share
+                        * commute_share_of_drive_access * (D if apply_D else 1))
         diverted     = min(supply, demand)                          # demand omitted if no data
         daily_saved  = diverted * V_net
         pct_commute  = daily_saved / commute_vmt(catchment)
@@ -1654,6 +1667,16 @@ def strategy_park_and_ride(
     the drive-to-transit access split carried through from the CDOT extract -
     falling back to a passed value only when no observed split exists. The access
     split scopes the rider pool; it is never multiplied into VMT directly.
+
+    ``total_transit_trips_catchment`` is an **all-purpose** daily transit trip
+    count (renamed 2026-07-27 from ``total_transit_commute_trips_catchment``:
+    agencies rarely publish a commute-only figure, per the 2026-07-21 content
+    review). Because this method's pool is commute VMT, the count is scoped back
+    to commute travel by ``commute_share_of_drive_access`` - the commute share of
+    the drive-access subset, which defaults to
+    ``PARK_AND_RIDE_DERIVED["commute_share_of_drive_access"]``. Without that
+    factor a total-trip count would inflate the ceiling and silently make the
+    method supply-side-only for most catchments.
 
     ``l_commute_catchment_mi`` defaults to the **observed** catchment trip length
     (commute-VMT-weighted mean of ``tdm_avg_trip_length_mi`` / ``avg_trip_length``).
@@ -1749,11 +1772,19 @@ def strategy_park_and_ride(
     else:
         das_source = "user_specified"
 
+    if commute_share_of_drive_access is None:
+        commute_share_of_drive_access = K["commute_share_of_drive_access"]
+
     flags = [catchment_basis]
-    if total_transit_commute_trips_catchment is not None and drive_access_share is not None:
-        diverted_demand = total_transit_commute_trips_catchment * drive_access_share * d_factor
+    if total_transit_trips_catchment is not None and drive_access_share is not None:
+        # The trip count is all-purpose; scope it to commute travel (this method's
+        # pool) via the commute share of the drive-access subset.
+        diverted_demand = (total_transit_trips_catchment * drive_access_share
+                           * commute_share_of_drive_access * d_factor)
         diverted_trips = min(diverted_supply, diverted_demand)
         flags.append(f"drive_access_share={das_source}({drive_access_share:.0%})")
+        flags.append(
+            f"commute_share_of_drive_access={commute_share_of_drive_access:.0%}_PLACEHOLDER")
         if diverted_supply > 2.0 * diverted_demand:
             flags.append("supply>>demand_ceiling_check_review_utilization_or_catchment")
     else:
@@ -2025,7 +2056,7 @@ def strategy_transit_shelters(
     level_of_implementation: float = 1.0,
     shelter_ridership_uplift: float | None = None,
     measure_max: float | None = None,
-    brt_covers_all_routes: bool = False,
+    brt_stop_share: float = 0.0,
 ) -> pd.DataFrame:
     """
     21. Transit Shelters (CAPCOA T-46).
@@ -2045,10 +2076,17 @@ def strategy_transit_shelters(
     reference) is replaced here by the **observed per-TAZ AVO** (1/AVO) wherever
     the TDM model supplies it, falling back to the statewide default otherwise.
 
-    Exclusivity: **mutually exclusive with T-28 (Bus Rapid Transit)** where BRT
-    covers all community routes (T-28 already accounts for station
-    improvements). Pass ``brt_covers_all_routes=True`` to zero out the credit
-    and flag the conflict.
+    Overlap with T-28 (Bus Rapid Transit): T-28 already funds station
+    improvements, so shelters at BRT stations would be double-counted.
+    ``brt_stop_share`` is the share of the area's transit stops already covered
+    by BRT station investment, and the credit is scaled by ``1 - brt_stop_share``
+    (a **partial** exclusion, default 0.0).
+
+    Changed 2026-07-27 (content review): this replaced an all-or-nothing
+    ``brt_covers_all_routes`` flag that zeroed the whole credit. A BRT corridor
+    inside a project area almost never means every route in that area is BRT, so
+    the flag was either never true or wildly over-applied. ``brt_stop_share=1.0``
+    reproduces the old zeroing behaviour.
 
     .. warning::
        The verbatim T-46 equation and constants were NOT captured during
@@ -2060,33 +2098,25 @@ def strategy_transit_shelters(
     cap = measure_max if measure_max is not None else TRANSIT_SHELTERS_T46["measure_max"]
     uplift = shelter_ridership_uplift if shelter_ridership_uplift is not None \
         else TRANSIT_SHELTERS_T46["shelter_ridership_uplift"]
-    # Accept a Python bool (direct callers) or the catalog select string
-    # ("yes" / "no") that the app passes through.
-    brt = brt_covers_all_routes if isinstance(brt_covers_all_routes, bool) \
-        else str(brt_covers_all_routes).strip().lower() in ("yes", "true", "1")
-
-    if brt:
-        pct = pd.Series(0.0, index=taz_df.index)
-        inputs = "brt_covers_all_routes=True -> mutually exclusive with T-28 (BRT)"
-        assumptions = pd.Series(
-            "ZEROED_mutually_exclusive_with_T-28_BRT", index=taz_df.index)
-        return _result(taz_df, "Transit Shelters", inputs, pct,
-                       _base_vmt(taz_df, "all"), assumptions)
+    # Share of area stops already covered by BRT station investment. Clamped so a
+    # stray >1 or <0 can't flip the credit's sign.
+    brt = min(max(float(brt_stop_share), 0.0), 1.0)
 
     df = add_imputed_avo(add_imputed_mode_shares(taz_df))
     a_raw = level_of_implementation * uplift * df["transit_mode_share"] \
         * (1.0 / df["avo"]) / df["auto_mode_share"].clip(lower=1e-9)
     a = a_raw.clip(lower=0.0, upper=cap)
-    pct = -a
+    pct = -a * (1.0 - brt)
 
     inputs = (f"LOI={level_of_implementation:.0%}, "
               f"shelter_ridership_uplift={uplift:.2%}, cap={cap:.0%}, "
-              f"G=1/AVO(observed)")
+              f"G=1/AVO(observed), brt_stop_share={brt:.0%}")
     placeholder = (shelter_ridership_uplift is None) or (measure_max is None)
     assumptions = pd.Series(_join_assumptions(
         "mode_share=imputed_from_area_type",
         _avo_assumption(df),
         "CAPCOA_T-46_constants=PLACEHOLDER_confirm_against_fact_sheet" if placeholder else "",
+        f"BRT_station_overlap_excluded={brt:.0%}_of_stops" if brt > 0 else "",
         "subsector=transit_15pct_cap",
     ), index=df.index)
     return _result(df, "Transit Shelters", inputs, pct,
@@ -2355,7 +2385,7 @@ if __name__ == "__main__":
         ("lane_mile_addition",            dict(new_lane_miles=2.0, facility_class="major_arterial")),
         ("park_and_ride",                 dict(n_spaces=200, l_access_mi=4.0,
                                                 isolated_facility=True,
-                                                total_transit_commute_trips_catchment=500)),
+                                                total_transit_trips_catchment=500)),
         ("mobility_hub",                  dict(catchment_share=0.30)),
         ("traffic_calming",               dict(streets_with_calming=12, total_streets=80,
                                                 intersections_with_calming=6, total_intersections=40)),

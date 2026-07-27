@@ -57,11 +57,17 @@ methodology_detail: |
   value is used:
 
   - *Supply side* (parking capacity): `spaces × utilization × diversion_fraction`
-  - *Demand side* (who actually drives to transit): `transit_commute_trips × drive-to-transit share × diversion_fraction`
+  - *Demand side* (who actually drives to transit): `transit_trips × drive-to-transit share × commute share × diversion_fraction`
 
   The drive-to-transit access share comes from the area's observed transit-access split (the
   share of transit riders who reach transit by car versus on foot) rather than a national
-  default. The avoided VMT per diverted round trip is `V_net = 2 × (commute trip length −
+  default. The transit trip count you enter is all-purpose, so a **commute share of 80%** is
+  applied to the drive-access subset to keep the ceiling matched to this measure's commute-VMT
+  pool. That 80% is a **placeholder**: the CDOT 2019 model's transit matrices are segmented by
+  access mode rather than trip purpose, so no Colorado transit trip-purpose split was available
+  to derive it. It is set high deliberately, because park-and-ride parking is dominated by
+  all-day, peak-period commute use and its commute share is well above transit's overall.
+  Outputs flag the assumption. The avoided VMT per diverted round trip is `V_net = 2 × (commute trip length −
   access drive length)`, using the area's observed commute trip length. The diversion
   fraction is 0.80 for an isolated facility and 0.32 where a comparable alternative exists
   (Duncan & Cao 2020). Where local trip lengths are unavailable, the method falls back to
@@ -156,23 +162,31 @@ inputs:
     expands access to transit rather than shifting riders from one facility to another: a
     comparable facility nearby lowers the estimated benefit to roughly 40% of what an
     isolated facility would earn, because fewer riders depend on this specific lot.
-- key: total_transit_commute_trips_catchment
-  label: Daily transit commute trips in catchment (optional)
+- key: total_transit_trips_catchment
+  label: Daily transit trips in catchment (optional)
   control: number
   min: 0
   step: 50
   default: 0
   unit: trips/day
   prerequisite: true
-  summary: 'Optional but recommended. Enter the estimated number of daily commute trips made by
-    transit that begin within the facility’s catchment area. This limits the estimated benefit to
-    the number of commuters who could reasonably drive to the park-and-ride and transfer to transit.'
+  summary: 'Optional but recommended. Enter the estimated number of daily transit trips, all purposes,
+    that begin within the facility’s catchment area. This limits the estimated benefit to the number
+    of travelers who could reasonably drive to the park-and-ride and transfer to transit.'
   source_note: your regional travel model or transit ridership data
-  tooltip: Total daily commute transit trips originating in the catchment area, used as the demand-side ceiling.
+  tooltip: Total daily transit trips (all purposes) originating in the catchment area, used as the demand-side ceiling.
   instructions: |
-    This value is optional but recommended. Enter the total daily commute transit trips
-    originating in the catchment area. Combined with the observed drive-to-transit access
-    share, this caps the number of commuters actually driving to transit. Leave at 0 to use
-    the parking-capacity (supply-side) estimate only; the calculator will flag the missing
-    demand ceiling.
-notes: 'Promoted from todo; replaces the legacy CAPCOA 2010 T-22 credit with a derived Duncan & Cao (2020) method that uses the observed drive/walk transit-access split and a spatial catchment. COMPLEX (cross-TAZ / spatial): stays a Python calc fn (strategy_park_and_ride) and is hand-ported to app/src/strategies/parkAndRide.ts (AGGREGATE_REGISTRY), pinned to Python by parkAndRide.test.ts via scripts/generate_pnr_golden.py. App approximation: the user''s selected TAZs are the catchment (no runtime geometry), the commute split is the statewide default (no observed vmt_share_commute on the app TAZ layer), and with no drive-access/transit-trip data the credit is supply-side only (observed trip length is used where avg_trip_length is present). For a geographic sub-catchment or demand ceiling, those fields must be added to the app TAZ layer.'
+    This value is optional but recommended. Enter total daily transit boardings or trips
+    originating in the catchment area, counting **all trip purposes**, not commute trips
+    only. Agency ridership reports and regional travel models normally publish the
+    all-purpose figure, which is why the calculator asks for it.
+
+    The calculator narrows that count for you. It applies the area's observed
+    drive-to-transit access share (how many riders reach transit by car rather than on
+    foot) and then a commute share, because a park-and-ride serves commute travel.
+    The result caps the estimate at the number of commuters who could realistically
+    drive to this facility and transfer.
+
+    Leave at 0 to use the parking-capacity (supply-side) estimate only; the calculator
+    will flag the missing demand ceiling.
+notes: 'Promoted from todo; replaces the legacy CAPCOA 2010 T-22 credit with a derived Duncan & Cao (2020) method that uses the observed drive/walk transit-access split and a spatial catchment. COMPLEX (cross-TAZ / spatial): stays a Python calc fn (strategy_park_and_ride) and is hand-ported to app/src/strategies/parkAndRide.ts (AGGREGATE_REGISTRY), pinned to Python by parkAndRide.test.ts via scripts/generate_pnr_golden.py. App approximation: the user''s selected TAZs are the catchment (there is no runtime TAZ geometry, so a geographic sub-catchment still needs upstream work). The demand ceiling DOES work in the app: drive_to_transit_share, tdm_avg_trip_length_mi and vmt_share_commute are all published on the enriched TAZ layer and queried by queryTaz, so entering a transit trip count engages the ceiling. 2026-07-27: the trip-count input is now ALL-PURPOSE (total_transit_trips_catchment) and scoped to commute by PARK_AND_RIDE_DERIVED["commute_share_of_drive_access"] (0.80 PLACEHOLDER) - agencies rarely publish a commute-only count. Superseded the earlier note claiming the app was supply-side only.'

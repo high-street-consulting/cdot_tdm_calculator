@@ -19,19 +19,25 @@ tags:
 short_description: New and repaired sidewalks that close gaps in the pedestrian network, shifting short
   trips from driving to walking.
 extended_description: |
-  Pedestrian network improvements include adding new sidewalks. A more complete, comfortable
-  pedestrian network encourages people to walk for short trips that would otherwise be made
-  by car, lowering vehicle miles traveled.
+  Pedestrian network improvements include adding new sidewalks, and repairing sidewalks whose
+  condition makes them unusable today. A more complete, comfortable pedestrian network
+  encourages people to walk for short trips that would otherwise be made by car, lowering
+  vehicle miles traveled.
 
   The effect depends on how much the sidewalk network expands relative to the street network
   and on how many nearby trips are short enough to walk. Sidewalk investments are most
   effective in compact, mixed-use areas where destinations are close together and the main
   barrier is a missing or broken pedestrian connection.
 guidance: |
-  Use this strategy for projects that add or repair sidewalks within a study
-  area (about a 0.5-mile radius, a 6–10 minute walk, around the improvement). Measure
-  sidewalk length on both sides of the street: a 0.5-mile street with a sidewalk on both
-  sides of the street is 1.0 mile of sidewalk.
+  Use this strategy for projects that add sidewalks, or repair sidewalks that
+  are currently unusable, anywhere in the area you selected. Measure sidewalk length on both
+  sides of the street: a 0.5-mile street with a sidewalk on both sides of the street is 1.0
+  mile of sidewalk.
+
+  Count repaired sidewalk only where the repair takes a segment from unusable to usable, so
+  that it makes walking trips practical where they were not before. Resurfacing or upgrading
+  a sidewalk that people can already walk on does not add pedestrian coverage, and the method
+  credits added coverage.
 images: []
 method: CAPCOA T-18 (verbatim)
 formula: ΔHouseholdVMT% = ((C / B) − 1) × −0.05
@@ -43,9 +49,16 @@ methodology_detail: |
   `ΔVMT% = ((C / B) − 1) × D`
 
   where **B** is existing sidewalk length, **C** is sidewalk length with the measure (both
-  measured on both sides of the street within a ~0.5-mile study area), and **D = −0.05** is
-  the elasticity of household vehicle travel with respect to the sidewalk-to-street ratio
-  (Frank et al. 2011; Handy et al. 2014).
+  measured on both sides of the street), and **D = −0.05** is the elasticity of household
+  vehicle travel with respect to the sidewalk-to-street ratio (Frank et al. 2011; Handy et
+  al. 2014).
+
+  **Study area.** T-18 frames the ratio over a walkable study area around the improvement.
+  The calculator measures it over **the TAZs you selected** instead, because that is the
+  geography every other input and the baseline VMT already use. Selecting an area larger than
+  the walkshed dilutes the ratio, so this will tend to understate the effect slightly rather
+  than overstate it. Repaired sidewalk counts only where the repair returns an unusable
+  segment to service, since the elasticity is on pedestrian *coverage*, not condition.
 
   The reduction is capped at a **6.4% measure maximum**, derived from the share of vehicle
   trips short enough to shift to walking (FHWA 2019). *Reviewer note:* the fact sheet
@@ -79,13 +92,13 @@ inputs:
   default: 9
   unit: miles
   prerequisite: true
-  summary: The existing sidewalk length in the study area (about a 0.5-mile radius).
+  summary: The existing sidewalk length in the selected area.
   source_note: your sidewalk inventory or GIS layer / study-area measurement
-  tooltip: Existing sidewalk length in the study area, measured on both sides of the street.
+  tooltip: Existing sidewalk length in the selected area, measured on both sides of the street.
   instructions: |
-    Enter the existing sidewalk length in the study area (about a 0.5-mile radius around the
-    improvement). Measure on both sides of the street: a 0.5-mile street with a sidewalk on
-    both sides is 1.0 mile; coverage on one side only is 0.5 mile.
+    Enter the existing sidewalk length in the selected area. Measure on both sides of the
+    street: a 0.5-mile street with a sidewalk on both sides is 1.0 mile; coverage on one
+    side only is 0.5 mile.
 - key: sidewalk_mi_with_measure
   label: Sidewalk length with the project
   control: number
@@ -94,14 +107,18 @@ inputs:
   default: 10
   unit: miles
   prerequisite: true
-  summary: The total sidewalk length in the study area after the project (existing plus new and
-    repaired), measured on both sides of the street.
+  summary: The total sidewalk length in the selected area after the project (existing plus new, plus
+    any sidewalk the project repairs from unusable to usable), measured on both sides of the street.
   source_note: your project design drawings / plan set
-  tooltip: Sidewalk length in the study area after the project (existing plus new/repaired), both sides of the street.
+  tooltip: Sidewalk length in the selected area after the project, both sides of the street. Count repaired sidewalk only where the repair makes an unusable segment usable.
   instructions: |
-    Enter the sidewalk length after the project (existing sidewalk plus the new and repaired
-    sidewalk the project adds), measured the same way (both sides of the street). This must be
-    at least the existing length.
+    Enter the sidewalk length after the project, measured the same way (both sides of the
+    street). This must be at least the existing length.
+
+    Include new sidewalk, plus repaired sidewalk **only where the repair takes a segment from
+    unusable to usable** and so makes walking trips practical where they were not before.
+    Resurfacing sidewalk that is already walkable adds no pedestrian coverage and should not
+    be counted, because the method credits added coverage rather than condition.
 notes: 'New strategy (CAPCOA T-18, verbatim). Trip pool is household VMT, approximated as all-trip VMT. Amax=6.4% (3.4% discrepancy flagged for reviewer). Closed-form: math lives in the compute block below (no code calc fn). strategy_pedestrian_network_improvements in scripts/strategy_calculations.py is retained as the cross-check oracle.'
 # Closed-form math (single source of truth). Evaluated identically in Python and the app.
 # Mirrors strategy_pedestrian_network_improvements. B (existing) is guarded > 0 via max().

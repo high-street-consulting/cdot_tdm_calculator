@@ -81,7 +81,22 @@ SCENARIOS = [
              "vmt_share_commute": 0.28, "drive_to_transit_share": 0.6},
         ],
         "args": dict(n_spaces=200, l_access_mi=4, utilization=0.7, isolated_facility="isolated",
-                     total_transit_commute_trips_catchment=100),
+                     total_transit_trips_catchment=100),
+    },
+    {
+        # Pins the 2026-07-27 commute-share scoping: the trip count is all-purpose,
+        # so the ceiling is trips x drive_access_share x commute_share x D. Supply
+        # here is 200 x 0.7 x 0.8 = 112; the ceiling is well below it, so the
+        # commute-share factor is load-bearing in this scenario.
+        "label": "demand_ceiling_all_purpose_trips",
+        "rows": [
+            {"taz_id": "50", "daily_vmt": 80000.0, "avg_trip_length": 12.0,
+             "vmt_share_commute": 0.32, "drive_to_transit_share": 0.55},
+            {"taz_id": "51", "daily_vmt": 45000.0, "avg_trip_length": 11.0,
+             "vmt_share_commute": 0.30, "drive_to_transit_share": 0.65},
+        ],
+        "args": dict(n_spaces=200, l_access_mi=4, utilization=0.7, isolated_facility="isolated",
+                     total_transit_trips_catchment=180),
     },
 ]
 
@@ -95,7 +110,7 @@ def main() -> int:
     for sc_def in SCENARIOS:
         df = frame(sc_def["rows"])
         # The catchment is the whole set (no facility location). Per-scenario args
-        # carry any demand inputs (total_transit_commute_trips_catchment); observed
+        # carry any demand inputs (total_transit_trips_catchment); observed
         # drive-access + trip length come from the row columns.
         result = sc.strategy_park_and_ride(df, **sc_def["args"])
         taz_inputs = [

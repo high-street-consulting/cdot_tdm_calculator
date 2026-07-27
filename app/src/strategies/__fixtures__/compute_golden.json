@@ -132,7 +132,7 @@
     },
     "params": {
       "level_of_implementation": 1.0,
-      "brt_covers_all_routes": 0
+      "brt_stop_share": 0.0
     },
     "expected_pct": -0.00030864197530864197
   },
@@ -145,7 +145,7 @@
     },
     "params": {
       "level_of_implementation": 0.5,
-      "brt_covers_all_routes": 0
+      "brt_stop_share": 0.0
     },
     "expected_pct": -0.00015432098765432098
   },
@@ -158,9 +158,22 @@
     },
     "params": {
       "level_of_implementation": 1.0,
-      "brt_covers_all_routes": 1
+      "brt_stop_share": 1.0
     },
-    "expected_pct": 0.0
+    "expected_pct": -0.0
+  },
+  {
+    "strategy": "transit_shelters",
+    "row": {
+      "transit_mode_share": 0.06,
+      "auto_mode_share": 0.81,
+      "avo": 1.2
+    },
+    "params": {
+      "level_of_implementation": 1.0,
+      "brt_stop_share": 0.4
+    },
+    "expected_pct": -0.00018518518518518518
   },
   {
     "strategy": "residential_density",

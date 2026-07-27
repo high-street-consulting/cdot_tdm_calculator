@@ -26,8 +26,16 @@ export interface ParkAndRideArgs {
   /** Python bool or the catalog select string ("isolated" / "alternative"). */
   isolated_facility?: boolean | string;
   l_commute_catchment_mi?: number | null;
-  total_transit_commute_trips_catchment?: number | null;
+  /**
+   * ALL-PURPOSE daily transit trips originating in the catchment. Renamed
+   * 2026-07-27 from `total_transit_commute_trips_catchment` (agencies rarely
+   * publish a commute-only figure); scoped back to commute travel by
+   * `commute_share_of_drive_access` below.
+   */
+  total_transit_trips_catchment?: number | null;
   drive_access_share?: number | null;
+  /** Commute share of the drive-access subset; defaults to the derived constant. */
+  commute_share_of_drive_access?: number | null;
 }
 
 /** Compute Park-and-Ride across the catchment; one StrategyResult per TAZ. */
@@ -104,10 +112,20 @@ export function parkAndRide(catchment: TazInputs[], args: ParkAndRideArgs): Stra
   // only. A default/blank count of 0 is treated as "no demand data" (not a 0
   // ceiling), an intentional divergence from the Python `is not None` check,
   // which the app never relies on.
-  const totalTransit = args.total_transit_commute_trips_catchment ?? 0;
+  //
+  // The count is ALL-PURPOSE, so it is scoped to commute travel (this method's
+  // pool) by the commute share of the drive-access subset. Without that factor a
+  // total-trip count would inflate the ceiling and quietly make the method
+  // supply-side-only for most catchments.
+  const totalTransit = args.total_transit_trips_catchment ?? 0;
+  const commuteShare =
+    args.commute_share_of_drive_access ?? K.commute_share_of_drive_access;
   let diverted: number;
   if (totalTransit > 0 && das != null) {
-    diverted = Math.min(divertedSupply, totalTransit * das * dFactor);
+    diverted = Math.min(
+      divertedSupply,
+      totalTransit * das * commuteShare * dFactor,
+    );
   } else {
     diverted = divertedSupply;
   }

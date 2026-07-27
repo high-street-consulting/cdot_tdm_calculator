@@ -115,4 +115,14 @@ export const PARK_AND_RIDE_DERIVED = {
   vnet_fallback_alt: 10.0, // mi/round trip avoided VMT fallback (alternative; embeds D)
   utilization_default: 0.7, // occupied / total spaces (planning default)
   sanity_ceiling_pct: 0.05, // flag commute-VMT reductions above this share for review
+  // Commute share of DRIVE-ACCESS transit trips. Scopes the demand ceiling when
+  // the user supplies a TOTAL daily transit trip count (the number agencies can
+  // actually source) instead of a commute-only count.
+  // PLACEHOLDER pending a Colorado source: the CDOT 2019 model's transit matrices
+  // are segmented by access mode, not trip purpose, and the custom TAZ extract
+  // splits VMT by purpose for autos only. 0.80 is the agreed interim value
+  // (2026-07-27). It applies to the drive-access subset, NOT to transit ridership
+  // overall: park-and-ride parking is dominated by all-day, peak-period commute
+  // use, so its commute share is far higher than transit's overall.
+  commute_share_of_drive_access: 0.8,
 } as const;

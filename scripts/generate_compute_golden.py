@@ -85,10 +85,10 @@ def case_transit_shelters(p):
     df = base_row()
     pct = float(sc.strategy_transit_shelters(
         df, level_of_implementation=p["level_of_implementation"],
-        brt_covers_all_routes=p["brt"])["pct_vmt_reduction"].iloc[0])
+        brt_stop_share=p["brt"])["pct_vmt_reduction"].iloc[0])
     row = _imputed_row(df)
     return pct, row, dict(level_of_implementation=p["level_of_implementation"],
-                          brt_covers_all_routes=1 if p["brt"] else 0)
+                          brt_stop_share=p["brt"])
 
 
 def _generic_row() -> dict:
@@ -134,9 +134,12 @@ CASES = [
      dict(loi_transit=1.0, loi_active=0.0, transit_vrh=10.0, transit_route_count=2.0, bike_centerline_mi=0.0)),
     ("wayfinding", case_wayfinding,
      dict(loi_transit=1.0, loi_active=1.0, transit_vrh=0.0, transit_route_count=0.0, bike_centerline_mi=5.0)),
-    ("transit_shelters", case_transit_shelters, dict(level_of_implementation=1.0, brt=False)),
-    ("transit_shelters", case_transit_shelters, dict(level_of_implementation=0.5, brt=False)),
-    ("transit_shelters", case_transit_shelters, dict(level_of_implementation=1.0, brt=True)),
+    ("transit_shelters", case_transit_shelters, dict(level_of_implementation=1.0, brt=0.0)),
+    ("transit_shelters", case_transit_shelters, dict(level_of_implementation=0.5, brt=0.0)),
+    # brt=1.0 reproduces the pre-2026-07-27 all-or-nothing zeroing; brt=0.4 pins the
+    # partial exclusion the share-based input added.
+    ("transit_shelters", case_transit_shelters, dict(level_of_implementation=1.0, brt=1.0)),
+    ("transit_shelters", case_transit_shelters, dict(level_of_implementation=1.0, brt=0.4)),
 
     # --- batch 2: the 14 migrated closed-form strategies (engine oracle) ---
     ("residential_density", case_generic("residential_density"), dict(pct_change_res_density=0.20)),

@@ -34,9 +34,9 @@ extended_description: |
   with the calculator's transit service frequency and fare reduction strategies.
 guidance: |
   Use this strategy for projects that add or upgrade transit shelters and stop
-  amenities. Do not combine this strategy with the Bus Rapid Transit coverage configuration
-  below. This configuration option includes BRT station amenities as part of the BRT corridor
-  investment.
+  amenities. Where some of the area's stops are already BRT stations, enter that share below:
+  BRT projects include their own station amenities, so that share is excluded here rather than
+  counted twice.
 images: []
 method: CAPCOA T-46 (structural; constants pending fact-sheet confirmation)
 formula: ΔVMT% = −clamp(LOI × ridership_uplift × transit_MS × (1/AVO) / vehicle_MS, 0, 15%)
@@ -53,8 +53,14 @@ methodology_detail: |
 
   The mode-shift factor uses the area's **observed** average vehicle occupancy (1/AVO) rather
   than the national default, and local transit and vehicle mode shares come from the area
-  data. T-46 is **mutually exclusive with Bus Rapid Transit** where BRT covers all community
-  routes, and turning on that flag zeroes the credit.
+  data.
+
+  **Overlap with Bus Rapid Transit.** CAPCOA T-28 (Bus Rapid Transit) already funds station
+  amenities, so shelters at BRT stations would be counted twice. The credit is therefore
+  scaled by `1 − BRT stop share`: enter the share of the area's stops already covered by BRT
+  station investment and that share is excluded, leaving the rest creditable. This is a
+  partial exclusion, because a BRT corridor inside a project area rarely means every route in
+  the area is BRT.
 
   > **Constants pending confirmation.** The verbatim T-46 equation and constants (the
   > shelter ridership uplift and the measure maximum) were not captured during research and
@@ -97,29 +103,34 @@ inputs:
     Estimate the share of the area's transit stops or stations that will receive new shelters
     or amenity improvements. Use 100% for a system-wide program; lower it for a targeted set
     of stops.
-- key: brt_covers_all_routes
-  label: Bus Rapid Transit coverage
-  control: select
-  default: 'no'
-  options:
-  - value: 'no'
-    label: Not BRT, or BRT does not cover all routes
-  - value: 'yes'
-    label: BRT already covers all community routes
+- key: brt_stop_share
+  label: Share of stops already covered by BRT stations
+  control: slider
+  min: 0
+  max: 100
+  step: 5
+  scale: 100
+  suffix: '%'
+  default: 0
   prerequisite: true
-  summary: Whether the corridor is already served by Bus Rapid Transit. If yes, shelters are assumed
-    to be part of the BRT project in order to not double count this amenity.
+  summary: The share of the area's transit stops that are already BRT stations. BRT projects fund
+    station amenities themselves, so this share is excluded here to avoid double counting. Leave at
+    0% where the area has no BRT.
   source_note: your area's existing/planned BRT coverage
-  tooltip: If Bus Rapid Transit already covers all community routes, shelters are mutually exclusive with BRT and the credit is zeroed.
+  tooltip: Share of area stops already covered by BRT station investment. That share is excluded from the shelter credit; 0% = no BRT in the area.
   instructions: |
-    Choose the BRT option only if Bus Rapid Transit already covers all community routes. BRT
-    investments account for station improvements, so crediting shelters too would
-    double-count, and the calculator zeroes the shelter credit in that case.
-notes: 'New strategy (CAPCOA T-46). shelter_ridership_uplift and measure_max are PLACEHOLDER constants pending fact-sheet confirmation. Mutually exclusive with BRT where it covers all routes. Closed-form: math lives in the compute block below (no code calc fn). strategy_transit_shelters in scripts/strategy_calculations.py is retained as the cross-check oracle. brt_covers_all_routes (select yes/no) is coerced to 1/0 by the host.'
+    Enter the share of the area's transit stops that are already BRT stations, or are
+    scheduled to receive BRT station investment. Leave it at 0% if the area has no BRT.
+
+    Bus Rapid Transit projects pay for their own station amenities, so crediting shelters
+    at those same stops would double-count. The calculator excludes exactly that share of
+    the credit and keeps the rest, which is the usual case: a BRT corridor running through
+    a project area rarely means every route in the area is BRT.
+notes: 'New strategy (CAPCOA T-46). shelter_ridership_uplift and measure_max are PLACEHOLDER constants pending fact-sheet confirmation. Closed-form: math lives in the compute block below (no code calc fn). strategy_transit_shelters in scripts/strategy_calculations.py is retained as the cross-check oracle. 2026-07-27 (content review): the all-or-nothing brt_covers_all_routes select was replaced by brt_stop_share, a 0-100% slider defaulting to 0, and the T-28 overlap is now a PARTIAL exclusion (credit scaled by 1 - brt_stop_share). Rationale: a BRT corridor inside a project area almost never means every route in that area is BRT, so the old flag was either never true or wildly over-applied when it was. brt_stop_share = 100% reproduces the old zeroing.'
 # Closed-form math (single source of truth). Evaluated identically in Python and the app.
 # Mirrors strategy_transit_shelters. Reads imputed transit_mode_share/auto_mode_share/avo.
-# brt_covers_all_routes: select 'yes'/'no' -> coerced to 1/0 by the host (zeroes the credit
-# where BRT already covers all routes, mutually exclusive with T-28).
+# brt_stop_share: share of area stops already covered by BRT station investment; that share
+# of the credit is excluded to avoid double-counting T-28 (which funds its own stations).
 compute:
   pool: all
   const:
@@ -128,5 +139,6 @@ compute:
   let:
     - a_raw: "level_of_implementation * shelter_ridership_uplift * transit_mode_share * (1 / avo) / max(auto_mode_share, 0.000000001)"
     - a: "clamp(a_raw, 0, measure_max)"
-    - credit: "a * (1 - brt_covers_all_routes)"
+    - brt: "clamp(brt_stop_share, 0, 1)"
+    - credit: "a * (1 - brt)"
   formula: "-credit"
