@@ -136,6 +136,35 @@ test.describe("Area step", () => {
     expect((await box(search)).width, "map search box width").toBeGreaterThan(180);
   });
 
+  test("the map owns pinch gestures, and the page keeps its own zoom", async ({ page }) => {
+    await gotoArea(page);
+    await waitForMapIdle(page);
+
+    // The ArcGIS view sets this modifier class at runtime and expects the theme
+    // stylesheet (which the app doesn't import) to supply the touch-action. With
+    // the rule missing the surface computed `auto`, so the browser took pinches
+    // for its own page zoom and the whole app scaled along with the map.
+    const surface = page.locator(".esri-view-surface").first();
+    await expect(surface).toHaveClass(/esri-view-surface--touch-(none|pan)/);
+    expect(
+      await surface.evaluate((el) => getComputedStyle(el).touchAction),
+      "map surface must claim the gesture",
+    ).not.toBe("auto");
+
+    // ...but only the map. Zooming the PAGE is a WCAG 1.4.4 requirement, so the
+    // document must not be locked down to buy the fix.
+    expect(
+      await page.evaluate(() => getComputedStyle(document.body).touchAction),
+      "page must stay pinch-zoomable",
+    ).toBe("auto");
+    const viewport = await page
+      .locator('meta[name="viewport"]')
+      .getAttribute("content");
+    expect(viewport, "viewport must not disable user scaling").not.toMatch(
+      /user-scalable\s*=\s*no|maximum-scale/i,
+    );
+  });
+
   test("tapping the map selects a TAZ", async ({ page }) => {
     // The real WebGL hit-test on a phone-sized map — the counterpart to
     // bug-map-selection.spec.ts, which skips narrow viewports because its click

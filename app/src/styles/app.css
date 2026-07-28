@@ -209,6 +209,22 @@ html[data-brand="highstreet"] .hdr-nav a.active { color: var(--brand-secondary);
 .map-canvas-host { min-height: 320px; }
 /* layout rules in shop.css */
 
+/* Gesture ownership on touch devices.
+   The ArcGIS view puts one of these modifier classes on its surface at runtime
+   and expects the theme stylesheet to supply the touch-action — but we don't
+   import that sheet (see the Esri Search notes further down), so the rule was
+   simply missing and the surface computed touch-action:auto. The browser then
+   claimed pinch gestures for its own page zoom, so pinching the map scaled the
+   whole app underneath it as well as the map. Ported verbatim from
+   @arcgis/core/assets/esri/themes/light/main.css.
+
+   Scoped to the map surface ON PURPOSE: the page keeps its default pinch-zoom
+   (the viewport meta has no user-scalable=no / maximum-scale), so this doesn't
+   trade a map bug for a WCAG 1.4.4 violation. No scroll trap either — the map is
+   a fixed-height box and the area panel below it scrolls on its own. */
+.esri-view-surface--touch-none { touch-action: none; }
+.esri-view-surface--touch-pan { touch-action: pan-x pan-y; }
+
 /* Branded loading overlay shown while the map chunk + ArcGIS view initialize
    (replaces the bare blank canvas + floating widgets). z-index sits above the
    map tools (z-index:10) so the half-initialized controls are covered. */
