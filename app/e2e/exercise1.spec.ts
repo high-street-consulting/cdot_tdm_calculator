@@ -10,7 +10,7 @@
 
 import { test, expect } from "@playwright/test";
 import {
-  STEAMBOAT_TAZS, STRATEGY, gotoArea, selectTazs, addStrategy, gotoResults,
+  STEAMBOAT_TAZS, STRATEGY, INPUT, gotoArea, selectTazs, addStrategy, gotoResults,
   resultsHeadlinePct, perStrategyRows, basketImpactPct, annualReductionM, ghgAvoidedText, readNum,
 } from "./helpers";
 
@@ -25,7 +25,7 @@ test.describe("Exercise 1 — MPO Planner: Steamboat downtown MMOF", () => {
     await addStrategy(
       page,
       STRATEGY.sharrows,
-      [["Share of area VMT treated", 25]],
+      [[INPUT.bikewayVmtShare, 25]],
       "Lincoln Ave (~50% of VMT) is unsuitable for bikes; ~25% of streets already have "
         + "sharrows/routes; remaining ~25% is the realistic treatable share.",
     );
@@ -35,7 +35,7 @@ test.describe("Exercise 1 — MPO Planner: Steamboat downtown MMOF", () => {
     await addStrategy(
       page,
       STRATEGY.transitFrequency,
-      [["Frequency change", 100], ["Implementation level", 40]],
+      [[INPUT.transitFrequencyChange, 100], [INPUT.transitFrequencyScope, 40]],
       "Yellow Route runs every 30 min and is ~40% of the downtown system; a 100% "
         + "frequency increase at 40% implementation ~doubles frequency along that line.",
     );
@@ -79,13 +79,13 @@ test.describe("Exercise 1 — MPO Planner: Steamboat downtown MMOF", () => {
     await gotoArea(page);
     await selectTazs(page, STEAMBOAT_TAZS);
 
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 25]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 25]]);
     await gotoResults(page);
     const strong = Math.abs(await resultsHeadlinePct(page));
     expect(strong).toBeGreaterThan(0);
 
     // Re-open and dial the treated share down — reduction magnitude must shrink.
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 5]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 5]]);
     await gotoResults(page);
     const weak = Math.abs(await resultsHeadlinePct(page));
 

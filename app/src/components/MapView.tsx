@@ -635,7 +635,15 @@ export function MapCanvas({
   }, []);
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%", minHeight: 320 }}>
+    // Positioning context for the map chrome below (search box, tool strip). The
+    // min-height floor lives in CSS rather than inline: on a phone the stacked
+    // Area step gives the map less than the desktop floor, and an inline 320px
+    // made this wrapper overflow the clipped .map box — which carried the
+    // bottom-anchored tool strip out of sight. See .map-canvas-host.
+    <div
+      className="map-canvas-host"
+      style={{ position: "relative", width: "100%", height: "100%" }}
+    >
       <div ref={containerRef} style={{ width: "100%", height: "100%" }} />
       {mapLoading && <MapLoading />}
       <div ref={searchHostRef} className="map-search-host" />

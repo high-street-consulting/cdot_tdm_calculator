@@ -9,6 +9,11 @@
   display: grid;
   grid-template-rows: 56px 64px 1fr auto;
   height: 100vh;
+  /* Mobile browsers size 100vh to the viewport with the URL bar *hidden*, so on
+     a phone the footer (and part of the map) sat below the fold until you
+     scrolled. dvh tracks the visible viewport; the 100vh above stays as the
+     fallback for engines that don't support it. */
+  height: 100dvh;
   background: #F7F7F7;
   min-height: 0;
   overflow: hidden;
@@ -1219,7 +1224,9 @@
   display: flex; align-items: center; justify-content: center;
 }
 .area-panel .how-steps li b { color: #141414; }
-.area-panel .source-note { font-size: 12px; color: #6B6B6B; line-height: 1.45; margin: 12px 0 0; }
+/* Direct child of the panel (not of .cta), so the panel's 20px flex gap owns
+   the spacing above it — same margin-free model as .area-intro > * above. */
+.area-panel .source-note { font-size: 12px; color: #6B6B6B; line-height: 1.45; margin: 0; }
 .area-panel .cta { margin-top: 4px; padding-top: 16px; border-top: 1px solid #EBEBEB; }
 .area-panel .cta .btn-next { width: 100%; padding: 12px; background: var(--cdot-orange-cta); color: #fff; border: 0; border-radius: 2px; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
 .area-panel .cta .btn-next:hover:not(:disabled) { background: var(--cdot-orange-cta-hover); }

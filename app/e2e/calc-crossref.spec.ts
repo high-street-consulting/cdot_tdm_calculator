@@ -14,7 +14,7 @@
 import { readFileSync } from "node:fs";
 import { test, expect } from "@playwright/test";
 import {
-  gotoArea, selectTazs, addStrategy, gotoResults, STEAMBOAT_TAZS, STRATEGY,
+  gotoArea, selectTazs, addStrategy, gotoResults, STEAMBOAT_TAZS, STRATEGY, INPUT,
   basketImpactPct, resultsHeadlinePct,
 } from "./helpers";
 
@@ -28,7 +28,7 @@ test.describe("Calculation cross-reference (vs. Python calc documentation)", () 
   test("sign convention: a reduction strategy is negative", async ({ page }) => {
     await gotoArea(page);
     await selectTazs(page, STEAMBOAT_TAZS);
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 25]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 25]]);
     expect(await basketImpactPct(page), "reduction should render as negative % VMT").toBeLessThan(0);
   });
 
@@ -36,7 +36,7 @@ test.describe("Calculation cross-reference (vs. Python calc documentation)", () 
     await gotoArea(page);
     await selectTazs(page, STEAMBOAT_TAZS);
     // Default 2.0 lane-mi on a major arterial → an INCREASE in VMT.
-    await addStrategy(page, "Lane Miles Added (Negative Impact on VMT)", []);
+    await addStrategy(page, STRATEGY.laneMiles, []);
     expect(await basketImpactPct(page), "induced demand should render as a positive % (increase)").toBeGreaterThan(0);
   });
 
@@ -47,10 +47,10 @@ test.describe("Calculation cross-reference (vs. Python calc documentation)", () 
     await gotoArea(page);
     await selectTazs(page, STEAMBOAT_TAZS);
     // Stack several transit strategies, pushed high, to probe the cap.
-    await addStrategy(page, STRATEGY.transitFrequency, [["Frequency change", 100], ["Implementation level", 100]]);
+    await addStrategy(page, STRATEGY.transitFrequency, [[INPUT.transitFrequencyChange, 100], [INPUT.transitFrequencyScope, 100]]);
     await addStrategy(page, STRATEGY.transitPass, []);
-    await addStrategy(page, "Transit Shelters", []);
-    await addStrategy(page, "Increased Transit Service", []);
+    await addStrategy(page, STRATEGY.transitShelters, []);
+    await addStrategy(page, STRATEGY.transitServiceExpansion, []);
 
     const magnitude = Math.abs(await basketImpactPct(page));
     expect(magnitude).toBeGreaterThan(0);
@@ -62,7 +62,7 @@ test.describe("Calculation cross-reference (vs. Python calc documentation)", () 
     await gotoArea(page);
     await selectTazs(page, STEAMBOAT_TAZS);
 
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 10]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 10]]);
     await gotoResults(page);
     const headlineLow = await resultsHeadlinePct(page);
     const barLow = await basketImpactPct(page);
@@ -70,7 +70,7 @@ test.describe("Calculation cross-reference (vs. Python calc documentation)", () 
     expect(Math.abs(Math.abs(headlineLow) - Math.abs(barLow))).toBeLessThan(0.05);
 
     // Monotonicity: raise the treated share → larger reduction magnitude.
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 40]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 40]]);
     await gotoResults(page);
     const headlineHigh = Math.abs(await resultsHeadlinePct(page));
     expect(headlineHigh).toBeGreaterThan(Math.abs(headlineLow));

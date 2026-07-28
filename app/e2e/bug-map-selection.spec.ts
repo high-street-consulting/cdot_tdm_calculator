@@ -9,6 +9,20 @@ import { test, expect } from "@playwright/test";
 import { gotoArea, projectAreaCount, waitForMapIdle } from "./helpers";
 
 test.describe("Bug regression — TAZ map selection (reported broken in Edge)", () => {
+  // The click positions below are ABSOLUTE offsets inside the map surface, tuned
+  // for a desktop-width map at the default Denver extent. On a phone the Area
+  // step stacks and the surface is only ~390x225 (see styles/mobile.css), so
+  // those offsets land outside it and Playwright clicks straight through to the
+  // area panel underneath. This is desktop geometry, and the reported bug was a
+  // desktop-Edge one; phone tap-to-select is covered by mobile-layout.spec.ts,
+  // which derives its click point from the measured surface instead.
+  test.beforeEach(({ viewport }) => {
+    test.skip(
+      (viewport?.width ?? Number.MAX_SAFE_INTEGER) <= 760,
+      "hard-coded surface offsets assume a desktop-width map",
+    );
+  });
+
   test("clicking the map selects a TAZ", async ({ page }) => {
     await gotoArea(page);
     const surface = page.locator(".esri-view-surface").first();

@@ -202,6 +202,11 @@ html[data-brand="highstreet"] .hdr-nav a.active { color: var(--brand-secondary);
 
 /* ───── Map ───── */
 .map { position:relative; background: #DCE2E8; overflow:hidden; min-height: 0; }
+/* MapView's wrapper: the positioning context every piece of map chrome anchors
+   to, so it must not grow past .map (which clips). The floor keeps the ArcGIS
+   view from initialising at zero height in the desktop layout; mobile.css drops
+   it, where the stacked Area step legitimately gives the map less than 320px. */
+.map-canvas-host { min-height: 320px; }
 /* layout rules in shop.css */
 
 /* Branded loading overlay shown while the map chunk + ArcGIS view initialize
@@ -512,14 +517,94 @@ html[data-brand="highstreet"] .hdr-nav a.active { color: var(--brand-secondary);
 .cat-section-ic { width: 22px; height: 22px; margin-right: 6px; }
 .cat-row-ic { width: 18px; height: 18px; }
 
-/* Esri Search widget: sit inside the map, styled to match other map tools */
+/* ───── Esri Search widget (map address / place / TAZ-ID lookup) ─────
+   The widget mounts ONTO .map-search-host, so it also carries .esri-search.
+
+   The ArcGIS theme stylesheet (@arcgis/core/assets/esri/themes/light/main.css)
+   is deliberately not imported: the app draws its own map chrome (.map-tool, and
+   Esri's attribution + zoom are clipped out of .map), and main.css is a large
+   global sheet that would fight the CDOT palette. The cost of leaving it out is
+   that this widget ships no layout of its own — .esri-search__container and
+   .esri-search__form are plain blocks, so its three parts (source-selector
+   caret, text input, submit) stacked vertically into an ~82px-tall column that
+   overlapped the tool stack. Everything here is that missing layout, plus a skin
+   matching .map-tool so the two read as one family.
+
+   The parts are Calcite web components (calcite-dropdown / calcite-autocomplete).
+   Their internals live in a shadow root and are themed only through Calcite's
+   public custom properties — the --calcite-button-* / --calcite-autocomplete-*
+   API in calcite-components 5.x. */
 .map-search-host {
   position: absolute; top: 12px; left: 12px; z-index: 10;
-  width: 320px; max-width: calc(100vw - 460px);
+  /* 360, not 320: laid out as a row, the caret and Submit leave the input too
+     narrow at 320 and it truncated its own placeholder mid-word. */
+  width: 360px; max-width: calc(100vw - 460px);
+  /* Present the three parts as a single control, like the tools opposite it. */
+  display: flex;
+  background: #fff;
+  border: 1px solid #8C8C8C;
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.10);
+  /* Deliberately NOT overflow:hidden — it would clip the suggestions menu. */
 }
-.map-search-host .esri-search { box-shadow: 0 2px 6px rgba(0,0,0,.10); }
-.map-search-host .esri-search__input {
-  font-family: inherit; font-size: 14px;
+.map-search-host:focus-within { border-color: var(--cdot-dark-blue); }
+
+/* The missing row layout: [source caret] [input] [submit]. */
+.map-search-host .esri-search__container,
+.map-search-host .esri-search__form {
+  display: flex; align-items: stretch;
+  flex: 1 1 auto; min-width: 0;
+}
+
+/* Source-selector caret. Flattened so it reads as part of the bar, with a
+   divider standing in for its own border. */
+.map-search-host .esri-search__dropdown {
+  flex: 0 0 auto;
+  display: flex; align-items: stretch;
+  border-right: 1px solid #DEDEDE;
+  --calcite-button-background-color: transparent;
+  --calcite-button-border-color: transparent;
+  --calcite-button-corner-radius: 0;
+  --calcite-button-icon-color: #4A4A4A;
+  --calcite-button-text-color: #4A4A4A;
+}
+
+/* Text input. Transparent so the host box above provides the one visible
+   border; the menu tokens style the suggestions dropdown. */
+.map-search-host .esri-search__autocomplete {
+  flex: 1 1 auto; min-width: 0;
+  --calcite-autocomplete-input-background-color: transparent;
+  --calcite-autocomplete-input-border-color: transparent;
+  --calcite-autocomplete-input-corner-radius: 0;
+  --calcite-autocomplete-input-shadow: none;
+  --calcite-autocomplete-input-text-color: #141414;
+  --calcite-autocomplete-input-placeholder-text-color: #6B6B6B;
+  --calcite-autocomplete-input-icon-color: #6B6B6B;
+  --calcite-autocomplete-background-color: #fff;
+  --calcite-autocomplete-border-color: #D4D4D4;
+  --calcite-autocomplete-corner-radius: 2px;
+  --calcite-autocomplete-text-color: #141414;
+  --calcite-autocomplete-heading-text-color: #141414;
+  --calcite-autocomplete-description-text-color: #4A4A4A;
+  --calcite-autocomplete-menu-max-size-y: 40vh;
+}
+
+/* Submit. A plain native <button>, so it needs the whole skin. Keeps its "Search"
+   text rather than becoming an icon — it's clearer, and the label is the button's
+   accessible name. */
+.map-search-host .esri-search__submit-button {
+  flex: 0 0 auto;
+  padding: 0 12px;
+  border: 0; border-left: 1px solid #DEDEDE;
+  background: transparent;
+  color: var(--cdot-dark-blue);
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.map-search-host .esri-search__submit-button:hover { background: var(--cdot-dark-blue-05); }
+.map-search-host .esri-search__submit-button:focus-visible {
+  outline: 2px solid var(--cdot-dark-blue); outline-offset: -2px;
 }
 
 .map-overlay-top { position:absolute; top:12px; left:12px; right:12px; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; pointer-events:none; z-index: 2; }

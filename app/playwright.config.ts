@@ -72,6 +72,12 @@ export default defineConfig({
     ...(edgeInstalled
       ? [{ name: "msedge", use: { ...devices["Desktop Edge"], channel: "msedge" } }]
       : []),
+    // Phone viewports. The app is desktop-first and its layouts only collapse
+    // below the breakpoints in styles/mobile.css, so mobile-layout.spec.ts needs
+    // a genuinely narrow viewport — plus isMobile/hasTouch, which is what makes
+    // the Esri search widget adopt its taller touch layout.
+    { name: "mobile-chrome", use: { ...devices["Pixel 7"] } },
+    { name: "mobile-safari", use: { ...devices["iPhone 14"] } },
   ],
   webServer: {
     command: "npm run dev",

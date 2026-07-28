@@ -1160,6 +1160,11 @@ function AreaPanel({
         />
       )}
 
+      {/* The CTA holds only the button so that on narrow viewports it can become
+          a sticky footer inside this scrolling panel (see mobile.css) without
+          dragging the four-line source note along with it. The note stays after
+          it in the DOM to keep the desktop button-then-note reading order;
+          mobile.css reorders the CTA below the note there. */}
       <div className="cta">
         <button
           className="btn-next"
@@ -1168,13 +1173,13 @@ function AreaPanel({
         >
           Select strategies →
         </button>
-        <p className="source-note">
-          The calculator pre-fills baseline VMT, mode share, and density for the
-          selection. Baseline data aggregates automatically from the Colorado
-          Statewide Activity-Based Travel Model (StateFocus), the U.S. Census
-          ACS, and CDOT public layers.
-        </p>
       </div>
+      <p className="source-note">
+        The calculator pre-fills baseline VMT, mode share, and density for the
+        selection. Baseline data aggregates automatically from the Colorado
+        Statewide Activity-Based Travel Model (StateFocus), the U.S. Census ACS,
+        and CDOT public layers.
+      </p>
     </div>
   );
 }

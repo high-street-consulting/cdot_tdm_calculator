@@ -5,7 +5,7 @@
 
 import { test, expect } from "@playwright/test";
 import {
-  gotoArea, selectTazs, addStrategy, gotoResults, STEAMBOAT_TAZS, STRATEGY,
+  gotoArea, selectTazs, addStrategy, gotoResults, STEAMBOAT_TAZS, STRATEGY, INPUT,
   basketImpactPct, resultsHeadlinePct, perStrategyRows, baselineVmtK,
 } from "./helpers";
 
@@ -16,7 +16,7 @@ test.describe("Bug regression — VMT change surfaced in results", () => {
     // No strategies → 0% impact (the app renders "−0.00", i.e. negative zero).
     expect(Math.abs(await basketImpactPct(page)), "no strategies → 0% impact").toBeLessThan(0.005);
 
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 25]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 25]]);
 
     // Back on the picker the basket bar must immediately show a reduction.
     await expect
@@ -27,7 +27,7 @@ test.describe("Bug regression — VMT change surfaced in results", () => {
   test("results page reflects the reduction (not zero / not stale)", async ({ page }) => {
     await gotoArea(page);
     await selectTazs(page, STEAMBOAT_TAZS);
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 25]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 25]]);
 
     const barImpact = await basketImpactPct(page);
     expect(barImpact).toBeLessThan(0);
@@ -84,10 +84,10 @@ test.describe("Bug regression — VMT change surfaced in results", () => {
     await gotoArea(page);
     await selectTazs(page, STEAMBOAT_TAZS);
 
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 25]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 25]]);
     const one = Math.abs(await basketImpactPct(page));
 
-    await addStrategy(page, STRATEGY.transitFrequency, [["Frequency change", 100], ["Implementation level", 40]]);
+    await addStrategy(page, STRATEGY.transitFrequency, [[INPUT.transitFrequencyChange, 100], [INPUT.transitFrequencyScope, 40]]);
     const two = Math.abs(await basketImpactPct(page));
 
     expect(two).toBeGreaterThan(one);

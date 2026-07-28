@@ -1,0 +1,401 @@
+/* Narrow-viewport layer — phones and small tablets.
+   Imported LAST (see main.tsx) so these rules win on equal specificity against
+   the desktop-first layouts in app.css / shop.css / report.css.
+
+   The app is built desktop-first: every view is a fixed rail beside a flexible
+   pane. Below the widths here each of those collapses to one column. The three
+   steps are tied to the width at which a specific layout stops working, not to
+   device names:
+
+     ≤ 900px  Two-column CONTENT views stack: strategy list + filter rail,
+              results + summary rail, report hero. The basket bar also splits
+              into two rows — below ~900px the four-metric strip no longer fits
+              beside the three-step crumb and was being clipped away entirely.
+     ≤ 760px  The AREA step stacks, map first. Its rail is a fixed 360px, so
+              below ~760px the map gets under 400px; at phone widths it was a
+              15-50px sliver, i.e. the pane covered the map.
+     ≤ 560px  Phone chrome: the header nav wraps to its own row (Methodology,
+              Data sources and Help were off-screen), paddings tighten, and the
+              remaining 2-up sub-grids go single-column.
+
+   Every query is `screen and` on purpose: the print stylesheet lays the report
+   out at 8.5in ≈ 816 CSS px, which would otherwise match the ≤900px block and
+   drag the stacked mobile layout into the printed PDF. */
+
+/* ═════════════════════════════════════════════════════════════════════
+   ≤ 900px — stack the two-column content views; split the basket bar
+   ═════════════════════════════════════════════════════════════════════ */
+@media screen and (max-width: 900px) {
+  /* The basket bar grows to two rows, so its grid track can't stay at 64px. */
+  .shop-app { grid-template-rows: 56px auto 1fr auto; }
+
+  /* ── Basket bar: crumb on row 1, metrics + Start over on row 2 ───────
+     The crumb scrolls horizontally rather than clipping: the three step pills
+     need ~500px and must all stay reachable. */
+  .basket-bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "crumb  crumb"
+      "totals reset";
+    align-items: center;
+    gap: 2px 12px;
+    padding: 4px 12px 8px;
+  }
+  .basket-bar .crumb {
+    grid-area: crumb;
+    overflow-x: auto;
+    /* Touch-scrolled, so hide the scrollbar rather than let it cover the
+       sliding tab-indicator that sits 1px off the crumb's bottom edge. */
+    scrollbar-width: none;
+  }
+  .basket-bar .crumb::-webkit-scrollbar { display: none; }
+  .basket-bar .totals {
+    grid-area: totals;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    /* The divider + inset only made sense with the crumb to its left. */
+    border-left: 0;
+    padding-left: 0;
+    /* Now that the strip wraps instead of competing for one row, let it show
+       everything rather than clipping the leading metrics. */
+    overflow: visible;
+  }
+  .basket-bar .totals .val { font-size: 15px; }
+  .basket-bar .start-over,
+  .basket-bar .start-over-placeholder { grid-area: reset; }
+
+  /* ── Strategy list: filter rail becomes a disclosure on top ──────────
+     ShopBody switches the rail to a disclosure at this same width (see
+     RAIL_COLLAPSE_PX) so its ~550px of categories and tag facets can't bury
+     every strategy card below the fold. */
+  .shop-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  .shop-body > * { min-height: 0; }
+  .shop-aside {
+    border-right: 0;
+    border-bottom: 1px solid #EBEBEB;
+    padding: 6px 16px 12px;
+    /* Expanded, the rail gets its own scroll budget rather than pushing the
+       strategy cards out of the viewport. */
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  /* Collapsed: only the heading (which holds the toggle) stays. display:none
+     also drops the hidden controls from the a11y tree, which is what the
+     toggle's aria-expanded="false" announces. */
+  .shop-aside[data-collapsed="true"] > *:not(.aside-title) { display: none; }
+  .shop-aside[data-collapsed="true"] {
+    max-height: none;
+    overflow: visible;
+    padding-bottom: 6px;
+  }
+
+  /* Disclosure toggle. Sits inside the <h2>, so it inherits the heading's
+     colour/weight and keeps the heading outline intact. */
+  .shop-aside .aside-title { margin: 0; }
+  .shop-aside-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 44px;
+    padding: 4px 0;
+    background: none;
+    border: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .shop-aside-toggle:focus-visible {
+    outline: 2px solid var(--cdot-dark-blue);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  /* Chevron: a rotating CSS caret, so there's no icon dependency. */
+  .shop-aside-chev {
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #6B6B6B;
+    border-bottom: 2px solid #6B6B6B;
+    transform: rotate(45deg);
+    transition: transform 0.15s ease;
+  }
+  .shop-aside-toggle[aria-expanded="false"] .shop-aside-chev {
+    transform: rotate(-45deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .shop-aside-chev { transition: none; }
+  }
+  .shop-aside-badge {
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--cdot-dark-blue-05);
+    color: var(--cdot-dark-blue);
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+
+  .shop-main { padding: 16px; }
+  .shop-head { flex-wrap: wrap; gap: 8px; }
+  .shop-head h1 { font-size: 23px; }
+
+  /* ── Results (cart): summary rail drops below the strategy list ────── */
+  .cart-view {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  .cart-hero {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 20px;
+  }
+  .cart-hero .big { font-size: 46px; }
+  .cart-hero .big .pct { font-size: 26px; }
+  .cart-hero .abs-row { flex-wrap: wrap; gap: 8px 24px; }
+
+  /* ── Report: the on-screen "document" goes fluid ─────────────────────
+     8.5in is 816px, wider than any phone. Print keeps the paper width because
+     these queries are screen-only. */
+  .report-view { padding: 16px 10px 40px; }
+  .report-toolbar { max-width: 100%; flex-wrap: wrap; }
+  .report-doc {
+    max-width: 100%;
+    padding: 22px 16px;
+  }
+  .report-hero-grid { grid-template-columns: 1fr; }
+
+  /* ── Footer: stack instead of truncating ─────────────────────────────
+     The one-line footer nowraps + ellipsises both halves, which already at
+     768px silently ate the Accessibility and Source code links.
+     Wrapped it runs to ~4 lines, so tighten the type: this footer is permanent
+     chrome in the app shell (not scrolled away), and every row it takes comes
+     straight off the map. */
+  .app-footer {
+    height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding: 5px 14px max(5px, env(safe-area-inset-bottom));
+    font-size: 10px;
+    line-height: 1.4;
+  }
+  .app-footer-left,
+  .app-footer-right {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    text-align: left;
+  }
+
+  /* ── Long-form docs (Methodology, Data sources) ──────────────────────── */
+  .doc-hero { padding: 24px 16px 20px; }
+  .doc-hero h1 { font-size: 26px; }
+  .doc-section { padding: 22px 16px; }
+
+  /* Data tables stay real tables — the accessibility work deliberately keeps
+     native table display so the implicit row/cell roles survive (see
+     shop.css "Reduction by category"). So scroll the PARENT instead of setting
+     display:block on the table, and hold a legible minimum width rather than
+     letting 5+ columns crush to ~60px each. Without this the tables were
+     clipped by an ancestor's overflow:hidden, i.e. unreachable. */
+  .doc-section { overflow-x: auto; }
+  .doc-table { min-width: 520px; }
+  .report-doc .report-section { overflow-x: auto; }
+  .report-table { min-width: 460px; }
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   ≤ 760px — the Area step stacks, map on top
+   ═════════════════════════════════════════════════════════════════════ */
+@media screen and (max-width: 760px) {
+  /* Column, and the map takes the top slot. The rail's 360px basis and the
+     map's flex:1 are both from shop.css and must both be undone. */
+  .shop-main-region[data-view="area"] > .map-overlay { flex-direction: column; }
+
+  /* Map first: it's the actual instrument of this step, so it gets the larger
+     share and is on screen without scrolling. flex-grow lets it absorb whatever
+     the (capped) panel leaves. */
+  .map-overlay > .map-host {
+    order: 1;
+    flex: 1 1 auto;
+    /* No floor: the map's share is guaranteed from the other side by the
+       panel's max-height below, which can't be squeezed into clipping. */
+    min-height: 0;
+  }
+  /* The desktop 320px floor is taller than the map's share of a phone screen,
+     and this wrapper is the containing block for the map chrome — overflowing
+     .map (which clips) pushed the bottom tool strip out of sight entirely. */
+  .map-canvas-host { min-height: 0; }
+  /* Panel below, capped at ~46% so the map keeps the majority. `height: auto`
+     undoes the desktop `height: 100%`, which would otherwise make the panel
+     claim the whole column. It keeps its own overflow-y from shop.css. */
+  .map-overlay > .area-panel {
+    order: 2;
+    flex: 0 1 auto;
+    height: auto;
+    max-height: 46%;
+    border-right: 0;
+    border-top: 1px solid #EBEBEB;
+    padding: 16px 16px 0;
+    gap: 14px;
+  }
+  .area-panel h1,
+  .area-panel h2 { font-size: 19px; }
+
+  /* The CTA becomes a sticky footer inside the scrolling panel, so the primary
+     action stays reachable without scrolling a ~300px-tall pane. `order: 1`
+     moves it below the source note (which is DOM-ordered after it to keep the
+     desktop button-then-note reading order). It is the panel's last flex item,
+     so sticky bottom:0 pins it for the whole scroll range. */
+  .map-overlay > .area-panel > .cta {
+    order: 1;
+    position: sticky;
+    bottom: 0;
+    margin-top: 0;
+    padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+    background: #fff;
+    /* Reads as a raised footer over the scrolling content above it. */
+    box-shadow: 0 -8px 14px -10px rgba(0, 0, 0, 0.35);
+  }
+  .map-overlay > .area-panel > .cta .btn-next { padding: 13px 12px; }
+
+  /* ── Map chrome: search across the top, tools as a bottom strip ──────
+     app.css caps the search at calc(100vw - 460px) to clear the 360px rail and
+     the tool stack. On a stacked phone layout that computes NEGATIVE, so the
+     search box collapsed to zero width and the address/TAZ lookup was gone. */
+  .map-search-host {
+    left: 8px;
+    right: 8px;
+    width: auto;
+    max-width: none;
+  }
+  /* Left at its natural ~34px rather than padded out to 44 like .map-tool:
+     stretching the Calcite autocomplete just grows its box and leaves the text
+     top-aligned (its internal input stays 28px and won't re-centre), and 34px
+     already clears WCAG 2.2 AA 2.5.8 Target Size (Minimum) of 24x24. The 10px
+     saved goes to the map, which is scarce here. */
+  .map-search-host .esri-search__submit-button { padding: 0 14px; }
+
+  /* The tool stack is ~240px tall — most of a phone-height map — and the Esri
+     search widget grows to ~80px at this width, so a top-right column both
+     collided with the search and buried the map. Re-lay it as a single
+     bottom-anchored row that scrolls horizontally: every tool stays reachable
+     and the map keeps all but ~50px of its height.
+     Anchoring at the bottom is safe — Esri renders its attribution and zoom
+     widget below the view box, where .map's overflow:hidden already clips them
+     (true at every width, not just here). */
+  .map-tools-overlay {
+    top: auto;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Let the row scroll under the finger without the map stealing the gesture. */
+    -webkit-overflow-scrolling: touch;
+  }
+  .map-tools-overlay::-webkit-scrollbar { display: none; }
+  /* Comfortable touch targets; nowrap keeps each label on one line so the row
+     height stays predictable. */
+  .map-tool {
+    min-height: 44px;
+    padding: 8px 14px;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+  /* Reference layers is the one tool with a panel. In a bottom strip it has to
+     open UPWARD (column-reverse) or it would open into the clipped area below
+     the map. */
+  .map-reflayers {
+    flex-direction: column-reverse;
+    flex: 0 0 auto;
+  }
+  .map-reflayers-panel {
+    max-height: 45vh;
+    overflow-y: auto;
+  }
+  /* The hint duplicates step 1 of "How it works" in the panel just below the
+     map, so it can be the item that scrolls out of the strip first. */
+  .map-tool-hint {
+    flex: 0 0 auto;
+    max-width: 62vw;
+    font-size: 11.5px;
+  }
+
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   ≤ 560px — phone chrome
+   ═════════════════════════════════════════════════════════════════════ */
+@media screen and (max-width: 560px) {
+  /* The header wraps to two rows, so its track can't stay at 56px either. */
+  .shop-app { grid-template-rows: auto auto 1fr auto; }
+
+  /* ── Header: nav drops to its own full-width row ─────────────────────
+     Logo + title + nav + Help needs ~560px on one line. Below that the nav ran
+     off the right edge and Help sat entirely off-screen, so Methodology, Data
+     sources and Help were all unreachable. Wrapping keeps row 1 as
+     logo/title + Help and gives the nav row 2. */
+  .hdr {
+    flex-wrap: wrap;
+    padding: 6px 12px;
+    gap: 0 10px;
+  }
+  .hdr-home { padding-left: 0; padding-right: 0; }
+  .hdr-home img { height: 28px; }
+  .hdr-title { font-size: 17px; }
+  /* The tagline has to leave row 1 for logo + title + Help to fit, and showing
+     it costs ~52px of permanent chrome (it wraps to two lines at this width),
+     28px of which comes off the map. Hidden VISUALLY ONLY, via the same recipe
+     as .sr-only in app.css — display:none would also drop it from the
+     accessibility tree, taking the app's one-line description away from screen
+     reader users on phones for a layout problem they don't have. */
+  .hdr-title .sub {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .hdr-sep { display: none; }
+  .hdr-nav {
+    /* Last flex item -> wraps onto row 2 and spans it. */
+    order: 5;
+    width: 100%;
+    margin-left: 0;
+    padding-bottom: 2px;
+    /* Safety valve: three labels are ~275px, which fits 375px, but a longer
+       label or a large text-zoom setting must scroll rather than clip. */
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .hdr-nav::-webkit-scrollbar { display: none; }
+  .hdr-nav button,
+  .hdr-nav a { white-space: nowrap; }
+
+  /* ── Basket bar: pills stay tappable, metrics go 2-up ────────────── */
+  .basket-bar { padding: 4px 12px 6px; }
+  .basket-bar .crumb .step { padding: 7px 10px; font-size: 13px; }
+  .basket-bar .totals { gap: 4px 14px; }
+  .basket-bar .totals .lab { font-size: 9.5px; }
+  .basket-bar .totals .val { font-size: 14px; }
+  .basket-bar .totals .val .u { font-size: 11px; }
+  .basket-bar .start-over { font-size: 13px; }
+
+  /* ── Remaining 2-up sub-grids go single-column ──────────────────── */
+  .shop-detail .method-grid { grid-template-columns: 1fr; }
+  .shop-detail { padding: 8px 12px 32px; }
+  .cart-view { padding: 12px; }
+  .cart-hero { padding: 16px; }
+  .cart-hero .big { font-size: 38px; }
+  .doc-section { padding: 20px 12px; }
+  .report-doc { padding: 18px 12px; }
+}

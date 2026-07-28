@@ -42,6 +42,25 @@ function matchesTags(s: StrategyMeta, selected: Set<string>): boolean {
   return (s.tags ?? []).some((t) => selected.has(t));
 }
 
+/** Width at or below which the filter rail becomes a disclosure instead of a
+    side rail. Must match the 900px breakpoint in mobile.css that stacks
+    .shop-body into one column. */
+const RAIL_COLLAPSE_PX = 900;
+
+/** True while the viewport is at or below `maxWidth`. */
+function useIsNarrowViewport(maxWidth: number): boolean {
+  const query = `(max-width: ${maxWidth}px)`;
+  const [narrow, setNarrow] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const onChange = () => setNarrow(mql.matches);
+    onChange();
+    mql.addEventListener("change", onChange);
+    return () => mql.removeEventListener("change", onChange);
+  }, [query]);
+  return narrow;
+}
+
 export function ShopBody({
   basket,
   openDetail,
@@ -55,6 +74,11 @@ export function ShopBody({
   const [query, setQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<SortKey>("name");
+  // On phones/small tablets the rail's ~550px of categories and tag facets would
+  // bury every strategy card below the fold, so it collapses behind its own
+  // heading. Starts closed: the cards are what the step is for.
+  const railCollapsible = useIsNarrowViewport(RAIL_COLLAPSE_PX);
+  const [railOpen, setRailOpen] = useState(false);
 
   const inBasket = useMemo(() => new Set(basket.map((b) => b.id)), [basket]);
   const basketCountByCat = useMemo(() => {
@@ -101,6 +125,9 @@ export function ShopBody({
   }, [query, catFilter, selectedTags, sortBy]);
 
   const hasFilters = catFilter !== null || query.trim() !== "" || selectedTags.size > 0;
+  // Only the facets that live in the rail, so the collapsed toggle's badge
+  // reports what's hidden behind it (the search box sits in .shop-main).
+  const railFilterCount = (catFilter !== null ? 1 : 0) + selectedTags.size;
 
   const toggleTag = (t: string) =>
     setSelectedTags((prev) => {
@@ -119,8 +146,33 @@ export function ShopBody({
 
   return (
     <div className="shop-body">
-      <aside className="shop-aside">
-        <h2 className="aside-title">Filter strategies</h2>
+      {/* When collapsible, data-collapsed hides every child except the heading
+          (see mobile.css) — so the collapsed controls leave the a11y tree too,
+          which is what aria-expanded on the toggle announces. */}
+      <aside
+        className="shop-aside"
+        data-collapsed={railCollapsible && !railOpen ? "true" : undefined}
+      >
+        <h2 className="aside-title">
+          {railCollapsible ? (
+            <button
+              type="button"
+              className="shop-aside-toggle"
+              aria-expanded={railOpen}
+              onClick={() => setRailOpen((o) => !o)}
+            >
+              <span className="shop-aside-chev" aria-hidden="true" />
+              Filter strategies
+              {railFilterCount > 0 && (
+                <span className="shop-aside-badge">
+                  {railFilterCount} active
+                </span>
+              )}
+            </button>
+          ) : (
+            "Filter strategies"
+          )}
+        </h2>
         <h3>Categories</h3>
         <div className="cat-nav">
           <button className={!catFilter ? "on" : ""} onClick={() => setCatFilter(null)}>

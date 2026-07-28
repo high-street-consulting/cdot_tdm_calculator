@@ -4,7 +4,10 @@
 // page. These are cross-engine so browser-specific UI regressions surface.
 
 import { test, expect } from "@playwright/test";
-import { gotoArea, gotoStrategyList, selectTazs, openStrategy, setInput, STEAMBOAT_TAZS, STRATEGY } from "./helpers";
+import {
+  gotoArea, gotoStrategyList, openFilterRail, selectTazs, openStrategy, setInput,
+  STEAMBOAT_TAZS, STRATEGY, INPUT, escapeRe,
+} from "./helpers";
 
 test.describe("Requirements — UI / outputs / accessibility / docs", () => {
   test("UI-06: overriding a default shows a clear 'modified' affordance", async ({ page }) => {
@@ -12,9 +15,13 @@ test.describe("Requirements — UI / outputs / accessibility / docs", () => {
     await selectTazs(page, STEAMBOAT_TAZS);
     await openStrategy(page, STRATEGY.sharrows);
     // No reset control before the value is changed…
-    const reset = page.getByRole("button", { name: /Reset Share of area VMT treated to default/i });
+    // Accessible name is `Reset ${input.label} to default` (DetailView), so it
+    // carries the same authored label — keep it sourced from INPUT too.
+    const reset = page.getByRole("button", {
+      name: new RegExp(`Reset ${escapeRe(INPUT.bikewayVmtShare)} to default`, "i"),
+    });
     await expect(reset).toHaveCount(0);
-    await setInput(page, "Share of area VMT treated", 25);
+    await setInput(page, INPUT.bikewayVmtShare, 25);
     // …and it appears once the value differs from the default.
     await expect(reset).toBeVisible();
   });
@@ -51,6 +58,8 @@ test.describe("Requirements — UI / outputs / accessibility / docs", () => {
 
   test("UI-03: strategies are organized by category (picker filter)", async ({ page }) => {
     await gotoStrategyList(page); // closes the map overlay so the sidebar is clickable
+    // On a phone the rail is a disclosure that starts closed; no-op on desktop.
+    await openFilterRail(page);
     // Category chips in the sidebar act as filters.
     await expect(page.locator(".cat-nav button").first()).toBeVisible();
     const before = await page.locator(".product-card").count();

@@ -11,7 +11,7 @@
 import { test, expect } from "@playwright/test";
 import {
   gotoArea, selectTazs, addStrategy, removeStrategy, gotoResults,
-  STEAMBOAT_TAZS, STRATEGY, resultsHeadlinePct, perStrategyRows,
+  STEAMBOAT_TAZS, STRATEGY, INPUT, resultsHeadlinePct, perStrategyRows,
 } from "./helpers";
 
 // Denver-metro TAZ ids (urban context) to contrast with resort Steamboat.
@@ -23,7 +23,7 @@ test.describe("Exercise 2 — comparing strategy scenarios", () => {
     await selectTazs(page, STEAMBOAT_TAZS);
 
     // Scenario A — bike-only.
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 25]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 25]]);
     await gotoResults(page);
     const scenarioA = Math.abs(await resultsHeadlinePct(page));
     await expect(perStrategyRows(page)).toHaveCount(1);
@@ -31,7 +31,7 @@ test.describe("Exercise 2 — comparing strategy scenarios", () => {
 
     // Scenario B — transit-only (swap the combination).
     await removeStrategy(page, STRATEGY.sharrows);
-    await addStrategy(page, STRATEGY.transitFrequency, [["Frequency change", 100], ["Implementation level", 40]]);
+    await addStrategy(page, STRATEGY.transitFrequency, [[INPUT.transitFrequencyChange, 100], [INPUT.transitFrequencyScope, 40]]);
     await gotoResults(page);
     const scenarioB = Math.abs(await resultsHeadlinePct(page));
     await expect(perStrategyRows(page)).toHaveCount(1);
@@ -45,7 +45,7 @@ test.describe("Exercise 2 — comparing strategy scenarios", () => {
     // Resort context (Steamboat).
     await gotoArea(page);
     await selectTazs(page, STEAMBOAT_TAZS);
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 25]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 25]]);
     await gotoResults(page);
     const resort = Math.abs(await resultsHeadlinePct(page));
 
@@ -54,7 +54,7 @@ test.describe("Exercise 2 — comparing strategy scenarios", () => {
     await page.reload();
     await gotoArea(page);
     await selectTazs(page, DENVER_TAZS);
-    await addStrategy(page, STRATEGY.sharrows, [["Share of area VMT treated", 25]]);
+    await addStrategy(page, STRATEGY.sharrows, [[INPUT.bikewayVmtShare, 25]]);
     await gotoResults(page);
     const urban = Math.abs(await resultsHeadlinePct(page));
 

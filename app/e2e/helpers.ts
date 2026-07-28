@@ -10,12 +10,43 @@ import { Page, Locator, expect } from "@playwright/test";
 /** Downtown Steamboat Springs — Exercise 1's project area. */
 export const STEAMBOAT_TAZS = ["1368", "1369", "1370", "1371", "1380"];
 
-/** Strategy display names (match the picker card aria-label + detail <h1>). */
+/**
+ * Strategy display names (match the picker card aria-label + detail <h1>).
+ *
+ * Like INPUT below, these are AUTHORED CONTENT from strategy-catalog/strategies/
+ * *.yaml `name:`. Keep every spec sourcing names from here — inlined literals
+ * are what let a batch of renames go unnoticed.
+ */
 export const STRATEGY = {
   sharrows: "Striped Bike Lanes, Neighborhood Bikeways and Sharrows",
+  /** TR-01. Note: its *id* is transit_service_expansion — not TR-06 below. */
   transitFrequency: "Transit Service Frequency Increase",
   transitPass: "Transit Pass Subsidies",
+  transitShelters: "Transit Shelters",
+  /** TR-06 new_transit_service. Was "Increased Transit Service". */
+  transitServiceExpansion: "Transit Service Expansion",
+  /** ID-01. Was "Lane Miles Added (Negative Impact on VMT)"; now covers both
+      directions, though the default is still +2 lane-mi (an increase). */
+  laneMiles: "Lane Miles Reduced or Lane Miles Added (Induced Demand)",
   traffic_calming: "Traffic Calming",
+} as const;
+
+/**
+ * Strategy input labels, as rendered in the detail view's <label>.
+ *
+ * These are AUTHORED CONTENT — they come from each strategy's `inputs[].label`
+ * in strategy-catalog/strategies/*.yaml, so a copy edit there renames them.
+ * Centralised here (like STRATEGY above) because they were previously inlined
+ * across five specs, and one rewording silently broke twelve tests. When a spec
+ * fails on a label lookup, diff against the YAML and fix it in this one place.
+ */
+export const INPUT = {
+  /** BP-02 sharrows_bike_lanes → scope_share. (BP-01 uses the same wording.) */
+  bikewayVmtShare: "Share of study-area VMT affected by the bikeway",
+  /** TR-01 transit_service_expansion → pct_change. */
+  transitFrequencyChange: "Frequency change",
+  /** TR-01 transit_service_expansion → level_of_implementation. */
+  transitFrequencyScope: "Share of area routes with the frequency change",
 } as const;
 
 /**
@@ -109,6 +140,20 @@ export async function gotoStrategyList(page: Page): Promise<void> {
   await expect(page.getByRole("heading", { name: /Select TDM strategies/ })).toBeVisible();
 }
 
+/**
+ * Ensure the strategy-list filter rail is expanded before touching the category
+ * nav or tag facets. At/below RAIL_COLLAPSE_PX (see ShopBody) the rail is a
+ * disclosure that starts closed, so its controls are display:none on a phone.
+ * No-op at desktop widths, where the rail is always open and has no toggle —
+ * which keeps rail-touching specs viewport-agnostic.
+ */
+export async function openFilterRail(page: Page): Promise<void> {
+  const toggle = page.locator(".shop-aside-toggle");
+  if ((await toggle.count()) === 0) return;
+  if ((await toggle.getAttribute("aria-expanded")) !== "true") await toggle.click();
+  await expect(page.locator(".shop-aside .cat-nav")).toBeVisible();
+}
+
 /** Open a strategy's detail/config view from the picker by its display name. */
 export async function openStrategy(page: Page, displayName: string): Promise<void> {
   await gotoStrategyList(page);
@@ -127,7 +172,16 @@ export async function setInput(page: Page, label: string, value: string | number
   // Resolve the control via its <label for=…>, NOT getByLabel — once a value is
   // modified the app shows a reset button whose aria-label also contains the
   // input label (UI-06), which would make getByLabel ambiguous.
-  const forId = await page.locator("label", { hasText: label }).first().getAttribute("for");
+  //
+  // Anchored + case-sensitive: a plain `hasText` string is a case-INSENSITIVE
+  // substring match, so on TR-01 "Frequency change" also matched "Share of area
+  // routes with the frequency change" and only resolved correctly because of
+  // DOM order. Anchor the start instead of matching the whole string, because the
+  // <label> can also contain a trailing "i" info glyph. `(?!\S)` (end, or
+  // followed by space) rather than `\b`, so it still works for labels ending in
+  // punctuation like "Fare reduction (%)".
+  const labelRe = new RegExp(`^\\s*${escapeRe(label)}(?!\\S)`);
+  const forId = await page.locator("label").filter({ hasText: labelRe }).first().getAttribute("for");
   const ctrl = page.locator(`[id="${forId}"]`);
   const kind = await ctrl.evaluate((el) => {
     const t = el as HTMLInputElement | HTMLSelectElement;

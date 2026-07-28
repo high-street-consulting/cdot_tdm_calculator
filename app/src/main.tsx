@@ -5,6 +5,9 @@ import "./styles/brand.css";
 import "./styles/app.css";
 import "./styles/shop.css";
 import "./styles/report.css";
+// Narrow-viewport overrides last, so they win on equal specificity against the
+// desktop-first layouts above. Print stays after it (own @media print block).
+import "./styles/mobile.css";
 import "./styles/print.css";
 
 import { App } from "./App";
