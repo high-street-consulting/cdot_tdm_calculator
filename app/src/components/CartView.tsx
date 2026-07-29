@@ -121,8 +121,14 @@ export function CartView({
             <div className="sub">
               vs. baseline · {basket.length} strateg{basket.length === 1 ? "y" : "ies"} · {tazCount} TAZ{tazCount === 1 ? "" : "s"}
             </div>
+            {/* Both variable parts describe what actually happened rather than
+                the common case. The overlap clause is gated on the SAME flag as
+                the "Overlap & cap adjustment" row in the breakdown below, so the
+                headline can no longer claim an adjustment the breakdown doesn't
+                show — a single-strategy package has nothing to overlap with. */}
             <p className="hero-note">
-              Combined reduction across all VMT, adjusted for overlapping impacts.{" "}
+              Combined {netReduces ? "reduction" : "increase"} across all VMT
+              {hasCombinationAdjustment ? ", adjusted for overlapping impacts" : ""}.{" "}
               <a href="#/methodology">How it's calculated →</a>
             </p>
             <div className="abs-row">
