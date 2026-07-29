@@ -108,3 +108,32 @@ Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE).
 Copyright 2026 Colorado Department of Transportation. Built for the CDOT Office
 of Innovative Mobility by High Street Consulting Group and Felsburg Holt &
 Ullevig.
+
+### Third-party dependencies
+
+The Apache-2.0 grant above covers the code in this repository. It does **not**
+extend to the dependencies this project builds against, some of which are not
+open source:
+
+- **Esri** — `@arcgis/core` and the Calcite component library are proprietary,
+  licensed under the [Esri Master License Agreement](https://www.esri.com/en-us/legal/terms/full-master-agreement),
+  not an OSI-approved license. They are referenced rather than vendored, but you
+  need appropriate Esri entitlement to build or run this project, and any bundle
+  you distribute contains them and must carry their copyright notice.
+- **amCharts 5** — reaches the built bundle transitively through `@arcgis/core`,
+  under a "linkware" license: free to redistribute provided its LICENSE text
+  ships with the distribution and its branding link is not hidden or altered.
+
+`app/public/THIRD-PARTY-LICENSES.txt` carries the full notices for every package
+compiled into the distributable. It is regenerated on every build
+(`npm run licenses:third-party`) so it cannot drift from `package.json`, is
+served at `/THIRD-PARTY-LICENSES.txt` on any deployment, and is included in the
+IIS handoff package.
+
+### Trademarks
+
+Apache-2.0 grants no trademark rights (see section 6 of the license). The
+Colorado Department of Transportation name, the CDOT logo
+(`app/public/cdot_logo.png` and the favicons derived from it), and the marks of
+the contributing firms are **excluded from this license**. Forks and derivative
+works must remove or replace CDOT branding unless separately authorized by CDOT.
