@@ -23,8 +23,8 @@ import { readFileSync, writeFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const APP_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-const OUT = join(APP_DIR, "public", "THIRD-PARTY-LICENSES.txt");
+const ROOT_DIR = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const OUT = join(ROOT_DIR, "public", "THIRD-PARTY-LICENSES.txt");
 
 /** Filenames a package might use for its license text, in preference order. */
 const LICENSE_FILES = [
@@ -52,7 +52,7 @@ function productionPackagePaths() {
   let out = "";
   try {
     out = execFileSync("npm", ["ls", "--omit=dev", "--all", "--parseable"], {
-      cwd: APP_DIR,
+      cwd: ROOT_DIR,
       encoding: "utf8",
       maxBuffer: 64 * 1024 * 1024,
       stdio: ["ignore", "pipe", "ignore"],

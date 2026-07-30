@@ -1,47 +1,44 @@
-# Local environment files — keep .env.example committed, never .env
+# Secrets / local config
 .env
 .env.local
 .env.*.local
+*.local
 
-# Private data repo, mounted here via TDM_DATA_DIR / TDM_OUTPUTS_DIR (see
-# scripts/paths.py). Never commit travel-model inputs or generated artifacts.
-# Anchored to the repo root so app/src/data/ (real source) is NOT ignored.
-/data/
-/outputs/
+# Node / build
+node_modules/
+dist/
+dist-ssr/
+*.tsbuildinfo
 
-# Python
+# Generated at build time (see scripts/sync-catalog.mjs)
+public/catalog-images/
+
+# Test artifacts
+test-results/
+playwright-report/
+.playwright/
+blob-report/
+TEST*.xml
+*.log
+
+# Python (methods/ + report_service/)
 .venv/
-.venv_docx/
 *.py[cod]
 __pycache__/
 
-# Node
-node_modules/
-dist/
-
-# TypeScript incremental build info
-*.tsbuildinfo
-
-# Spreadsheets are kept out of the repo (internal working files)
-*.xlsx
-
-# Logs / test reports
-*.log
-TEST*.xml
+# Private data — lives in the tdm_data_and_methods repo, never here
+/data/
+/outputs/
 
 # Editors / OS
 .idea/
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 .DS_Store
 Thumbs.db
-
-# Claude Code project config / skills (not part of the shared repo)
 .claude/
-
-# Large media
-*.mp4
-*.tiff
-*.avi
-*.flv
-*.mov
-*.wmv
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

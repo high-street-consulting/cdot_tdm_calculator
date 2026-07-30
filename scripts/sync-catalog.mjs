@@ -11,9 +11,9 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const src = resolve(here, "../../strategy-catalog/compiled/strategies.json");
+const src = resolve(here, "../strategy-catalog/compiled/strategies.json");
 const dst = resolve(here, "../src/strategies/catalog.json");
-const imgSrc = resolve(here, "../../strategy-catalog/images");
+const imgSrc = resolve(here, "../strategy-catalog/images");
 const imgDst = resolve(here, "../public/catalog-images");
 
 if (!existsSync(src)) {

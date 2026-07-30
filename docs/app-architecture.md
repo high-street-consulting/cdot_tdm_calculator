@@ -56,7 +56,7 @@ telework                      lane_mile_addition
 ```
 
 These are the Sprint-1 set explicitly requested by the user. The Python source
-(`scripts/strategy_calculations.py`) defines 19 total; the remaining 8 (fare
+(`methods/strategy_calculations.py`) defines 19 total; the remaining 8 (fare
 subsidy, parking pricing/cashout/unbundled, affordable housing, park & ride,
 mobility hub, traffic calming) are *not* exposed here — adding them is a
 matter of porting and adding entries to `src/strategies/{strategies,registry}.ts`.

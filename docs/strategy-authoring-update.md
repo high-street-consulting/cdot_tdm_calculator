@@ -29,7 +29,7 @@ compute:
 
 1. Edit the `compute:` block in `strategy-catalog/strategies/<id>.yaml`.
 2. `python strategy-catalog/build.py`: validates the YAML and recompiles.
-3. `python scripts/generate_compute_golden.py`: confirms your formula reproduces the authoritative Python engine (it prints `ok`/`FAIL` per case).
+3. `python methods/generate_compute_golden.py`: confirms your formula reproduces the authoritative Python engine (it prints `ok`/`FAIL` per case).
 
 **Docs:** the full grammar (`+ - * /`, `clamp/min/max/if`, etc.), the block shape, and how per-TAZ data (mode share, AVO, parking) reaches a formula are in `strategy-catalog/README.md` → *"Computing the math"*, which links to the complete reference.
 

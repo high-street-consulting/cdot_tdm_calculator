@@ -45,7 +45,7 @@ Canonical fact-sheet deep-link pattern (verified to resolve):
 
 ---
 
-## 1. `app/src/components/MethodologyView.tsx`
+## 1. `src/components/MethodologyView.tsx`
 
 This renders the "Elasticities and effect sizes" and "Pre-quantified program effects"
 tables on the Methodology page. The citations are hardcoded in the `<td>` cells.
@@ -92,7 +92,7 @@ tables on the Methodology page. The citations are hardcoded in the `<td>` cells.
 
 ---
 
-## 2. `app/src/strategies/context.ts`
+## 2. `src/strategies/context.ts`
 
 These are `source:` strings shown on the "Project context" cards in the strategy detail
 (configure) view.
@@ -117,9 +117,9 @@ These are `source:` strings shown on the "Project context" cards in the strategy
 
 ---
 
-## 3. `app/src/strategies/constants.ts` (code comments, optional)
+## 3. `src/strategies/constants.ts` (code comments, optional)
 
-Not user-facing, but inconsistent with `scripts/strategy_calculations.py`, whose
+Not user-facing, but inconsistent with `methods/strategy_calculations.py`, whose
 `PROGRAM_EFFECTS` comments already cite the 2021 codes (`T-5`, `T-13`, `T-3`). Align them:
 
 ### Line ~64
@@ -136,7 +136,7 @@ Not user-facing, but inconsistent with `scripts/strategy_calculations.py`, whose
 
 ---
 
-## 4. `app/src/strategies/strategies.ts` (code comment + assumptions label, optional)
+## 4. `src/strategies/strategies.ts` (code comment + assumptions label, optional)
 
 ### Line ~285: section comment
 ```diff
@@ -159,14 +159,14 @@ Not user-facing, but inconsistent with `scripts/strategy_calculations.py`, whose
 ## Leave as-is
 
 The `// formerly TRT-X in the 2010 edition` comments in
-`scripts/strategy_calculations.py` (lines ~184-189, ~911, ~1183, ~1210, ~1245) already
+`methods/strategy_calculations.py` (lines ~184-189, ~911, ~1183, ~1210, ~1245) already
 cite the correct 2021 code and intentionally note the historical mapping. No change needed.
 
 ---
 
 ## After editing
 
-The app reads the strategy *catalog* from `app/src/strategies/catalog.json` (synced from
+The app reads the strategy *catalog* from `src/strategies/catalog.json` (synced from
 the YAML), but the items above are hardcoded in `.ts`/`.tsx`, so a normal
 build/typecheck is the only verification needed:
 

@@ -154,7 +154,7 @@ Verified live service URLs (all public, no token):
 - Transit: `https://services.arcgis.com/yzB9WM8W0BO3Ql7d/arcgis/rest/services/Statewide_Transit_Routes/FeatureServer/0`
 - Bikeways (broken SR, deferred): `https://services.arcgis.com/0L95CJ0VTaxqcmED/arcgis/rest/services/TRANSPORTATION_bicycle_facilities/FeatureServer/0`
 
-Implementation: `app/src/data/contextLayers.ts` (config) + the toggle panel + lazy layer creation in `app/src/components/MapView.tsx`. Layers are created on first toggle, inserted below the selection graphics, scale-gated, popups off, excluded from TAZ selection (the click hitTest is scoped to the TAZ layer), with attribution.
+Implementation: `src/data/contextLayers.ts` (config) + the toggle panel + lazy layer creation in `src/components/MapView.tsx`. Layers are created on first toggle, inserted below the selection graphics, scale-gated, popups off, excluded from TAZ selection (the click hitTest is scoped to the TAZ layer), with attribution.
 
 ## 9. Risks & gotchas
 

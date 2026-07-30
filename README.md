@@ -9,24 +9,34 @@ Built for the CDOT Office of Innovative Mobility.
 
 ## Repository layout
 
+The calculator **is** this repository — `src/`, `public/`, `e2e/` and the build
+config sit at the root, so `npm install && npm run dev` works from a fresh clone
+with no subdirectory to descend into.
+
 | Path | What it is |
 |---|---|
-| `app/` | The calculator: a React + Vite + TypeScript single-page app (ArcGIS Maps SDK for the interactive map). |
+| `src/`, `index.html` | The calculator: a React + Vite + TypeScript single-page app (ArcGIS Maps SDK for the interactive map). |
+| `e2e/` | Playwright end-to-end suite (desktop engines + phone viewports). |
+| `scripts/` | Build-time Node scripts: catalog sync and third-party licence generation. |
 | `strategy-catalog/` | TDM strategy **content**: one YAML per strategy + `build.py` that validates and compiles them to `compiled/strategies.json` (the app's data). Closed-form math lives in each YAML's `compute:` block (see [`strategy-catalog/COMPUTE_DSL.md`](strategy-catalog/COMPUTE_DSL.md)). |
-| `scripts/` | The Python **calculation engine** (`strategy_calculations.py`) and offline data pipeline: TAZ data prep (`prepare_taz.py`), AGOL publishing (`publish_enriched_taz.py`), and helpers. |
+| `methods/` | The Python **calculation engine** (`strategy_calculations.py`, `strategy_compute.py`) that the TypeScript port is validated against, plus the golden-fixture generators. |
 | `report_service/` | Proof-of-concept server-side accessible-PDF export (WeasyPrint). |
-| `docs/` | Deployment, methodology, and status docs. |
+| `docs/` | Deployment, methodology, and status docs — including [`docs/app-architecture.md`](docs/app-architecture.md), the app's design decisions and known issues. |
 
-> **Data lives in a separate private repository.** The travel-model inputs and
-> generated artifacts (the old `data/` and `outputs/` trees) are **not** in this
-> repo. The web app never needs them — it reads TAZ data from published AGOL
-> layers at runtime. Only the offline data pipeline in `scripts/` touches them;
-> see [Data pipeline](#data-pipeline) below.
+> **The data pipeline lives in a separate private repository.** The travel-model
+> inputs, the generated artifacts (`data/`, `outputs/`) and the offline scripts
+> that build and publish the TAZ layer are **not** here. The app never needs
+> them — it reads TAZ data from published AGOL layers at runtime.
+>
+> The one seam runs the other way: the publishing script in that repo reads this
+> app's `TAZ_FIELDS` list out of `src/data/queryTaz.ts` to decide which
+> attributes to publish, so the hosted layer can never drift from what the app
+> queries. Point its `$TDM_APP_DIR` at a checkout of this repo.
 
 ## Prerequisites
 
-- **Node ≥ 22** (repo targets 24; see `app/.nvmrc`) for the web app.
-- **Python 3.12** with [`uv`](https://docs.astral.sh/uv/) for the calculation engine and data scripts.
+- **Node ≥ 22** (repo targets 24; see `.nvmrc`) for the web app.
+- **Python 3.12** with [`uv`](https://docs.astral.sh/uv/) for the calculation engine in `methods/`.
 
 The web app has **no data dependency** — you can clone, build, and run it without
 the private data repo.
@@ -34,7 +44,6 @@ the private data repo.
 ## The web app
 
 ```bash
-cd app
 npm install
 npm run dev        # dev server at http://localhost:5180
 npm run build      # production build
@@ -46,10 +55,10 @@ Testing:
 ```bash
 npm test           # unit tests (Vitest)
 npm run test:e2e   # cross-browser E2E (Playwright: Blink/Gecko/WebKit, + real
-                   # Chrome/Edge when installed). See app/e2e/README.md.
+                   # Chrome/Edge when installed). See e2e/README.md.
 ```
 
-The app reads its strategy data from `app/src/strategies/catalog.json`, which is
+The app reads its strategy data from `src/strategies/catalog.json`, which is
 synced from `strategy-catalog/compiled/strategies.json` automatically before
 dev/build/test (the `sync:catalog` npm script). The compiled catalog and the
 golden fixtures are committed, so the app builds and its tests pass on a bare
@@ -63,7 +72,7 @@ A strategy lives in **two places** kept in sync by its stable `id`:
   UI inputs, and, for closed-form strategies, the `compute:` block).
 - **Math**: the `compute:` block (evaluated identically in Python and the app),
   or, for complex strategies, a Python calc function in
-  `scripts/strategy_calculations.py` with a hand-ported TypeScript twin pinned by
+  `methods/strategy_calculations.py` with a hand-ported TypeScript twin pinned by
   a golden test.
 
 After editing a YAML, recompile and commit the output:
@@ -77,20 +86,26 @@ full workflow, conventions, and the `compute:` DSL reference.
 
 ## Data pipeline
 
-The scripts in `scripts/` that regenerate the app's TAZ data layer
-(`prepare_taz.py`, `publish_enriched_taz.py`, `transit_metrics_per_taz.py`,
-`fetch_background_data.py`) read the private travel-model inputs. Point them at
-your local checkout of the private data repo via environment variables (see
-`scripts/paths.py`):
+The offline pipeline that builds and publishes the TAZ layer lives in the
+**private data repository**, not here — it needs the travel-model inputs, which
+are not public. That covers `prepare_taz.py`, `publish_enriched_taz.py`,
+`transit_metrics_per_taz.py` and `fetch_background_data.py`.
+
+Nothing in this repository depends on it: the compiled catalog and the golden
+fixtures are committed, so a bare checkout builds, runs and tests on its own.
+
+The dependency runs the other way. `publish_enriched_taz.py` reads the
+`TAZ_FIELDS` array out of `src/data/queryTaz.ts` and publishes exactly those
+attributes, so the hosted layer cannot carry fields the app does not read, nor
+omit ones it does. Point that script at a checkout of this repo:
 
 ```bash
-export TDM_DATA_DIR=/path/to/tdm-private-data/data
-export TDM_OUTPUTS_DIR=/path/to/tdm-private-data/outputs
+export TDM_APP_DIR=/path/to/cdot-tdm-calculator
 ```
 
-Both default to `./data` and `./outputs` when unset. Credentials for the Census
-API and AGOL publishing go in `.env` (copy `.env.example`). None of this is
-needed to run the web app.
+Adding a field to `TAZ_FIELDS` therefore requires a republish before the app can
+read it — the publish script fails loudly if the assembled table can't satisfy
+the contract.
 
 ## Deployment
 
@@ -124,7 +139,7 @@ open source:
   under a "linkware" license: free to redistribute provided its LICENSE text
   ships with the distribution and its branding link is not hidden or altered.
 
-`app/public/THIRD-PARTY-LICENSES.txt` carries the full notices for every package
+`public/THIRD-PARTY-LICENSES.txt` carries the full notices for every package
 compiled into the distributable. It is regenerated on every build
 (`npm run licenses:third-party`) so it cannot drift from `package.json`, is
 served at `/THIRD-PARTY-LICENSES.txt` on any deployment, and is included in the
@@ -134,6 +149,6 @@ IIS handoff package.
 
 Apache-2.0 grants no trademark rights (see section 6 of the license). The
 Colorado Department of Transportation name, the CDOT logo
-(`app/public/cdot_logo.png` and the favicons derived from it), and the marks of
+(`public/cdot_logo.png` and the favicons derived from it), and the marks of
 the contributing firms are **excluded from this license**. Forks and derivative
 works must remove or replace CDOT branding unless separately authorized by CDOT.
