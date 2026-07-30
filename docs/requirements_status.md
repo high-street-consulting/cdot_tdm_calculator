@@ -1,6 +1,9 @@
 # CDOT TDM Calculator: Requirements Implementation Status
 
-Status of the web calculator against **`docs/CDOT TDM Calculator Requirements.docx`** (March 2026, Task Order #12).
+Status of the web calculator against the **CDOT TDM Calculator Requirements**
+document (March 2026, Task Order #12). That document is a client deliverable and
+lives in the private data repository, not here; the requirement IDs below
+(`DI-05`, `UI-06`, …) are the reference points.
 
 - **Assessed:** 2026-06-30, against `main` (deployed at `high-street.bitbucket.io/cdot_tdm_calculator/`).
 - **Legend:** ✅ Implemented · 🟡 Partial / adapted · ⬜ Not yet built · 🔵 External / process task (not app code).
