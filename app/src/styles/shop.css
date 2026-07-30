@@ -826,14 +826,23 @@
   flex-wrap: wrap;
   box-shadow: 0 2px 12px rgba(0,25,112,.09);
 }
-.commit-bar .commit-impact { min-width: 0; }
+/* The impact text is the shrink track, so the bar keeps impact-left /
+   action-right on one row rather than breaking apart. Between the 980px
+   stacking breakpoint and ~1090px it used to wrap onto two lines while
+   .commit-actions kept right-aligning its contents against its own box (sized
+   to the help text) — which left "Add to package" floating mid-card, aligned to
+   nothing. Basis 0 makes this column yield space first; .commit-figure already
+   wraps internally, so the figures reflow instead of the layout coming apart. */
+.commit-bar .commit-impact { min-width: 0; flex: 1 1 0; }
 .commit-bar .commit-figure { display: flex; align-items: baseline; gap: 10px; margin-top: 3px; flex-wrap: wrap; }
 .commit-bar .commit-pct {
   font-size: 26px; font-weight: 600; letter-spacing: -0.01em;
   font-variant-numeric: tabular-nums; line-height: 1;
 }
 .commit-bar .commit-caption { font-size: 14px; color: #4A4A4A; }
-.commit-bar .commit-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+/* Keeps its natural width but may shrink (the help text wraps) before the row
+   is ever allowed to break; the button itself is the floor. */
+.commit-bar .commit-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex: 0 1 auto; }
 .commit-bar .commit-buttons { display: flex; gap: 10px; align-items: center; }
 .commit-bar .commit-help { font-size: 12px; color: #6B6B6B; text-align: right; }
 .commit-bar .btn-add {
@@ -1011,7 +1020,14 @@
   .shop-detail .dhero .band-panel .band-glyph {
     right: -14px; bottom: -14px; transform: scale(.8); transform-origin: bottom right;
   }
-  /* Commit bar stacks (impact over actions), actions align left. */
+  /* Commit bar stacks (impact over actions), actions align left. State the
+     column explicitly rather than relying on the row wrapping: the impact
+     column is now the shrink track (flex: 1 1 0, see the base rule), so the row
+     no longer breaks on its own and the left-alignment below would otherwise
+     leave the button hanging inside a right-hand block. */
+  .commit-bar { flex-direction: column; align-items: stretch; }
+  .commit-bar .commit-impact,
+  .commit-bar .commit-actions { flex: 0 0 auto; }
   .commit-bar .commit-actions { align-items: flex-start; }
   .commit-bar .commit-help { text-align: left; }
 }

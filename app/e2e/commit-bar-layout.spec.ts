@@ -1,0 +1,61 @@
+// The "Add to package" button must always be anchored to an edge of its card.
+//
+// It has two intended states: side-by-side (impact left, action flush right)
+// above the 980px stacking breakpoint, and stacked (impact over action, both
+// flush left) at or below it.
+//
+// The regression this guards: .commit-bar used to rely on flex-wrap to produce
+// the stacked state. Between 981px and ~1090px the row was too narrow to fit but
+// no media query had kicked in, so it wrapped while .commit-actions still
+// right-aligned its contents inside its own box — sized to the help text, not
+// the card. The button ended up floating in the middle of the card, aligned to
+// nothing. The fix makes the impact column the shrink track and states the
+// stack explicitly, so no width is left to improvise.
+
+import { test, expect } from "@playwright/test";
+import { STEAMBOAT_TAZS, STRATEGY, gotoArea, selectTazs, openStrategy } from "./helpers";
+
+/** Card padding is 22px; allow a little slack for borders/rounding. */
+const FLUSH = 30;
+/** Matches the .shop-detail stacking breakpoint in shop.css. */
+const STACK_PX = 980;
+
+const WIDTHS = [390, 760, 900, 979, 981, 1024, 1060, 1200, 1680];
+
+test("the commit button stays anchored at every width", async ({ page }) => {
+  test.slow();
+  await gotoArea(page);
+  await selectTazs(page, STEAMBOAT_TAZS);
+  await openStrategy(page, STRATEGY.sharrows);
+
+  const bar = page.locator(".commit-bar");
+  const button = page.locator(".commit-bar .btn-add");
+  await expect(button).toBeVisible();
+
+  for (const width of WIDTHS) {
+    await page.setViewportSize({ width, height: 900 });
+    // Let the reflow settle before measuring.
+    await page.waitForTimeout(250);
+
+    const b = (await bar.boundingBox())!;
+    const btn = (await button.boundingBox())!;
+    const insetLeft = Math.round(btn.x - b.x);
+    const insetRight = Math.round(b.x + b.width - (btn.x + btn.width));
+
+    // Whichever state applies, the button hugs one edge — never both large,
+    // which is precisely the "floating mid-card" failure.
+    if (width <= STACK_PX) {
+      expect(insetLeft, `at ${width}px the stacked button should be flush left`).toBeLessThanOrEqual(FLUSH);
+    } else {
+      expect(insetRight, `at ${width}px the button should be flush right`).toBeLessThanOrEqual(FLUSH);
+    }
+    expect(
+      Math.min(insetLeft, insetRight),
+      `at ${width}px the button is anchored to neither edge (L=${insetLeft}, R=${insetRight})`,
+    ).toBeLessThanOrEqual(FLUSH);
+
+    // And it must stay inside its card.
+    expect(insetLeft, `at ${width}px the button overflows the card`).toBeGreaterThanOrEqual(-1);
+    expect(insetRight, `at ${width}px the button overflows the card`).toBeGreaterThanOrEqual(-1);
+  }
+});
