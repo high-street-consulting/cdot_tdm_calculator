@@ -106,7 +106,7 @@ export function DataSourcesView() {
           <ul className="doc-meta">
             <li><b>Vintage:</b> 30-year climate normals, 1991-2020</li>
             <li><b>Stations:</b> Colorado HCN / CRN / GSN stations (subset that publishes daily-normal products)</li>
-            <li><b>Provides:</b> <code>annual_bikeable_days_taz</code> (per-TAZ IDW interpolation, k=5, p=2) and <code>annual_bikeable_days_county</code> fallback. "Bikeable" = daytime high between 32°F and 95°F with no rain or snow</li>
+            <li><b>Provides:</b> <code>annual_bikeable_days_taz</code>, interpolated to every TAZ from the k=5 nearest stations (inverse distance weighting, p=2) — so it is populated statewide, not only for the counties that happen to contain a station. "Bikeable" = daytime high between 32°F and 95°F with no rain or snow</li>
             <li><b>Used by:</b> separated bike lanes strategy (the <code>annual_use_days</code> input pre-populates from this)</li>
             <li><b>Fetcher:</b> <code>scripts/fetch_background_data.py</code> (no auth required)</li>
           </ul>

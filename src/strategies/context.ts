@@ -370,7 +370,6 @@ const builders: Partial<Record<StrategyKey, Builder>> = {
   separated_bike_lanes: (tazs) => {
     const days =
       meanOf(tazs, "annual_bikeable_days_taz") ??
-      meanOf(tazs, "annual_bikeable_days_county") ??
       BEHAVIORAL_DEFAULTS.annual_bikeable_days;
     const avgTripLen =
       meanOf(tazs, "avg_trip_length") ?? BEHAVIORAL_DEFAULTS.avg_vehicle_trip_length_mi;

@@ -786,19 +786,18 @@ def strategy_separated_bike_lanes(
         days_source = "user_specified"
     elif "annual_bikeable_days_taz" in taz_df.columns \
             and taz_df["annual_bikeable_days_taz"].notna().any():
-        # IDW-interpolated per-TAZ value. Fall back to county or statewide
-        # for any TAZ rows that didn't get an interpolated value (rare; only
-        # happens if interpolation failed for that TAZ).
-        days = taz_df["annual_bikeable_days_taz"]
-        if "annual_bikeable_days_county" in taz_df.columns:
-            days = days.fillna(taz_df["annual_bikeable_days_county"])
-        days = days.fillna(BEHAVIORAL_DEFAULTS["annual_bikeable_days"])
-        days_source = "noaa_taz_idw"
-    elif "annual_bikeable_days_county" in taz_df.columns \
-            and taz_df["annual_bikeable_days_county"].notna().any():
-        days = taz_df["annual_bikeable_days_county"].fillna(
+        # IDW-interpolated per-TAZ value, statewide default for any row that
+        # somehow lacks one. The interpolation draws from the k nearest stations
+        # regardless of county, so in practice it is populated for every TAZ.
+        #
+        # There used to be an annual_bikeable_days_county step in between. It was
+        # dropped: that column is a QA/overview aggregate of stations falling
+        # INSIDE each county, so it is null for the 39 of Colorado's 64 counties
+        # that contain no NOAA station — it was 45% populated, and measurably
+        # never reached, because the IDW column is 100% populated.
+        days = taz_df["annual_bikeable_days_taz"].fillna(
             BEHAVIORAL_DEFAULTS["annual_bikeable_days"])
-        days_source = "noaa_county_with_default_fallback"
+        days_source = "noaa_taz_idw"
     else:
         days = pd.Series(BEHAVIORAL_DEFAULTS["annual_bikeable_days"], index=taz_df.index)
         days_source = "statewide_default"

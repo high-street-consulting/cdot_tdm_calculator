@@ -22,7 +22,6 @@ const TAZ_FIELDS = [
   "daily_trips",
   "avg_trip_length",
   "annual_bikeable_days_taz",
-  "annual_bikeable_days_county",
   "acs_total_workers",
   "acs_drove_alone_share",
   "acs_carpool_share",

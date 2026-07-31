@@ -21,9 +21,8 @@ export interface TazInputs {
   acs_transit_share?: number | null;
   acs_bike_share?: number | null;
   acs_walk_share?: number | null;
-  // NOAA bikeable days
+  // NOAA bikeable days (IDW-interpolated per TAZ; always populated statewide)
   annual_bikeable_days_taz?: number | null;
-  annual_bikeable_days_county?: number | null;
   // Lane miles by facility class
   lane_mi_freeway?: number | null;
   lane_mi_expressway?: number | null;

@@ -55,14 +55,13 @@ type Builder = (tazs: TazInputs[]) => Record<string, number | string>;
 
 const builders: Partial<Record<StrategyKey, Builder>> = {
   // Annual ridable days from the TAZ's NOAA-interpolated value, area-
-  // weighted across the selection. Falls back to the county mean, then to
-  // the statewide default. Rounded to whole days for the UI input.
+  // weighted across the selection, then the statewide default. Rounded to whole
+  // days for the UI input.
   separated_bike_lanes: (tazs) => {
     if (tazs.length === 0) return {};
     const days =
       weightedMean(tazs, "annual_bikeable_days_taz", "area_sqmi") ??
       mean(tazs, "annual_bikeable_days_taz") ??
-      mean(tazs, "annual_bikeable_days_county") ??
       BEHAVIORAL_DEFAULTS.annual_bikeable_days;
     const out: Record<string, number | string> = {};
     if (Number.isFinite(days)) out.annual_use_days = Math.round(days);
