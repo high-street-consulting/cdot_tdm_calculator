@@ -109,9 +109,12 @@ the contract.
 
 ## Deployment
 
-Production is **Cloudflare Pages** (`tdm.highstreet.work`). The app is a static
+Production is a **Cloudflare Worker with Static Assets** (`tdm.highstreet.work`)
+— not Cloudflare Pages; the dashboard's "Connect to Git" defaults static sites to
+a Worker. The app is a static
 build with no server-side or data dependency, so it can be built and deployed
-straight from this repo (Cloudflare Pages Git integration, a CI workflow, or a
+straight from this repo (the Worker's Git integration builds on push to `main`
+with root directory `/`, or a
 manual `npm run build:cf` + upload). The long-term target is an on-prem IIS host
 (static file copy). See [`docs/deployment.md`](docs/deployment.md) for the full
 hosting matrix and IIS handoff.

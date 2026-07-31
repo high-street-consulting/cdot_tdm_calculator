@@ -85,8 +85,8 @@ requirements **explicitly lists "an S3 bucket"** as a sanctioned hosting option.
 Mirror the current build-and-publish pipeline (today it pushes the built `dist/`
 to Bitbucket Pages), retargeted at AWS:
 
-1. `cd app && npm ci && npm run build`
-2. `aws s3 sync app/dist/ s3://<bucket>/ --delete`
+1. `npm ci && npm run build`
+2. `aws s3 sync dist/ s3://<bucket>/ --delete`
 3. `aws cloudfront create-invalidation --distribution-id <id> --paths "/*"`
 
 The PDF Lambda follows its own image build/push cycle (see the runbook).

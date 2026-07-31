@@ -171,7 +171,6 @@ the YAML), but the items above are hardcoded in `.ts`/`.tsx`, so a normal
 build/typecheck is the only verification needed:
 
 ```
-cd app
 npm run build      # or: npm run typecheck && npm test
 ```
 

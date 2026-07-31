@@ -2,8 +2,8 @@
 
 A closed-form strategy puts its VMT-reduction math in a `compute:` block in its
 YAML instead of a Python calc function. The block is the **single source of
-truth**: one evaluator runs it in both languages — `scripts/strategy_compute.py`
-(`run_compute`, for analysis) and `app/src/strategies/computeDsl.ts`
+truth**: one evaluator runs it in both languages — `methods/strategy_compute.py`
+(`run_compute`, for analysis) and `src/strategies/computeDsl.ts`
 (`runCompute`, in the app) — so the math is authored once and never
 hand-translated. `build.py` passes the block through to
 `compiled/strategies.json`; the app reads it from `catalog.json` and
@@ -84,11 +84,11 @@ For a yes/no `select` input, the host coerces the chosen option string to
 1. Edit the `compute:` block in the strategy YAML.
 2. `python scripts/generate_compute_golden.py` — asserts the block reproduces
    the authoritative Python function **and** writes the app fixture
-   `app/src/strategies/__fixtures__/compute_golden.json`.
-3. `cd app && npm test` — `computeDsl.test.ts` pins the TS evaluator to that
+   `src/strategies/__fixtures__/compute_golden.json`.
+3. `npm test` — `computeDsl.test.ts` pins the TS evaluator to that
    fixture.
 4. Keep the matching `strategy_*` Python function in
-   `scripts/strategy_calculations.py` as the cross-check oracle.
+   `methods/strategy_calculations.py` as the cross-check oracle.
 5. `python build.py` to recompile `compiled/strategies.json` (commit it
    alongside the YAML).
 

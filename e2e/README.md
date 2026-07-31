@@ -28,7 +28,6 @@ npx playwright test --project=msedge   # just the real Edge build
 ## Running
 
 ```bash
-cd app
 npm run test:e2e                       # all specs, all three engines
 npm run test:e2e -- --project=chromium-blink   # one engine
 npm run test:e2e -- bug-map-selection          # one spec
@@ -55,8 +54,8 @@ automatically by Playwright (`webServer` → `npm run dev` on :5180).
 ## Cross-reference to the Python engine
 
 The per-strategy math is already pinned to the Python engine by unit/golden
-tests (twin evaluators `scripts/strategy_compute.py` ⇄
-`app/src/strategies/computeDsl.ts`, plus `generate_compute_golden.py` for
+tests (twin evaluators `methods/strategy_compute.py` ⇄
+`src/strategies/computeDsl.ts`, plus `generate_compute_golden.py` for
 closed-form strategies and hand-port golden tests for code strategies).
 `calc-crossref.spec.ts` validates the **full live pipeline** (AGOL data → TS
 engine → display) against the *documented calculation behavior*: the negative-=

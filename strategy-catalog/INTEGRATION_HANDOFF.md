@@ -1,7 +1,7 @@
 # Handoff: integrate the strategy catalog into the calculator app
 
 This describes how to wire the new strategy catalog (`strategy-catalog/`) into the
-working SPA (`app/`), replacing the hardcoded strategy metadata with the compiled
+working SPA, replacing the hardcoded strategy metadata with the compiled
 JSON, surfacing the new content fields (extended description, images, methodology
 detail, per-input instructions, applicability), and adding tag-based filtering and
 sorting to the picker.
@@ -11,11 +11,11 @@ semantics. This document assumes that context.
 
 ## Goal
 
-Today, `app/src/strategies/registry.ts` hardcodes `CATEGORIES` and `STRATEGIES`
+Today, `src/strategies/registry.ts` hardcodes `CATEGORIES` and `STRATEGIES`
 (`StrategyMeta[]`). The catalog now owns that content as per-strategy YAML compiled
 to `strategy-catalog/compiled/strategies.json`. The app should consume that JSON as
 its single source of strategy content. The numeric engine stays in code: the calc
-functions in `app/src/strategies/strategies.ts` (`STRATEGY_REGISTRY`) and the
+functions in `src/strategies/strategies.ts` (`STRATEGY_REGISTRY`) and the
 constants in `constants.ts` are unchanged and remain authoritative for the math.
 
 Keep the change additive and low-risk: introduce an adapter that maps the catalog
@@ -79,7 +79,7 @@ stubs are excluded by `build.py`. As stubs are promoted, they appear here automa
 Prefer a static module import over a runtime fetch (type-checked, no network, bundled):
 
 1. Add an npm script that copies the compiled JSON into the app on every dev/build run.
-   In `app/package.json`:
+   In `package.json`:
 
    ```jsonc
    "scripts": {
@@ -90,7 +90,7 @@ Prefer a static module import over a runtime fetch (type-checked, no network, bu
    }
    ```
 
-   `app/scripts/sync-catalog.mjs`:
+   `scripts/sync-catalog.mjs`:
 
    ```js
    import { copyFileSync, mkdirSync } from "node:fs";
@@ -102,7 +102,7 @@ Prefer a static module import over a runtime fetch (type-checked, no network, bu
    console.log(`synced catalog → ${dst}`);
    ```
 
-   (Alternative: point `build.py`'s `OUT_PATH` directly at `app/src/strategies/catalog.json`.
+   (Alternative: point `build.py`'s `OUT_PATH` directly at `src/strategies/catalog.json`.
    The copy script keeps the catalog repo and app build decoupled, which is cleaner.)
 
 2. Ensure `app/tsconfig.json` has `"resolveJsonModule": true` and `"esModuleInterop": true`.
@@ -112,7 +112,7 @@ Prefer a static module import over a runtime fetch (type-checked, no network, bu
 
 ## Step 2 — types + adapter
 
-Add `app/src/strategies/catalog.ts`:
+Add `src/strategies/catalog.ts`:
 
 ```ts
 import catalog from "./catalog.json";

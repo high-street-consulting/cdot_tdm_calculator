@@ -12,7 +12,6 @@ consuming a hosted feature layer + web map on `hspartner.maps.arcgis.com`.
 ## Quick start
 
 ```bash
-cd app
 npm install               # one-time
 cp .env.example .env      # only if you want to override the default web map
 npm run dev               # dev server on http://localhost:5180
@@ -170,7 +169,7 @@ VITE_PORTAL_URL=https://hspartner.maps.arcgis.com
 VITE_TAZ_LAYER_URL=...                # used by data/queryTaz.ts
 ```
 
-The enriched layer is produced by `scripts/publish_enriched_taz.py` (repo
+The enriched layer is produced by `publish_enriched_taz.py` (private data repo) (repo
 root), which runs `prepare_taz()`, writes the joined table to GeoJSON, and
 publishes it to AGOL. Use GeoJSON specifically (not the SDK's shapefile path)
 because shapefile field names are capped at 10 characters — the
@@ -181,7 +180,7 @@ To republish after the source CSV/script changes:
 
 ```bash
 cd ..
-uv run python scripts/publish_enriched_taz.py
+uv run python `publish_enriched_taz.py` (private data repo)
 ```
 
 The script will create new items each time (idempotent on title); delete
@@ -264,5 +263,5 @@ app/
 npm run typecheck                                     # fastest pre-commit check
 npm test -- --reporter=verbose                        # see each golden row pass
 .venv/bin/python ../scripts/generate_golden_fixtures.py  # regen fixtures
-.venv/bin/python ../scripts/publish_enriched_taz.py   # republish AGOL data
+.venv/bin/python ../`publish_enriched_taz.py` (private data repo)   # republish AGOL data
 ```

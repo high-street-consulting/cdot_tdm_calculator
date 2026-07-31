@@ -85,8 +85,8 @@ Items 1–3 move the SDK off the first-paint path and trim the entry chunk, so t
 
 1. Drop the new source TAZ dataset at `DEFAULT_TAZ_PATH` (or pass `--taz-path`). Update the `source → contract` field map in `prepare_taz.py` if CDOT changed field names.
 2. (Optional) Refresh background sources (`fetch_cdot_layers.py`, `fetch_background_data.py`, `transit_metrics_per_taz.py`), or reuse cached pulls if ACS/NOAA haven't changed.
-3. `python scripts/prepare_taz.py` → enriched GeoDataFrame. **Validation gate** asserts the `TAZ_FIELDS` contract.
-4. `python scripts/publish_enriched_taz.py --overwrite --env prod` → **overwrites the existing FL** in the CDOT org (same item ID, same URL).
+3. `python `prepare_taz.py` (private data repo) → enriched GeoDataFrame. **Validation gate** asserts the `TAZ_FIELDS` contract.
+4. `python `publish_enriched_taz.py` (private data repo) --overwrite --env prod` → **overwrites the existing FL** in the CDOT org (same item ID, same URL).
 5. Regenerate the VTL from the updated geometry → **overwrite the existing VTL item** (same ID/URL). (ArcGIS API for Python, or an ArcGIS Pro "Create Vector Tile Package" + overwrite step; see §6.)
 6. Smoke test against staging, then confirm prod. **No app redeploy**, since URLs are unchanged.
 

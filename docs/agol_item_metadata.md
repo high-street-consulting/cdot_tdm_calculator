@@ -75,7 +75,7 @@ Per-TAZ enriched dataset for the CDOT TDM Calculator: CDOT 2019 SWTDM zone geome
 
 ### Description
 ```
-Per-zone enriched dataset that drives the CDOT TDM Calculator. One row per traffic analysis zone (TAZ), built by scripts/prepare_taz.py from CDOT 2019 Statewide Travel Demand Model (SWTDM) outputs plus background sources.
+Per-zone enriched dataset that drives the CDOT TDM Calculator. One row per traffic analysis zone (TAZ), built by `prepare_taz.py` (private data repo) from CDOT 2019 Statewide Travel Demand Model (SWTDM) outputs plus background sources.
 
 Attribute groups include:
 • Identity & geography: taz_id, county, MPO, area type, area (sq mi)

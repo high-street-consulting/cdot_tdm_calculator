@@ -58,7 +58,7 @@ The project is **well past the Sprint-1 proof of concept**; it is a working Reac
 | DI-02 | Must | ✅ | Baseline VMT from the CDOT Statewide Travel Demand Model (currently 2019 SWTDM). **2025 base-year refresh pending** (external, expected summer 2026). |
 | DI-03 | Could | 🟡 | Bike-network mileage (`bike_centerline_mi`) present, sourced from CDOT/model rather than OSM. |
 | DI-04 | Could | ⬜ | National Zoning Atlas not integrated; land-use inputs are user-supplied / density-based. |
-| DI-05 | Must | ✅ | Scripted, repeatable data prep + publish (`scripts/prepare_taz.py`, `publish_enriched_taz.py`). |
+| DI-05 | Must | ✅ | Scripted, repeatable data prep + publish (`prepare_taz.py` (private data repo), `publish_enriched_taz.py`). |
 | DI-06 | Could | ⬜ | No micromobility-feed integration (RideReport/NABSA); a shared-micromobility *strategy* exists but not the data feed. |
 
 ## 4.4 Outputs & Reporting

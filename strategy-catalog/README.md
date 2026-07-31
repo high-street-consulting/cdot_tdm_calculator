@@ -5,7 +5,7 @@ YAML file per strategy, validated against a schema and compiled to a single
 JSON the app consumes. This replaces the Google Sheet (which couldn't model
 one-strategy-to-many-inputs or hold long-form descriptions and per-input
 guidance) and externalizes the metadata currently hardcoded in
-`app/src/strategies/registry.ts`.
+`src/strategies/registry.ts`.
 
 ## Layout
 
@@ -20,7 +20,7 @@ strategy-catalog/
   compiled/strategies.json   generated output (do not hand-edit)
 ```
 
-The 11 files were bootstrapped from `app/src/strategies/registry.ts`; the YAML
+The 11 files were bootstrapped from `src/strategies/registry.ts`; the YAML
 is now the source of truth.
 
 ## Editing workflow
@@ -51,7 +51,7 @@ fields and move the file up from `strategies/todo/` into `strategies/`.
 `status` values: `planned` (will be built), `not_recommended` (quantification
 not recommended per Handy et al. 2025 or the spreadsheet — kept for the record).
 Several stubs already have Python reference implementations in
-`scripts/strategy_calculations.py` (noted in their `notes`); those are the
+`methods/strategy_calculations.py` (noted in their `notes`); those are the
 quickest to promote.
 
 Only Must Have (Tier 1) and Nice to Have (Tier 2) strategies are stubbed; the
@@ -72,8 +72,8 @@ A strategy's VMT-reduction math lives in one of two places, picked by complexity
 - **Closed-form → in the YAML, in a `compute:` block.** If the per-TAZ reduction
   is arithmetic over inputs, named constants, and already-imputed TAZ fields
   (mode share, AVO, parking), put it in an optional `compute:` block. It's the
-  executable formula, evaluated **identically** by `scripts/strategy_compute.py`
-  (analysis) and `app/src/strategies/computeDsl.ts` (the app) — so the YAML is the
+  executable formula, evaluated **identically** by `methods/strategy_compute.py`
+  (analysis) and `src/strategies/computeDsl.ts` (the app) — so the YAML is the
   single source of truth and there's no calc function to write or hand-translate.
   Most strategies are this. See [`COMPUTE_DSL.md`](./COMPUTE_DSL.md)
   for the full grammar (`+ - * /`, comparisons, `and`/`or`/`not`, and
@@ -84,14 +84,14 @@ A strategy's VMT-reduction math lives in one of two places, picked by complexity
 - **Complex → stays in code.** When the math can't be a formula — a multi-value
   `select` that switches the formula, a select→constant lookup, a dynamic TAZ
   column, or cross-TAZ / spatial work — the calc function stays in
-  `scripts/strategy_calculations.py`, is hand-translated to a TypeScript port, and
+  `methods/strategy_calculations.py`, is hand-translated to a TypeScript port, and
   is pinned to the Python by a golden test. Today that's `transit_service_expansion`,
   `shared_micromobility`, `lane_mile_addition`, and `park_and_ride`.
 
 Either way, math is matched to a strategy by `id` (must equal the app's
 `StrategyKey`): a `compute:` block wins; otherwise the app falls back to the code
 registry. Shared constants for the code path stay in
-`app/src/strategies/constants.ts` and `scripts/strategy_calculations.py`. The
+`src/strategies/constants.ts` and `methods/strategy_calculations.py`. The
 `method`/`formula`/`methodology_detail` fields hold the human-readable prose in
 both cases (they describe the math; the `compute:` block, when present, *is* it).
 
