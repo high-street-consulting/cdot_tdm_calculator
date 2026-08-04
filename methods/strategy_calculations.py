@@ -1565,9 +1565,23 @@ def strategy_lane_mile_addition(
       major_arterial / minor_arterial   +0.6
       collector / local                 +0.4
 
-    Existing lane-miles come from the prepared TAZ table's
-    ``lane_mi_<facility_class>`` column. Returns 0 reduction (with a flag)
-    for TAZs with no existing lane-miles in the class.
+    AGGREGATE, not per-TAZ. Both terms are project-area totals: ``new_lane_miles``
+    is the whole project's net change in through-lane miles, and the denominator
+    is ``lane_mi_<facility_class>`` summed over every row of ``taz_df``. The
+    resulting percentage is uniform across the frame.
+
+    Duranton & Turner is an *area-level* elasticity relating a region's VMT to
+    that region's lane miles, so the aggregate reading is the faithful one.
+    Dividing the project total by each zone's own much smaller stock — which this
+    did until 2026-08-04 — made the same project report a larger effect the more
+    zones were selected, and readily produced reductions beyond -100%.
+    Distributing the entered total across zones by lane-mile share is
+    algebraically identical to the aggregate form and is not done separately.
+
+    Removal is clamped at the existing stock (you cannot take out more lanes than
+    are there), bounding the reduction at exactly ε. Additions are unbounded.
+    Returns 0 reduction, with a flag, when the frame has no lane-miles in the
+    class at all.
     """
     if elasticity is None:
         key = FACILITY_TO_INDUCED_ELASTICITY.get(facility_class)
@@ -1578,13 +1592,24 @@ def strategy_lane_mile_addition(
     col = f"lane_mi_{facility_class}"
     if col not in taz_df.columns:
         raise KeyError(f"Prepared TAZ table missing column {col!r}.")
-    existing = taz_df[col]
-    pct_change_lm = new_lane_miles / existing.where(existing > 0)
-    pct = pct_change_lm * elasticity
-    inputs = f"new_lane_mi={new_lane_miles:.2f}, class={facility_class}, ε={elasticity}"
+    existing_total = float(taz_df[col].fillna(0.0).clip(lower=0.0).sum())
     assumptions = pd.Series("", index=taz_df.index)
-    assumptions[existing <= 0] = "no_existing_lane_miles_in_class"
-    return _result(taz_df, "Lane-Mile Addition", inputs, pct.fillna(0.0),
+
+    if existing_total <= 0:
+        inputs = (f"new_lane_mi={new_lane_miles:.2f}, class={facility_class}, "
+                  f"ε={elasticity}, existing_lane_mi=0.00")
+        assumptions[:] = "no_existing_lane_miles_in_class"
+        return _result(taz_df, "Lane-Mile Addition", inputs,
+                       pd.Series(0.0, index=taz_df.index),
+                       _base_vmt(taz_df, "all"), assumptions)
+
+    applied = max(float(new_lane_miles), -existing_total)
+    if applied != float(new_lane_miles):
+        assumptions[:] = "lane_miles_removed_clamped_to_existing"
+    pct = pd.Series((applied / existing_total) * elasticity, index=taz_df.index)
+    inputs = (f"new_lane_mi={applied:.2f}, class={facility_class}, "
+              f"ε={elasticity}, existing_lane_mi={existing_total:.2f}")
+    return _result(taz_df, "Lane-Mile Addition", inputs, pct,
                    _base_vmt(taz_df, "all"), assumptions)
 
 

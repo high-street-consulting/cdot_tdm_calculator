@@ -18,7 +18,7 @@ import {
 } from "./catalog";
 import { STRATEGY_REGISTRY, type StrategyKey } from "./strategies";
 import { runCompute } from "./computeDsl";
-import { AGGREGATE_REGISTRY, type ParkAndRideArgs } from "./parkAndRide";
+import { AGGREGATE_REGISTRY } from "./aggregates";
 import type { StrategyResult, TazInputs, TripPurpose } from "./types";
 import { baseVmt, buildResult, getAvo, imputedModeShare, imputedParking } from "./util";
 import {
@@ -400,11 +400,32 @@ function partitionOverrides(
 }
 
 /**
+ * Seed a strategy's input defaults under the caller's values, dropping empty and
+ * undefined entries, so a cleared number input (which the DetailView stores as
+ * "") or an input the user never touched falls back to its catalog default
+ * instead of reaching a calc fn as "" / undefined and throwing (e.g.
+ * `args.new_lane_miles.toFixed`). Mirrors the DSL path's
+ * `{ ...defaults, ...numericParams(values) }` tolerance.
+ */
+function seedDefaults(
+  meta: StrategyMeta,
+  values: Record<string, number | string>,
+): Record<string, number | string> {
+  const args: Record<string, number | string> = { ...meta.defaults };
+  for (const [k, v] of Object.entries(values)) {
+    if (v === undefined || v === null) continue;
+    if (typeof v === "string" && v.trim() === "") continue;
+    args[k] = v;
+  }
+  return args;
+}
+
+/**
  * Compute one strategy's per-TAZ results (uncapped), dispatching on how its math
  * is defined. This is the single source of the dispatch, used by computeResults
  * (aggregation + caps) and by DetailView (live preview):
  *   1. YAML `compute:` block  -> evaluate via computeDsl
- *   2. AGGREGATE_REGISTRY      -> cross-TAZ fn (e.g. Park-and-Ride)
+ *   2. AGGREGATE_REGISTRY      -> cross-TAZ fn (Park-and-Ride, Lane-Mile Addition)
  *   3. STRATEGY_REGISTRY       -> per-TAZ hand-written calc fn (complex strategies)
  */
 export function computeStrategyRows(
@@ -454,7 +475,7 @@ export function computeStrategyRows(
 
   const aggregateFn = AGGREGATE_REGISTRY[id];
   if (aggregateFn) {
-    return aggregateFn(selectedTazs, values as unknown as ParkAndRideArgs);
+    return aggregateFn(selectedTazs, seedDefaults(meta, values));
   }
 
   // Hand-written per-TAZ calc fns. Thread contextOverrides through so a
@@ -462,18 +483,7 @@ export function computeStrategyRows(
   // expansion's transit/auto mode share + AVO) honors the override uniformly
   // across every TAZ, matching the DSL path's dslRow semantics. Fns that don't
   // read any overridable field simply ignore the extra arg.
-  //
-  // Seed the strategy's input defaults and drop empty/undefined values before
-  // calling the fn, so a cleared number input (which the DetailView stores as
-  // "") or an unset input falls back to its default instead of reaching a calc
-  // fn as "" / undefined and throwing (e.g. `args.new_lane_miles.toFixed`).
-  // Mirrors the DSL path's `{ ...defaults, ...numericParams(values) }` tolerance.
-  const args: Record<string, number | string> = { ...meta.defaults };
-  for (const [k, v] of Object.entries(values)) {
-    if (v === undefined || v === null) continue;
-    if (typeof v === "string" && v.trim() === "") continue;
-    args[k] = v;
-  }
+  const args = seedDefaults(meta, values);
   const fn = PER_TAZ_REGISTRY[id];
   return selectedTazs.map((taz) => fn(taz, args, contextOverrides));
 }

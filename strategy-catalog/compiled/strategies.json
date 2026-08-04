@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-27T23:50:35.006588+00:00",
+  "generated_at": "2026-08-04T18:29:35.205766+00:00",
   "categories": [
     {
       "id": "transit",
@@ -869,8 +869,8 @@
       "guidance": "Use this strategy to estimate VMT reductions from removing general-purpose\nlane capacity, such as through a road diet. It can also be used to estimate the added VMT\nassociated with new general-purpose lanes compared with the baseline. Other improvements\nsuch as turn lanes, bus-only lanes, or safety projects should be evaluated based on their\nspecific purpose.\n",
       "images": [],
       "method": "Duranton & Turner 2011 long-run induced-demand elasticities",
-      "formula": "ΔVMT% = (new_lane_miles / existing_lane_miles_in_class) × ε",
-      "methodology_detail": "Widening a road or adding lanes makes driving easier, which over time generates\nmore vehicle miles traveled (VMT), an effect known as induced demand. The added\ndriving is proportional to how much the new lanes increase capacity for that type\nof road.\n\n`ΔVMT% = (new_lane_miles / existing_lane_miles_in_class) × ε`\n\nThe strength of the effect depends on the road type: freeways and expressways\nbring out the most new travel, arterials less, and collectors and local streets\nthe least (Duranton & Turner 2011). Induced demand is not a CAPCOA reduction\nmeasure, so no CAPCOA reference applies.\n",
+      "formula": "ΔVMT% = (new_lane_miles / existing_lane_miles_in_class, selected area) × ε",
+      "methodology_detail": "Widening a road or adding lanes makes driving easier, which over time generates\nmore vehicle miles traveled (VMT), an effect known as induced demand. The added\ndriving is proportional to how much the new lanes increase capacity for that type\nof road.\n\n`ΔVMT% = (new_lane_miles / existing_lane_miles_in_class) × ε`\n\nBoth terms are totals for the **whole selected area**: the lane miles your\nproject adds or removes, over the lane miles of that road class across every\nzone you have selected. The result is an area-wide percentage, because the\nDuranton & Turner elasticity relates a region's total VMT to that region's total\nlane miles. Selecting a wider area therefore gives the same project a smaller\npercentage effect, spread across a larger baseline.\n\nThe strength of the effect depends on the road type: freeways and expressways\nbring out the most new travel, arterials less, and collectors and local streets\nthe least (Duranton & Turner 2011). Induced demand is not a CAPCOA reduction\nmeasure, so no CAPCOA reference applies — and because it is a supply-side\nchange rather than a behavioral one, it sits outside the CAPCOA overlap caps\nand is added to the project total directly. Its bound comes from the method\ninstead: a road diet cannot remove more lane miles than the area has, so the\nlargest reduction this measure can return is ε itself — 60% on arterials, 40%\non collectors and local streets, 100% on freeways. An entry that removes more\nthan the existing stock is reduced to it, and the result is flagged.\n",
       "applicability": {},
       "inputs": [
         {
@@ -883,7 +883,7 @@
           "summary": "The net change in through-lane miles the project makes (negative for a road diet, positive for added lanes), excluding turn lanes and shoulders.",
           "source_note": "your project scope / roadway design",
           "tooltip": "Signed net change in through-lane miles, excluding turn lanes and shoulders. Positive = lanes added; negative = a road diet (lanes removed).",
-          "instructions": "Enter the net change (+ or −) in general purpose through-lane miles the project\nmakes: lane-miles, not centerline miles (a 2-mile project adding one lane each way\nis 4 lane-miles). Use a **negative** value to model a **road diet** that removes\nthrough-lane capacity (e.g. `-4` for a 2-mile project that removes one lane each\nway). Use a **positive** value for added roadway capacity. Exclude turn lanes,\nauxiliary lanes, and shoulders.\n",
+          "instructions": "Enter the net change (+ or −) in general purpose through-lane miles the project\nmakes: lane-miles, not centerline miles (a 2-mile project adding one lane each way\nis 4 lane-miles). Use a **negative** value to model a **road diet** that removes\nthrough-lane capacity (e.g. `-4` for a 2-mile project that removes one lane each\nway). Use a **positive** value for added roadway capacity. Exclude turn lanes,\nauxiliary lanes, and shoulders.\n\nEnter the figure for the **whole project once**, not per zone. It is measured\nagainst the lane miles of that road class across your entire selected area, so\na road diet is a bigger percentage in a tight downtown selection than in one\nthat sweeps in a whole county. Removing more lane miles than the area has is\nnot possible: an entry beyond the existing stock is reduced to it and noted in\nthe results.\n",
           "min": -20,
           "unit": "lane-mi"
         },

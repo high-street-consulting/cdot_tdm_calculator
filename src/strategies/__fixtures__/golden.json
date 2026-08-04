@@ -1,7 +1,7 @@
 {
   "_meta": {
     "generator": "scripts/generate_golden_fixtures.py",
-    "python_source": "scripts/strategy_calculations.py",
+    "python_source": "methods/strategy_calculations.py (app repo)",
     "sample_taz_ids": [
       "3764",
       "6789",
@@ -1221,102 +1221,102 @@
         "new_lane_miles": 2.0,
         "facility_class": "major_arterial"
       },
-      "inputs_str": "new_lane_mi=2.00, class=major_arterial, \u03b5=0.6",
+      "inputs_str": "new_lane_mi=2.00, class=major_arterial, \u03b5=0.6, existing_lane_mi=21.24",
       "per_taz": [
         {
           "taz_id": "3764",
           "base_vmt_purpose": "all",
           "base_vmt": 42340.48791,
-          "pct_vmt_reduction": 17.408965617292903,
-          "daily_vmt_reduction": -737104.0982445959,
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -2391.9547810509544,
           "data_assumptions": ""
         },
         {
           "taz_id": "6789",
           "base_vmt_purpose": "all",
           "base_vmt": 89629.593606,
-          "pct_vmt_reduction": 0.3880064616009405,
-          "daily_vmt_reduction": -34776.86146979434,
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -5063.473415923745,
           "data_assumptions": ""
         },
         {
           "taz_id": "7728",
           "base_vmt_purpose": "all",
           "base_vmt": 47477.554202,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -2682.1647168420577,
+          "data_assumptions": ""
         },
         {
           "taz_id": "3765",
           "base_vmt_purpose": "all",
           "base_vmt": 69909.853255,
-          "pct_vmt_reduction": 0.7399268212373796,
-          "daily_vmt_reduction": -51728.175492143826,
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -3949.439791324971,
           "data_assumptions": ""
         },
         {
           "taz_id": "3748",
           "base_vmt_purpose": "all",
           "base_vmt": 49534.771514,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -2798.383755119531,
+          "data_assumptions": ""
         },
         {
           "taz_id": "5440",
           "base_vmt_purpose": "all",
           "base_vmt": 7732.980758,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -436.8617653908639,
+          "data_assumptions": ""
         },
         {
           "taz_id": "7473",
           "base_vmt_purpose": "all",
           "base_vmt": 28748.472455,
-          "pct_vmt_reduction": 2.407255467980493,
-          "daily_vmt_reduction": -69204.91751338534,
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -1624.0966869068116,
           "data_assumptions": ""
         },
         {
           "taz_id": "9377",
           "base_vmt_purpose": "all",
           "base_vmt": 47865.3396,
-          "pct_vmt_reduction": 0.34475427638950334,
-          "daily_vmt_reduction": -16501.78051793584,
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -2704.0720018676698,
           "data_assumptions": ""
         },
         {
           "taz_id": "3844",
           "base_vmt_purpose": "all",
           "base_vmt": 80505.883302,
-          "pct_vmt_reduction": 0.64702583789846,
-          "daily_vmt_reduction": -52089.386599232195,
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -4548.044719661075,
           "data_assumptions": ""
         },
         {
           "taz_id": "9309",
           "base_vmt_purpose": "all",
           "base_vmt": 63573.060159,
-          "pct_vmt_reduction": 0.3944710931582934,
-          "daily_vmt_reduction": -25077.734536338678,
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -3591.453303905963,
           "data_assumptions": ""
         },
         {
           "taz_id": "3700",
           "base_vmt_purpose": "all",
           "base_vmt": 1007708.011387,
-          "pct_vmt_reduction": 0.21871245436200118,
-          "daily_vmt_reduction": -220398.2924507022,
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -56928.77231042007,
           "data_assumptions": ""
         },
         {
           "taz_id": "3717",
           "base_vmt_purpose": "all",
           "base_vmt": 37160.993429,
-          "pct_vmt_reduction": 0.572675367514417,
-          "daily_vmt_reduction": -21281.185569153415,
+          "pct_vmt_reduction": 0.05649332114772397,
+          "daily_vmt_reduction": -2099.3479359529574,
           "data_assumptions": ""
         }
       ]
@@ -1328,103 +1328,103 @@
         "new_lane_miles": 1.0,
         "facility_class": "freeway"
       },
-      "inputs_str": "new_lane_mi=1.00, class=freeway, \u03b5=1.0",
+      "inputs_str": "new_lane_mi=1.00, class=freeway, \u03b5=1.0, existing_lane_mi=48.57",
       "per_taz": [
         {
           "taz_id": "3764",
           "base_vmt_purpose": "all",
           "base_vmt": 42340.48791,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -871.6624049234484,
+          "data_assumptions": ""
         },
         {
           "taz_id": "6789",
           "base_vmt_purpose": "all",
           "base_vmt": 89629.593606,
-          "pct_vmt_reduction": 2.7714035496136664,
-          "daily_vmt_reduction": -248399.77387009875,
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -1845.2018616551006,
           "data_assumptions": ""
         },
         {
           "taz_id": "7728",
           "base_vmt_purpose": "all",
           "base_vmt": 47477.554202,
-          "pct_vmt_reduction": 0.7091926975846315,
-          "daily_vmt_reduction": -33670.73473923694,
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -977.4190406961394,
           "data_assumptions": ""
         },
         {
           "taz_id": "3765",
           "base_vmt_purpose": "all",
           "base_vmt": 69909.853255,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -1439.2321351050452,
+          "data_assumptions": ""
         },
         {
           "taz_id": "3748",
           "base_vmt_purpose": "all",
           "base_vmt": 49534.771514,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -1019.770914237128,
+          "data_assumptions": ""
         },
         {
           "taz_id": "5440",
           "base_vmt_purpose": "all",
           "base_vmt": 7732.980758,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -159.19865210511765,
+          "data_assumptions": ""
         },
         {
           "taz_id": "7473",
           "base_vmt_purpose": "all",
           "base_vmt": 28748.472455,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -591.843974289261,
+          "data_assumptions": ""
         },
         {
           "taz_id": "9377",
           "base_vmt_purpose": "all",
           "base_vmt": 47865.3396,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -985.4023675140395,
+          "data_assumptions": ""
         },
         {
           "taz_id": "3844",
           "base_vmt_purpose": "all",
           "base_vmt": 80505.883302,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -1657.3723004484812,
+          "data_assumptions": ""
         },
         {
           "taz_id": "9309",
           "base_vmt_purpose": "all",
           "base_vmt": 63573.060159,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -1308.7767581782928,
+          "data_assumptions": ""
         },
         {
           "taz_id": "3700",
           "base_vmt_purpose": "all",
           "base_vmt": 1007708.011387,
-          "pct_vmt_reduction": 0.02136591025005828,
-          "daily_vmt_reduction": -21530.59892955935,
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -20745.655801920067,
           "data_assumptions": ""
         },
         {
           "taz_id": "3717",
           "base_vmt_purpose": "all",
           "base_vmt": 37160.993429,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.02058697119353645,
+          "daily_vmt_reduction": -765.0323012460203,
+          "data_assumptions": ""
         }
       ]
     },
@@ -1435,103 +1435,317 @@
         "new_lane_miles": 5.0,
         "facility_class": "collector"
       },
-      "inputs_str": "new_lane_mi=5.00, class=collector, \u03b5=0.4",
+      "inputs_str": "new_lane_mi=5.00, class=collector, \u03b5=0.4, existing_lane_mi=27.24",
       "per_taz": [
         {
           "taz_id": "3764",
           "base_vmt_purpose": "all",
           "base_vmt": 42340.48791,
-          "pct_vmt_reduction": 31.339611702211013,
-          "daily_vmt_reduction": -1326934.45038156,
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -3108.671935440221,
           "data_assumptions": ""
         },
         {
           "taz_id": "6789",
           "base_vmt_purpose": "all",
           "base_vmt": 89629.593606,
-          "pct_vmt_reduction": 2.4000470409220025,
-          "daily_vmt_reduction": -215115.24091312193,
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -6580.675282253365,
           "data_assumptions": ""
         },
         {
           "taz_id": "7728",
           "base_vmt_purpose": "all",
           "base_vmt": 47477.554202,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -3485.839384393134,
+          "data_assumptions": ""
         },
         {
           "taz_id": "3765",
           "base_vmt_purpose": "all",
           "base_vmt": 69909.853255,
-          "pct_vmt_reduction": 8.435081503975033,
-          "daily_vmt_reduction": -589695.3101368592,
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -5132.836430381198,
           "data_assumptions": ""
         },
         {
           "taz_id": "3748",
           "base_vmt_purpose": "all",
           "base_vmt": 49534.771514,
-          "pct_vmt_reduction": 0.0,
-          "daily_vmt_reduction": -0.0,
-          "data_assumptions": "no_existing_lane_miles_in_class"
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -3636.881898038938,
+          "data_assumptions": ""
         },
         {
           "taz_id": "5440",
           "base_vmt_purpose": "all",
           "base_vmt": 7732.980758,
-          "pct_vmt_reduction": 1.7436046759990202,
-          "daily_vmt_reduction": -13483.261409059247,
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -567.7615314871284,
           "data_assumptions": ""
         },
         {
           "taz_id": "7473",
           "base_vmt_purpose": "all",
           "base_vmt": 28748.472455,
-          "pct_vmt_reduction": 2.55338489468564,
-          "daily_vmt_reduction": -73405.9153118832,
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -2110.735466667293,
           "data_assumptions": ""
         },
         {
           "taz_id": "9377",
           "base_vmt_purpose": "all",
           "base_vmt": 47865.3396,
-          "pct_vmt_reduction": 0.18222303169742304,
-          "daily_vmt_reduction": -8722.167295138719,
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -3514.3108934201096,
           "data_assumptions": ""
         },
         {
           "taz_id": "3844",
           "base_vmt_purpose": "all",
           "base_vmt": 80505.883302,
-          "pct_vmt_reduction": 18.52606617510838,
-          "daily_vmt_reduction": -1491457.3215384048,
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -5910.8052932863075,
           "data_assumptions": ""
         },
         {
           "taz_id": "9309",
           "base_vmt_purpose": "all",
           "base_vmt": 63573.060159,
-          "pct_vmt_reduction": 0.19209369254597716,
-          "daily_vmt_reduction": -12211.983872389856,
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -4667.584095545113,
           "data_assumptions": ""
         },
         {
           "taz_id": "3700",
           "base_vmt_purpose": "all",
           "base_vmt": 1007708.011387,
-          "pct_vmt_reduction": 8.325250902249067,
-          "daily_vmt_reduction": -8389422.031003235,
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -73986.71505098963,
           "data_assumptions": ""
         },
         {
           "taz_id": "3717",
           "base_vmt_purpose": "all",
           "base_vmt": 37160.993429,
-          "pct_vmt_reduction": 0.8195565871041132,
-          "daily_vmt_reduction": -30455.536948069617,
+          "pct_vmt_reduction": 0.07342078679036698,
+          "daily_vmt_reduction": -2728.3893754688374,
           "data_assumptions": ""
+        }
+      ]
+    },
+    {
+      "label": "lane_mi_road_diet_4",
+      "strategy": "lane_mile_addition",
+      "kwargs": {
+        "new_lane_miles": -4.0,
+        "facility_class": "major_arterial"
+      },
+      "inputs_str": "new_lane_mi=-4.00, class=major_arterial, \u03b5=0.6, existing_lane_mi=21.24",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 4783.909562101909,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 10126.94683184749,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 5364.329433684115,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 7898.879582649942,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 5596.767510239062,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 873.7235307817278,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 3248.193373813623,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 5408.1440037353395,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 9096.08943932215,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 7182.906607811926,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 113857.54462084014,
+          "data_assumptions": ""
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": -0.11298664229544794,
+          "daily_vmt_reduction": 4198.695871905915,
+          "data_assumptions": ""
+        }
+      ]
+    },
+    {
+      "label": "lane_mi_road_diet_clamped",
+      "strategy": "lane_mile_addition",
+      "kwargs": {
+        "new_lane_miles": -500.0,
+        "facility_class": "collector"
+      },
+      "inputs_str": "new_lane_mi=-27.24, class=collector, \u03b5=0.4, existing_lane_mi=27.24",
+      "per_taz": [
+        {
+          "taz_id": "3764",
+          "base_vmt_purpose": "all",
+          "base_vmt": 42340.48791,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 16936.195164,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "6789",
+          "base_vmt_purpose": "all",
+          "base_vmt": 89629.593606,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 35851.8374424,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "7728",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47477.554202,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 18991.0216808,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "3765",
+          "base_vmt_purpose": "all",
+          "base_vmt": 69909.853255,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 27963.941302,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "3748",
+          "base_vmt_purpose": "all",
+          "base_vmt": 49534.771514,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 19813.9086056,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "5440",
+          "base_vmt_purpose": "all",
+          "base_vmt": 7732.980758,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 3093.1923032,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "7473",
+          "base_vmt_purpose": "all",
+          "base_vmt": 28748.472455,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 11499.388982,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "9377",
+          "base_vmt_purpose": "all",
+          "base_vmt": 47865.3396,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 19146.13584,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "3844",
+          "base_vmt_purpose": "all",
+          "base_vmt": 80505.883302,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 32202.3533208,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "9309",
+          "base_vmt_purpose": "all",
+          "base_vmt": 63573.060159,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 25429.224063600002,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "3700",
+          "base_vmt_purpose": "all",
+          "base_vmt": 1007708.011387,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 403083.2045548,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
+        },
+        {
+          "taz_id": "3717",
+          "base_vmt_purpose": "all",
+          "base_vmt": 37160.993429,
+          "pct_vmt_reduction": -0.4,
+          "daily_vmt_reduction": 14864.397371600002,
+          "data_assumptions": "lane_miles_removed_clamped_to_existing"
         }
       ]
     }

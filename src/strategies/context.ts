@@ -802,8 +802,13 @@ const builders: Partial<Record<StrategyKey, Builder>> = {
   lane_mile_addition: (tazs, values) => {
     const fc = String(values["facility_class"] ?? "major_arterial");
     const key = `lane_mi_${fc}` as keyof TazInputs;
+    // Selection total, matching the aggregate denominator in aggregates.ts.
+    // These two must agree: this panel showed the area-wide ratio while the calc
+    // divided per TAZ, which is how the -431% road diet went unnoticed.
     const existing = totalOf(tazs, key);
-    const newLm = Number(values["new_lane_miles"] ?? 0);
+    const requested = Number(values["new_lane_miles"] ?? 0);
+    // Same clamp the strategy applies: no removing more lanes than exist.
+    const newLm = existing > 0 ? Math.max(requested, -existing) : requested;
     const elKey = FACILITY_TO_INDUCED_ELASTICITY[fc];
     const el = elKey ? ELASTICITIES[elKey] : 0;
     const pct = existing > 0 ? (newLm / existing) * el : 0;
@@ -813,9 +818,10 @@ const builders: Partial<Record<StrategyKey, Builder>> = {
     const isDiet = newLm < 0;
     const capPct = existing > 0 ? (newLm / existing) * 100 : 0;
     const vmtPct = pct * 100;
+    const clamped = newLm !== requested;
     return [
       {
-        label: `Existing ${fc.replace("_", " ")} lane-miles`,
+        label: `Existing ${fc.replace("_", " ")} lane-miles, selected area`,
         value: existing > 0 ? fmt1(existing) : "N/A",
         unit: "lane-mi",
         unavailable: existing <= 0,
@@ -827,7 +833,9 @@ const builders: Partial<Record<StrategyKey, Builder>> = {
         unit: "lane-mi",
         projected:
           existing > 0
-            ? `${capPct >= 0 ? "+" : "−"}${Math.abs(capPct).toFixed(1)}% capacity change`
+            ? clamped
+              ? `limited to the ${fmt1(existing)} lane-mi in the selected area`
+              : `${capPct >= 0 ? "+" : "−"}${Math.abs(capPct).toFixed(1)}% capacity change`
             : "no existing capacity in class",
       },
       {

@@ -2,20 +2,19 @@
 // be expressed as a YAML `compute:` block (multi-value selects that switch the
 // formula, select->constant lookups, or a dynamic TAZ column). Everything
 // closed-form now lives in the catalog YAML and runs through computeDsl.ts; see
-// compute.ts for the dispatch. Park-and-Ride (cross-TAZ) lives in parkAndRide.ts.
+// compute.ts for the dispatch. The cross-TAZ strategies (Park-and-Ride, and
+// Lane-Mile Addition since 2026-08-04) live in parkAndRide.ts / aggregates.ts.
 //
-// Each function mirrors scripts/strategy_calculations.py and is pinned to the
+// Each function mirrors methods/strategy_calculations.py and is pinned to the
 // Python engine by the golden-value tests in strategies.test.ts.
 //
 // Kept here:
 //   transit_service_expansion  : `basis` select (frequency | service_miles)
 //   shared_micromobility       : `micromobility_type` select -> substitution ratio
-//   lane_mile_addition         : `facility_class` select -> elasticity + lane_mi_<class>
 
 import {
   BEHAVIORAL_DEFAULTS,
   ELASTICITIES,
-  FACILITY_TO_INDUCED_ELASTICITY,
   MICRO_SUBSTITUTION_BY_TYPE,
   PROGRAM_EFFECTS,
 } from "./constants";
@@ -201,64 +200,20 @@ export function sharedMicromobility(
   });
 }
 
-// ---------------------------------------------------------------------------
-// Lane-Mile Addition (induced demand): `facility_class` select + lane_mi_<class>
-// ---------------------------------------------------------------------------
-
-export type FacilityClass = keyof typeof FACILITY_TO_INDUCED_ELASTICITY;
-
-export interface LaneMileAdditionArgs {
-  new_lane_miles: number;
-  facility_class?: FacilityClass;
-  elasticity?: number;
-}
-
-export function laneMileAddition(taz: TazInputs, args: LaneMileAdditionArgs): StrategyResult {
-  const fc = args.facility_class ?? "major_arterial";
-  const elKey = FACILITY_TO_INDUCED_ELASTICITY[fc];
-  if (!elKey) {
-    throw new Error(`Unknown facility_class ${fc}`);
-  }
-  const elasticity = args.elasticity ?? ELASTICITIES[elKey];
-  const col = `lane_mi_${fc}` as keyof TazInputs;
-  const existing = (taz[col] as number | null | undefined) ?? 0;
-  // Coerce defensively: an empty/cleared number input can reach here as "" or
-  // undefined; treat a non-finite value as 0 rather than throwing on .toFixed.
-  const newLaneMiles = Number(args.new_lane_miles);
-  const newLaneMilesSafe = Number.isFinite(newLaneMiles) ? newLaneMiles : 0;
-  const inputs =
-    `new_lane_mi=${newLaneMilesSafe.toFixed(2)}, class=${fc}, ε=${elasticity}`;
-  if (!(existing > 0)) {
-    // Python returns 0 with a flag; mirror that.
-    return buildResult({
-      taz,
-      strategy: "Lane-Mile Addition",
-      inputs,
-      pct: 0,
-      basis: "all",
-      assumptions: "no_existing_lane_miles_in_class",
-    });
-  }
-  const pct = (newLaneMilesSafe / existing) * elasticity;
-  return buildResult({
-    taz,
-    strategy: "Lane-Mile Addition",
-    inputs,
-    pct,
-    basis: "all",
-  });
-}
+// Lane-Mile Addition (induced demand) used to live here as a per-TAZ calc fn.
+// Its denominator is the whole selection's lane-mile stock, not one zone's, so
+// it is now an aggregate: see `aggregates.ts`.
 
 // ---------------------------------------------------------------------------
 // Registry: string id -> calc fn, for the complex (code-backed) strategies.
 // Closed-form strategies are NOT here; they dispatch to computeDsl via their
-// catalog `compute:` block (see compute.ts).
+// catalog `compute:` block (see compute.ts). Cross-TAZ strategies are NOT here
+// either; they dispatch via AGGREGATE_REGISTRY (see aggregates.ts).
 // ---------------------------------------------------------------------------
 
 export const STRATEGY_REGISTRY = {
   transit_service_expansion:       transitServiceExpansion,
   shared_micromobility:            sharedMicromobility,
-  lane_mile_addition:              laneMileAddition,
 } as const;
 
 // A catalog strategy id. Closed-form strategies are driven by their YAML

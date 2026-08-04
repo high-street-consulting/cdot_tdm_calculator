@@ -8,11 +8,12 @@
 import { describe, it, expect } from "vitest";
 import golden from "./__fixtures__/golden.json";
 import { STRATEGY_REGISTRY } from "./strategies";
-import type { TazInputs } from "./types";
+import { AGGREGATE_REGISTRY } from "./aggregates";
+import type { StrategyResult, TazInputs } from "./types";
 
 const REGISTRY = STRATEGY_REGISTRY as Record<
   string,
-  ((taz: TazInputs, args: unknown) => { pct_vmt_reduction: number; daily_vmt_reduction: number; base_vmt: number; base_vmt_purpose: string }) | undefined
+  ((taz: TazInputs, args: unknown) => StrategyResult) | undefined
 >;
 
 interface GoldenPerTaz {
@@ -43,11 +44,40 @@ const tazInputs = fixture.taz_inputs;
 
 const VMT_TOL_MI = 0.5; // daily_vmt_reduction tolerance (mi/day)
 
+function assertMatches(actual: StrategyResult, expected: GoldenPerTaz) {
+  if (expected.pct_vmt_reduction == null) {
+    // Python emitted NaN/None; TS should produce 0.
+    expect(actual.pct_vmt_reduction).toBe(0);
+    return;
+  }
+  expect(actual.pct_vmt_reduction).toBeCloseTo(expected.pct_vmt_reduction, 6);
+  expect(Math.abs(actual.daily_vmt_reduction - (expected.daily_vmt_reduction ?? 0))).toBeLessThan(VMT_TOL_MI);
+  expect(actual.base_vmt).toBeCloseTo(expected.base_vmt ?? 0, 3);
+  expect(actual.base_vmt_purpose).toBe(expected.base_vmt_purpose);
+}
+
 describe("strategy port: golden-value tests", () => {
   for (const c of fixture.cases) {
-    const fn = REGISTRY[c.strategy];
-    if (!fn) {
+    const perTazFn = REGISTRY[c.strategy];
+    const aggregateFn = AGGREGATE_REGISTRY[c.strategy];
+
+    if (!perTazFn && !aggregateFn) {
       it.skip(`${c.strategy} (${c.label}): not in TS registry (closed-form: see computeDsl.test)`, () => {});
+      continue;
+    }
+
+    // A cross-TAZ strategy sees the whole sample at once; Python generated the
+    // fixture the same way, so the rows line up positionally. Assert the whole
+    // selection in one test — splitting it per TAZ would re-run the aggregate
+    // for each row and hide an ordering bug.
+    if (aggregateFn) {
+      const rows = c.per_taz.filter((e) => tazInputs[e.taz_id]);
+      it(`${c.strategy} :: ${c.label} (aggregate over ${rows.length} TAZs)`, () => {
+        const selection = rows.map((e) => tazInputs[e.taz_id]);
+        const actual = aggregateFn(selection, c.kwargs);
+        expect(actual).toHaveLength(rows.length);
+        rows.forEach((expected, i) => assertMatches(actual[i], expected));
+      });
       continue;
     }
 
@@ -60,17 +90,7 @@ describe("strategy port: golden-value tests", () => {
         }
 
         it(`TAZ ${expected.taz_id}`, () => {
-          const actual = fn(taz, c.kwargs);
-
-          if (expected.pct_vmt_reduction == null) {
-            // Python emitted NaN/None; TS should produce 0.
-            expect(actual.pct_vmt_reduction).toBe(0);
-            return;
-          }
-          expect(actual.pct_vmt_reduction).toBeCloseTo(expected.pct_vmt_reduction, 6);
-          expect(Math.abs(actual.daily_vmt_reduction - (expected.daily_vmt_reduction ?? 0))).toBeLessThan(VMT_TOL_MI);
-          expect(actual.base_vmt).toBeCloseTo(expected.base_vmt ?? 0, 3);
-          expect(actual.base_vmt_purpose).toBe(expected.base_vmt_purpose);
+          assertMatches(perTazFn!(taz, c.kwargs), expected);
         });
       }
     });

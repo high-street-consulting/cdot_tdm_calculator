@@ -41,7 +41,7 @@ guidance: |
   specific purpose.
 images: []
 method: Duranton & Turner 2011 long-run induced-demand elasticities
-formula: ΔVMT% = (new_lane_miles / existing_lane_miles_in_class) × ε
+formula: ΔVMT% = (new_lane_miles / existing_lane_miles_in_class, selected area) × ε
 methodology_detail: |
   Widening a road or adding lanes makes driving easier, which over time generates
   more vehicle miles traveled (VMT), an effect known as induced demand. The added
@@ -50,10 +50,23 @@ methodology_detail: |
 
   `ΔVMT% = (new_lane_miles / existing_lane_miles_in_class) × ε`
 
+  Both terms are totals for the **whole selected area**: the lane miles your
+  project adds or removes, over the lane miles of that road class across every
+  zone you have selected. The result is an area-wide percentage, because the
+  Duranton & Turner elasticity relates a region's total VMT to that region's total
+  lane miles. Selecting a wider area therefore gives the same project a smaller
+  percentage effect, spread across a larger baseline.
+
   The strength of the effect depends on the road type: freeways and expressways
   bring out the most new travel, arterials less, and collectors and local streets
   the least (Duranton & Turner 2011). Induced demand is not a CAPCOA reduction
-  measure, so no CAPCOA reference applies.
+  measure, so no CAPCOA reference applies — and because it is a supply-side
+  change rather than a behavioral one, it sits outside the CAPCOA overlap caps
+  and is added to the project total directly. Its bound comes from the method
+  instead: a road diet cannot remove more lane miles than the area has, so the
+  largest reduction this measure can return is ε itself — 60% on arterials, 40%
+  on collectors and local streets, 100% on freeways. An entry that removes more
+  than the existing stock is reduced to it, and the result is flagged.
 applicability: {}
 inputs:
 - key: new_lane_miles
@@ -73,6 +86,13 @@ inputs:
     through-lane capacity (e.g. `-4` for a 2-mile project that removes one lane each
     way). Use a **positive** value for added roadway capacity. Exclude turn lanes,
     auxiliary lanes, and shoulders.
+
+    Enter the figure for the **whole project once**, not per zone. It is measured
+    against the lane miles of that road class across your entire selected area, so
+    a road diet is a bigger percentage in a tight downtown selection than in one
+    that sweeps in a whole county. Removing more lane miles than the area has is
+    not possible: an entry beyond the existing stock is reduced to it and noted in
+    the results.
   min: -20
   unit: lane-mi
 - key: facility_class

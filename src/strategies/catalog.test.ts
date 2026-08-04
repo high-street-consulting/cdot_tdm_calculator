@@ -6,7 +6,7 @@
 import { describe, test, expect } from "vitest";
 import { CATALOG, STRATEGIES_FROM_CATALOG } from "./catalog";
 import { STRATEGY_REGISTRY } from "./strategies";
-import { AGGREGATE_REGISTRY } from "./parkAndRide";
+import { AGGREGATE_REGISTRY } from "./aggregates";
 import { isKnownStrategy } from "./registry";
 
 const REGISTRY = STRATEGY_REGISTRY as Record<string, unknown>;

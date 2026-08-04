@@ -145,10 +145,5 @@ export function parkAndRide(catchment: TazInputs[], args: ParkAndRideArgs): Stra
   );
 }
 
-/** Strategies whose math needs the whole catchment, not one TAZ at a time. */
-export const AGGREGATE_REGISTRY: Record<
-  string,
-  (catchment: TazInputs[], args: ParkAndRideArgs) => StrategyResult[]
-> = {
-  park_and_ride: parkAndRide,
-};
+// AGGREGATE_REGISTRY moved to aggregates.ts when Lane-Mile Addition became the
+// second cross-TAZ strategy; it was never P&R's to own.
