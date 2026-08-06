@@ -106,7 +106,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
               </a>
               {/* Say what the link costs before it is followed — a bare "↗" on a
                   3 MB download is a poor deal on a phone or a metered connection. */}
-              <p className="help-muted">PDF · 11 pages · 3 MB · opens in a new tab</p>
+              <p className="help-muted">PDF · 11 pages · 3.5 MB · opens in a new tab</p>
             </>
           ) : (
             <p className="help-muted">The full user guide will be available here soon.</p>
