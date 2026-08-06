@@ -89,7 +89,7 @@ The project is **well past the Sprint-1 proof of concept**; it is a working Reac
 | DG-01 | Must | ✅ | In-app tooltips / info icons per input. |
 | DG-02 | Must | ✅ | In-app Methodology view + per-strategy method/formula/sources. |
 | DG-03 | Should | ⬜ | One-page quick-start not yet written. |
-| DG-04 | Should | ⬜ | Full user guide not yet written (in-app Help modal is scaffolded to link to it). |
+| DG-04 | Should | ✅ | 11-page illustrated user guide shipped as `public/CDOT-TDM-Calculator-User-Guide.pdf`, linked from the in-app Help modal. Word source lives in the private data repo (`docs/`). **Not yet a tagged/accessible PDF** — see AC-01. |
 | DG-05 | Should | ⬜ | 5-minute narrated video not yet produced (Help modal scaffolded to embed it). |
 | DG-06 | Should | ✅ | Per-strategy limitations / assumptions / warnings documented for defensibility. |
 
@@ -121,7 +121,7 @@ The project is **well past the Sprint-1 proof of concept**; it is a working Reac
 5. **DI-02**: Refresh baseline to the **2025 SWTDM** base year when available (formulas are %-based, so no recalibration expected).
 
 **Strongly desired (Should-Have):**
-6. **DG-04 user guide**, **DG-03 quick-start**, **DG-05 tutorial video**: the Help modal is already wired to host the guide link + video.
+6. **DG-03 quick-start** and **DG-05 tutorial video**: the Help modal already hosts the guide link and is wired for the video embed. (**DG-04 user guide** is done.) Re-export the guide PDF from Word with "Best for electronic distribution and accessibility" so it carries tags and image alt text.
 7. **MC-06 corridor-level select-link analysis**, once CDOT provides corridor definitions.
 8. **MC-01b**: broaden geographic-context scaling of effect sizes across more strategies.
 

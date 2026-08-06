@@ -39,6 +39,20 @@ test.describe("Requirements — UI / outputs / accessibility / docs", () => {
     await expect(page.getByRole("heading", { name: /Help & resources/ })).toBeVisible();
   });
 
+  test("DG-04: Help links to the user guide, and the PDF actually serves", async ({ page, request }) => {
+    await page.goto("/#/area");
+    await page.getByRole("button", { name: /Help/ }).click();
+    const link = page.getByRole("link", { name: /Open the full user guide/ });
+    await expect(link).toBeVisible();
+
+    // Fetch it rather than trusting the href: a missing asset behind a SPA
+    // fallback answers 200 with the index.html shell, so only the magic bytes
+    // prove a real PDF is being served.
+    const res = await request.get((await link.getAttribute("href"))!);
+    expect(res.status()).toBe(200);
+    expect((await res.body()).subarray(0, 5).toString()).toBe("%PDF-");
+  });
+
   test("DG-02 / navigation: Methodology and Data sources pages load", async ({ page }) => {
     await page.goto("/#/area");
     await page.getByRole("link", { name: /Methodology/ }).click();

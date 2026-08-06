@@ -2,10 +2,10 @@
 // Built on the native <dialog> element (like ConfirmModal) so the browser
 // handles focus trap, ESC-to-close, and the inert background.
 //
-// Currently a scaffold: it will hold an embedded tutorial video and a link to
-// the full user guide. Drop the real URLs into the two constants below and the
-// placeholders are automatically replaced by the live embed / link, with no other
-// code changes needed.
+// The user guide link is live (public/CDOT-TDM-Calculator-User-Guide.pdf); the
+// tutorial video is still a placeholder. Drop the embed URL into the constant
+// below and the placeholder is automatically replaced by the live embed, with
+// no other code changes needed.
 
 import { useEffect, useRef } from "react";
 
@@ -16,8 +16,9 @@ import { useEffect, useRef } from "react";
 // Leave "" to show the "coming soon" placeholder.
 const TUTORIAL_VIDEO_EMBED_URL = "";
 // Full user guide: a link opened in a new tab (PDF or web page). Leave "" to
-// show the "coming soon" note.
-const USER_GUIDE_URL = "";
+// show the "coming soon" note. Served from public/, so it must carry BASE_URL —
+// the app is deployed both at a root ("/") and under a subpath on IIS.
+const USER_GUIDE_URL = `${import.meta.env.BASE_URL}CDOT-TDM-Calculator-User-Guide.pdf`;
 // ──────────────────────────────────────────────────────────────────────────
 
 interface HelpModalProps {
@@ -94,14 +95,19 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
         <section className="help-section">
           <h3 className="help-section-title">User guide</h3>
           {USER_GUIDE_URL ? (
-            <a
-              className="btn btn-brand"
-              href={USER_GUIDE_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Open the full user guide ↗
-            </a>
+            <>
+              <a
+                className="btn btn-brand"
+                href={USER_GUIDE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open the full user guide ↗
+              </a>
+              {/* Say what the link costs before it is followed — a bare "↗" on a
+                  3 MB download is a poor deal on a phone or a metered connection. */}
+              <p className="help-muted">PDF · 11 pages · 3 MB · opens in a new tab</p>
+            </>
           ) : (
             <p className="help-muted">The full user guide will be available here soon.</p>
           )}
