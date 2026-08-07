@@ -1490,9 +1490,24 @@
 .shop-detail .methodology-accordion > summary:hover .acc-toggle { border-color: var(--cdot-dark-blue); }
 .shop-detail .methodology-accordion .acc-toggle-label::before { content: "Show details"; }
 .shop-detail .methodology-accordion[open] .acc-toggle-label::before { content: "Hide details"; }
-/* Chevron points down (expand) when collapsed, flips up (collapse) when open. */
-.shop-detail .methodology-accordion .acc-chevron { font-size: 13px; line-height: 1; transition: transform .15s; }
-.shop-detail .methodology-accordion[open] .acc-chevron { transform: rotate(180deg); }
+/* Chevron points down (expand) when collapsed, flips up (collapse) when open.
+   Drawn from two borders rather than typeset as U+2304 "⌄": that glyph puts its
+   ink near the bottom of its em box, so the caret looked dropped even though
+   flexbox had centred it perfectly — pill, label and chevron BOX all shared one
+   centre line, and only the ink sat low. A CSS caret has no gap between box and
+   mark. Mirrors .shop-aside-chev in mobile.css (no icon or font dependency).
+   translateY corrects the optical centre of a bottom-right corner mark, and
+   flips sign with the rotation because the mark moves to the top edge. */
+.shop-detail .methodology-accordion .acc-chevron {
+  flex: 0 0 auto; width: 7px; height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform .15s;
+}
+.shop-detail .methodology-accordion[open] .acc-chevron {
+  transform: translateY(1px) rotate(225deg);
+}
 .shop-detail .methodology-body { margin-top: 22px; }
 /* Extra breathing room below the methodology section (it's the last block on
    the detail page), overrides .dsection's default 14px. */

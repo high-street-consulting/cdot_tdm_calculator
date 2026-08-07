@@ -645,7 +645,8 @@ export function DetailView({
               <h2>Methodology</h2>
               <span className="acc-toggle" aria-hidden="true">
                 <span className="acc-toggle-label"></span>
-                <span className="acc-chevron">⌄</span>
+                {/* Drawn in CSS rather than a glyph — see .acc-chevron. */}
+                <span className="acc-chevron" />
               </span>
             </summary>
             <div className="methodology-body">

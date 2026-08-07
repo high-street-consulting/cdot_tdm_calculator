@@ -59,3 +59,35 @@ test("the commit button stays anchored at every width", async ({ page }) => {
     expect(insetRight, `at ${width}px the button overflows the card`).toBeGreaterThanOrEqual(-1);
   }
 });
+
+// The methodology accordion's chevron. It was typeset as U+2304 "⌄", whose ink
+// sits near the bottom of its em box, so the caret looked dropped even though
+// flexbox had centred its box exactly. A box-geometry assertion would NOT have
+// caught that — every box already shared a centre line — so what is pinned here
+// is the cause: the mark is drawn in CSS, with no glyph to sag.
+test.describe("Methodology accordion chevron", () => {
+  test("is drawn in CSS, not typeset, and flips with the open state", async ({ page }) => {
+    await gotoArea(page);
+    await selectTazs(page, STEAMBOAT_TAZS);
+    await openStrategy(page, STRATEGY.sharrows);
+
+    const chevron = page.locator(".acc-chevron").first();
+    await chevron.scrollIntoViewIfNeeded();
+
+    const closed = await chevron.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return { text: el.textContent ?? "", border: cs.borderRightWidth, transform: cs.transform };
+    });
+    // No character to mis-position.
+    expect(closed.text.trim()).toBe("");
+    expect(closed.border).not.toBe("0px");
+
+    await page.locator(".methodology-accordion > summary").first().click();
+    await expect(page.locator(".methodology-accordion")).toHaveAttribute("open", "");
+    // Poll: the flip is a .15s transition, so reading the transform the instant
+    // the attribute lands still returns the closed matrix.
+    await expect
+      .poll(() => chevron.evaluate((el) => getComputedStyle(el).transform))
+      .not.toBe(closed.transform);
+  });
+});
