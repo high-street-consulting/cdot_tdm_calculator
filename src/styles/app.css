@@ -563,7 +563,22 @@ html[data-brand="highstreet"] .hdr-nav a.active { color: var(--brand-secondary);
   box-shadow: 0 2px 6px rgba(0,0,0,.10);
   /* Deliberately NOT overflow:hidden — it would clip the suggestions menu. */
 }
-.map-search-host:focus-within { border-color: var(--cdot-dark-blue); }
+/* Size the row to the Calcite control, not the other way round.
+   calcite-input renders a fixed 28px input and does not stretch, so a taller row
+   left it TOP-aligned with dead space underneath — and on focus its 2px ring drew
+   a short box floating inside the bar (the "height weirdness"). Matching the row
+   to 28px makes the ring flush, top and bottom.
+
+   Note what this deliberately does NOT do: suppress Calcite's focus chrome via
+   --calcite-color-focus. That token is the ONLY thing marking the active item in
+   the suggestions menu — an active item changes outline and nothing else, no
+   background — and the menu lives in the same inherited scope, so zeroing it here
+   would make keyboard navigation through search results invisible. */
+.map-search-host .esri-search__dropdown calcite-button,
+.map-search-host .esri-search__submit-button { height: 28px; }
+
+/* No focus ring on the host: Calcite already draws one on whichever part has
+   focus, and a second navy line around it read as a doubled border. */
 
 /* The missing row layout: [source caret] [input] [submit]. */
 .map-search-host .esri-search__container,

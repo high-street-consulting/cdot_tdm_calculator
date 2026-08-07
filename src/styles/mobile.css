@@ -274,10 +274,11 @@
     width: auto;
     max-width: none;
   }
-  /* Left at its natural ~34px rather than padded out to 44 like .map-tool:
-     stretching the Calcite autocomplete just grows its box and leaves the text
-     top-aligned (its internal input stays 28px and won't re-centre), and 34px
-     already clears WCAG 2.2 AA 2.5.8 Target Size (Minimum) of 24x24. The 10px
+  /* Left at its natural height rather than padded out to 44 like .map-tool:
+     stretching the Calcite autocomplete only grows its box, because its internal
+     input is a fixed 28px. app.css now sizes the row to that 28px, which is what
+     fixed the top-aligned text this note used to describe. The control is ~30px
+     and still clears WCAG 2.2 AA 2.5.8 Target Size (Minimum) of 24x24; the height
      saved goes to the map, which is scarce here. */
   .map-search-host .esri-search__submit-button { padding: 0 14px; }
 
