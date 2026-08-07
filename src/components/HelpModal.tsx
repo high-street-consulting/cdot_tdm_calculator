@@ -102,7 +102,7 @@ export function HelpModal({ open, onClose }: HelpModalProps) {
         </p>
 
         <section className="help-section">
-          <h3 className="help-section-title">Overview video</h3>
+          <h3 className="help-section-title">Tutorial video</h3>
           <div className="help-video">
             {/* preload="metadata": fetch the duration, not 5.9 MiB, for the
                 many people who open Help and never press play. */}

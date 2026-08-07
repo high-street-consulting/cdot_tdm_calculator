@@ -90,7 +90,7 @@ The project is **well past the Sprint-1 proof of concept**; it is a working Reac
 | DG-02 | Must | ✅ | In-app Methodology view + per-strategy method/formula/sources. |
 | DG-03 | Should | ⬜ | One-page quick-start not yet written. |
 | DG-04 | Should | ✅ | 11-page illustrated user guide shipped as `public/CDOT-TDM-Calculator-User-Guide.pdf`, linked from the in-app Help modal. **Tagged PDF**: StructTreeRoot present, `/Lang` en, 28 tagged headings, alt text on all 6 figures, bookmarks. Word source + generator live in the private data repo (`docs/`). |
-| DG-05 | Should | ✅ | 1:34 narrated overview video embedded in the Help modal, served from `public/` (no third-party embed). Ships with WebVTT captions and an in-modal text transcript. |
+| DG-05 | Should | ✅ | 1:34 narrated tutorial video embedded in the Help modal, served from `public/` (no third-party embed). Ships with WebVTT captions and an in-modal text transcript. |
 | DG-06 | Should | ✅ | Per-strategy limitations / assumptions / warnings documented for defensibility. |
 
 ## 5. Technology Stack
