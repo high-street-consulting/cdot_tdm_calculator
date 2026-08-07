@@ -90,7 +90,7 @@ The project is **well past the Sprint-1 proof of concept**; it is a working Reac
 | DG-02 | Must | ✅ | In-app Methodology view + per-strategy method/formula/sources. |
 | DG-03 | Should | ⬜ | One-page quick-start not yet written. |
 | DG-04 | Should | ✅ | 11-page illustrated user guide shipped as `public/CDOT-TDM-Calculator-User-Guide.pdf`, linked from the in-app Help modal. **Tagged PDF**: StructTreeRoot present, `/Lang` en, 28 tagged headings, alt text on all 6 figures, bookmarks. Word source + generator live in the private data repo (`docs/`). |
-| DG-05 | Should | ⬜ | 5-minute narrated video not yet produced (Help modal scaffolded to embed it). |
+| DG-05 | Should | ✅ | 1:34 narrated overview video embedded in the Help modal, served from `public/` (no third-party embed). Ships with WebVTT captions and an in-modal text transcript. |
 | DG-06 | Should | ✅ | Per-strategy limitations / assumptions / warnings documented for defensibility. |
 
 ## 5. Technology Stack
@@ -121,7 +121,7 @@ The project is **well past the Sprint-1 proof of concept**; it is a working Reac
 5. **DI-02**: Refresh baseline to the **2025 SWTDM** base year when available (formulas are %-based, so no recalibration expected).
 
 **Strongly desired (Should-Have):**
-6. **DG-03 quick-start** and **DG-05 tutorial video**: the Help modal already hosts the guide link and is wired for the video embed. (**DG-04 user guide** is done.)
+6. **DG-03 quick-start**: the one-page version is the last documentation item. (**DG-04 user guide** and **DG-05 overview video** are done.)
 7. **MC-06 corridor-level select-link analysis**, once CDOT provides corridor definitions.
 8. **MC-01b**: broaden geographic-context scaling of effect sizes across more strategies.
 
