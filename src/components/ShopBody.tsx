@@ -7,6 +7,7 @@ import { CATALOG } from "../strategies/catalog";
 import type { BasketEntry } from "../strategies/compute";
 import type { StrategyKey } from "../strategies/strategies";
 import { CategoryIcon } from "./CategoryIcon";
+import { useIsNarrowViewport } from "../hooks/useIsNarrowViewport";
 
 interface ShopBodyProps {
   basket: BasketEntry[];
@@ -46,20 +47,6 @@ function matchesTags(s: StrategyMeta, selected: Set<string>): boolean {
     side rail. Must match the 900px breakpoint in mobile.css that stacks
     .shop-body into one column. */
 const RAIL_COLLAPSE_PX = 900;
-
-/** True while the viewport is at or below `maxWidth`. */
-function useIsNarrowViewport(maxWidth: number): boolean {
-  const query = `(max-width: ${maxWidth}px)`;
-  const [narrow, setNarrow] = useState(() => window.matchMedia(query).matches);
-  useEffect(() => {
-    const mql = window.matchMedia(query);
-    const onChange = () => setNarrow(mql.matches);
-    onChange();
-    mql.addEventListener("change", onChange);
-    return () => mql.removeEventListener("change", onChange);
-  }, [query]);
-  return narrow;
-}
 
 export function ShopBody({
   basket,

@@ -250,6 +250,18 @@ html[data-brand="highstreet"] .hdr-nav a.active { color: var(--brand-secondary);
 }
 .inputs-error-banner .btn { flex: 0 0 auto; }
 
+/* Small-screen advisory. Blue, NOT the amber used by the two banners around it:
+   those mean something has gone wrong, and this only means the screen is small.
+   Reusing the alarm colour for advice devalues the real warnings. */
+.small-screen-notice {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 16px; background: var(--cdot-dark-blue-05);
+  border-bottom: 1px solid var(--cdot-dark-blue-10);
+  color: #23324A; font-size: 13px; line-height: 1.4;
+}
+.small-screen-notice b { color: var(--cdot-dark-blue); }
+.small-screen-notice .btn { flex: 0 0 auto; }
+
 /* Notice shown when a selection is capped at MAX_SELECTED_TAZS (some zones
    dropped). Same amber language as the error banner but framed as a warning. */
 .selection-cap-banner {

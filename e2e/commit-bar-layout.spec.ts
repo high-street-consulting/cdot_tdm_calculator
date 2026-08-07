@@ -91,3 +91,41 @@ test.describe("Methodology accordion chevron", () => {
       .not.toBe(closed.transform);
   });
 });
+
+// The app shell's banner row. .shop-app is a grid whose footer is pinned by
+// number (grid-row: 5), so a conditional banner rendered as a direct child used
+// to auto-place into the content row and push <main> down onto the footer —
+// they overlapped, and the banner itself was crushed to ~21px with its text
+// clipped. Every banner now lives inside .app-banners, which occupies a row of
+// its own and collapses to zero when empty.
+test.describe("App shell banner row", () => {
+  test("a banner never pushes main onto the footer", async ({ page }) => {
+    await gotoArea(page);
+    const box = async () =>
+      page.evaluate(() => {
+        const m = document.querySelector(".shop-main-region")!.getBoundingClientRect();
+        const f = document.querySelector(".app-footer")?.getBoundingClientRect();
+        return { mainBottom: m.bottom, footerTop: f ? f.top : Number.POSITIVE_INFINITY };
+      });
+
+    const before = await box();
+    expect(before.mainBottom).toBeLessThanOrEqual(before.footerTop + 1);
+
+    // Inject a banner the way the real ones render, then re-measure.
+    await page.evaluate(() => {
+      const slot = document.querySelector(".app-banners")!;
+      const el = document.createElement("div");
+      el.className = "inputs-error-banner";
+      el.dataset.testInjected = "1";
+      el.textContent = "Injected banner for layout assertion";
+      slot.appendChild(el);
+    });
+    await page.waitForTimeout(200);
+
+    const after = await box();
+    expect(after.mainBottom).toBeLessThanOrEqual(after.footerTop + 1);
+    // And the banner keeps its own height rather than being squeezed away.
+    const h = await page.locator("[data-test-injected]").evaluate((el) => el.getBoundingClientRect().height);
+    expect(h).toBeGreaterThan(20);
+  });
+});

@@ -1,13 +1,18 @@
 /* CDOT TDM Calculator: e-commerce flow styles.
    Layers over app.css and colors_and_type.css. */
 
-/* Page-level layout. Header (56) + basket bar (64) sit at top. The 3rd row
-   (1fr) holds the active scrolling view (or the persistent map). The 4th
-   row (auto) holds the full-bleed footer when it's visible; the Area
-   view hides the footer so the map fills the rest of the viewport. */
+/* Page-level layout. Header (56) + basket bar (64) sit at top. Row 3 (auto)
+   is the banner slot — it collapses to zero when no banner is showing. Row 4
+   (1fr) holds the active scrolling view (or the persistent map). Row 5 (auto)
+   holds the full-bleed footer when it's visible; the Area view hides the footer
+   so the map fills the rest of the viewport.
+   The banner row is explicit rather than implicit because the footer is pinned
+   by number: with four rows, one conditional banner auto-placed into row 3 and
+   pushed <main> into row 4 on top of the footer. Keep every banner inside
+   .app-banners so the count of grid children never changes. */
 .shop-app {
   display: grid;
-  grid-template-rows: 56px 64px 1fr auto;
+  grid-template-rows: 56px 64px auto 1fr auto;
   height: 100vh;
   /* Mobile browsers size 100vh to the viewport with the URL bar *hidden*, so on
      a phone the footer (and part of the map) sat below the fold until you
@@ -19,9 +24,9 @@
   overflow: hidden;
 }
 .shop-app > * { min-height: 0; min-width: 0; }
-.shop-app > .app-footer { grid-row: 4; }
+.shop-app > .app-footer { grid-row: 5; }
 
-/* <main id="main-content"> sits in row 3 of .shop-app. On the Area
+/* <main id="main-content"> sits in row 4 of .shop-app. On the Area
    route it's a 360 px panel + 1 fr map; on other routes the route's
    content takes the full width and the map-host is hidden. The
    data-view attribute is set from the active route in App.tsx. */

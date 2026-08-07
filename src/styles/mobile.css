@@ -27,7 +27,7 @@
    ═════════════════════════════════════════════════════════════════════ */
 @media screen and (max-width: 900px) {
   /* The basket bar grows to two rows, so its grid track can't stay at 64px. */
-  .shop-app { grid-template-rows: 56px auto 1fr auto; }
+  .shop-app { grid-template-rows: 56px auto auto 1fr auto; }
 
   /* ── Basket bar: crumb on row 1, metrics + Start over on row 2 ───────
      The crumb scrolls horizontally rather than clipping: the three step pills
@@ -339,7 +339,7 @@
    ═════════════════════════════════════════════════════════════════════ */
 @media screen and (max-width: 560px) {
   /* The header wraps to two rows, so its track can't stay at 56px either. */
-  .shop-app { grid-template-rows: auto auto 1fr auto; }
+  .shop-app { grid-template-rows: auto auto auto 1fr auto; }
 
   /* ── Header: nav drops to its own full-width row ─────────────────────
      Logo + title + nav + Help needs ~560px on one line. Below that the nav ran

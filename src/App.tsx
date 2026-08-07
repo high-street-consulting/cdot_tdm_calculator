@@ -39,6 +39,7 @@ import type FeatureLayer from "@arcgis/core/layers/FeatureLayer";
 
 import type { SelectionMode } from "./components/MapView";
 import { ShopBody } from "./components/ShopBody";
+import { SmallScreenNotice } from "./components/SmallScreenNotice";
 import { CartView } from "./components/CartView";
 import { ReportView } from "./components/ReportView";
 import { DetailView } from "./components/DetailView";
@@ -653,6 +654,12 @@ function Layout() {
         onReset={requestReset}
       />
 
+      {/* Banner slot (grid row 3). Always rendered, even when empty: the footer
+          is pinned to a numbered row, so a conditional banner appearing as a
+          direct child of .shop-app shifted <main> down on top of it. */}
+      <div className="app-banners">
+      <SmallScreenNotice />
+
       {inputsError && selectedTazIds.size > 0 && (
         <div className="inputs-error-banner" role="alert">
           <span>
@@ -687,6 +694,7 @@ function Layout() {
           </button>
         </div>
       )}
+      </div>
 
       <main
         id="main-content"
