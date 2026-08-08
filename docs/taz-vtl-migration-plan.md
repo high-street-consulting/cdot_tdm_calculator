@@ -1,6 +1,8 @@
 # Map engineering: vector-tile migration, data workflow & load performance (scoping)
 
-**Status:** scoping / for review · **Owner:** (you, CDOT AGOL publisher) · **Last updated:** 2026-06-04
+**Status: COMPLETED — historical.** The vector-tile split described here shipped; the app now loads the VTL for display and the feature layer for selection, on `cdot.maps.arcgis.com`. This document is kept as the record of why, and deliberately still describes the pre-migration setup — the HS-org item IDs, the web map and the `VITE_WEBMAP_ITEM_ID` env var it mentions are all retired. For the current picture see `app-architecture.md`.
+
+**Owner:** (you, CDOT AGOL publisher) · **Written:** 2026-06-04 · **Closed:** 2026-08-08
 
 ## 1. Objective
 

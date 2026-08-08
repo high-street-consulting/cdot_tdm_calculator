@@ -12,14 +12,11 @@ export const TAZ_LAYER_URL =
   import.meta.env.VITE_TAZ_LAYER_URL ??
   "https://services.arcgis.com/yzB9WM8W0BO3Ql7d/arcgis/rest/services/CDOT_TDM_Calculator_TAZ_Enriched_2026_06_29_source_/FeatureServer/0";
 
-/**
- * Web map item: NO LONGER USED AT RUNTIME. The app loads the TAZ feature layer
- * directly and reads its basemap/extent/symbology from config/mapStyle.json, so
- * nothing imports this anymore (kept only as a pointer to the AGOL artifact; the
- * web map item itself can be deleted from AGOL without affecting the app).
- */
-export const WEBMAP_ITEM_ID =
-  import.meta.env.VITE_WEBMAP_ITEM_ID ?? "bc54be72a9184b47a4f5d563f5565c6a";
+// A WEBMAP_ITEM_ID export used to live here. The app stopped loading a web map
+// when the VTL migration landed — it loads the feature layer directly and takes
+// basemap/extent/symbology from config/mapStyle.json — and the web map item was
+// deleted from AGOL on 2026-07-30. Removed rather than left pointing at an item
+// that no longer exists.
 
 /** Portal the items live in. */
 export const PORTAL_URL =

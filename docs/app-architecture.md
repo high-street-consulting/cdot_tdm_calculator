@@ -5,7 +5,7 @@ reduction from Transportation Demand Management strategies applied to user-
 selected Traffic Analysis Zones (TAZs) in Colorado.
 
 Vite + React 18 + TypeScript + Esri ArcGIS Maps SDK for JavaScript v5,
-consuming a hosted feature layer + web map on `hspartner.maps.arcgis.com`.
+consuming a hosted feature layer + vector tile layer on `cdot.maps.arcgis.com`.
 
 ---
 
@@ -153,20 +153,25 @@ prompt fires on tab close / refresh / back-button.
 
 ## Data sources
 
-Both items are owned by `reichert_hspartner` on `hspartner.maps.arcgis.com`
-and shared **public** so the dev app can read them without auth.
+The items are owned by `reichert_cdot` on `cdot.maps.arcgis.com`, shared
+**public** and delete-protected, so the app reads them anonymously.
 
-| Item             | ID                                  | Purpose                                              |
-| ---------------- | ----------------------------------- | ---------------------------------------------------- |
-| TAZ feature layer | `9fbb4bd715dc49f09dfe66425c8aecee` | Enriched per-TAZ table (112 fields × 8,045 polygons) |
-| Web map           | `b2647df733014039bfa0c7df40054489` | Wraps the TAZ layer over Light Gray Canvas         |
+| Item | ID | Purpose |
+| ---- | -- | ------- |
+| TAZ feature layer | `c5923ca9509043e5b5b85d9e7a507b1b` | Enriched per-TAZ table (36 attributes × 8,045 polygons) — queried for attributes and selection |
+| TAZ vector tiles | `df319a5f8a9f48669fd7786204442600` | What the map draws; far faster than rendering the polygons client-side |
 
-Both URLs are configurable via `.env`:
+There is **no web map**. The app loads the feature layer directly and takes its
+basemap, extent and symbology from `config/mapStyle.json`. A web map item existed
+before the vector-tile migration; it was deleted from AGOL on 2026-07-30 and
+nothing references it.
+
+Configurable via `.env`, defaults in `src/data/agol.ts`:
 
 ```env
-VITE_WEBMAP_ITEM_ID=...
-VITE_PORTAL_URL=https://hspartner.maps.arcgis.com
+VITE_PORTAL_URL=https://cdot.maps.arcgis.com
 VITE_TAZ_LAYER_URL=...                # used by data/queryTaz.ts
+VITE_VTL_ITEM_ID=...                  # used by components/MapView.tsx
 ```
 
 The enriched layer is produced by `publish_enriched_taz.py` (private data repo) (repo
